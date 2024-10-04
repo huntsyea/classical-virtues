@@ -2,6 +2,7 @@ import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import AudioPlayer from '@/components/AudioPlayer'; // Import the client component
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -10,8 +11,12 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Post({ params }: { params: { slug: string } }) {
+export default function Post({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
+
+  if (!post) {
+    return <div>Post not found</div>; // Error handling for missing post
+  }
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -24,15 +29,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
           className="rounded-lg"
         />
       </div>
-      {post.audioUrl && (
-        <Card className="my-8 p-4 bg-transparent">
-          <h2 className="text-2xl font-bold mb-4 font-heading">Listen to the Story</h2>
-          <audio controls className="w-full">
-            <source src={post.audioUrl} type="audio/mpeg" />
-            Your browser does not support the audio element.
-          </audio>
-        </Card>
-      )}
+      {post.audioUrl && <AudioPlayer audioUrl={post.audioUrl} />} {/* Use the client component */}
       <h1 className="text-4xl font-bold mb-4 font-heading">{post.title}</h1>
       <div className="prose prose-lg max-w-none">
         <MDXRemote source={post.content} />

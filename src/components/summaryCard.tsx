@@ -20,7 +20,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ fileName, image, title, summa
           </div>
         )}
         <CardContent className="p-4 space-y-2 flex-grow flex flex-col justify-between">
-          {title && <CardTitle className="line-clamp-2">{title}</CardTitle>}
+          {title && <CardTitle className="line-clamp-2 pb-1">{title}</CardTitle>}
           {summary && <CardDescription className="line-clamp-3">{summary}</CardDescription>}
         </CardContent>
       </Card>
