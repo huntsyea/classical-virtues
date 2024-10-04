@@ -1,11 +1,12 @@
-import Link from "next/link";
+{/* import Link from "next/link";
 import { Input } from "@/components/ui/input";
+*/}
 import SummaryCard from "@/components/summaryCard";
 import { getAllPosts, PostData } from "@/lib/posts";
+import { useMemo } from 'react';
 
 export default function Home() {
-  const virtues: PostData[] = getAllPosts();
-  console.log('Virtues:', virtues);
+  const virtues: PostData[] = useMemo(() => getAllPosts(), []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
@@ -17,9 +18,9 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="flex justify-center">
+        {/* <div className="flex justify-center">
           <Input type="search" placeholder="Search virtue stories..." className="max-w-md w-full" />
-        </div>
+        </div> */}
 
         <main className="space-y-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -34,14 +35,14 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <Link
               href="#"
               className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
             >
               See More
             </Link>
-          </div>
+          </div> */}
         </main>
       </div>
     </div>

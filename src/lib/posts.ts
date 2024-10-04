@@ -12,6 +12,7 @@ export interface PostData {
   summary: string;
   content: string;
   virtue: string;
+  audioUrl: string;
 }
 
 export function getAllPosts(): PostData[] {
@@ -37,6 +38,7 @@ export function getPostBySlug(slug: string): PostData {
     image: data.image || '',
     summary: data.summary || '',
     virtue: data.virtue || '',
+    audioUrl: data.audioUrl || '',
     content,
   };
 }

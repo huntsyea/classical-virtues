@@ -24,6 +24,15 @@ export default async function Post({ params }: { params: { slug: string } }) {
           className="rounded-lg"
         />
       </div>
+      {post.audioUrl && (
+        <Card className="my-8 p-4 bg-transparent">
+          <h2 className="text-2xl font-bold mb-4 font-heading">Listen to the Story</h2>
+          <audio controls className="w-full">
+            <source src={post.audioUrl} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+        </Card>
+      )}
       <h1 className="text-4xl font-bold mb-4 font-heading">{post.title}</h1>
       <div className="prose prose-lg max-w-none">
         <MDXRemote source={post.content} />
