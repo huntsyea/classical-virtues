@@ -1,7 +1,7 @@
 import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import AudioPlayer from '@/components/AudioPlayer'; // Import the client component
 import type { Metadata } from 'next'
 
@@ -22,12 +22,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     }
   }
 
-  const ogImage = `/api/og?title=${encodeURIComponent(post.title)}&virtue=${encodeURIComponent(post.virtue)}`
+  const ogImage = `/api/og?title=${encodeURIComponent(post.title)}&virtue=${encodeURIComponent(post.virtueDescription)}`
 
   return {
     title: post.title,
     description: post.summary,
-    keywords: [post.topic, 'virtue', 'moral story', 'classical virtues'],
+    keywords: [post.virtue, 'virtue', 'moral story', 'classical virtues'],
     openGraph: {
       type: 'article',
       url: `https://classicalvirtues.com/stories/${params.slug}`,
@@ -51,11 +51,75 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
+interface JsonLdProps {
+  data: {
+    '@context': string;
+    '@type': string;
+    headline: string;
+    description: string;
+    image: string;
+    author: {
+      '@type': string;
+      name: string;
+    };
+    publisher: {
+      '@type': string;
+      name: string;
+      logo: {
+        '@type': string;
+        url: string;
+      };
+    };
+    datePublished: string;
+    mainEntityOfPage: {
+      '@type': string;
+      '@id': string;
+    };
+  }
+}
+
+const JsonLd = ({ data }: JsonLdProps) => (
+  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+  />
+)
+
 export default function Post({ params }: { params: { slug: string } }) {
   const post = getPostBySlug(params.slug);
 
   if (!post) {
     return <div>Post not found</div>; // Error handling for missing post
+  }
+
+  const articleStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title,
+    "description": post.summary,
+    "image": `https://classicalvirtues.com${post.image}`,
+    "author": {
+      "@type": "Organization",
+      "name": "Classical Virtues",
+      "url": "https://classicalvirtues.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Classical Virtues",
+      "url": "https://classicalvirtues.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://classicalvirtues.com/logo.png"
+      }
+    },
+    "datePublished": new Date().toISOString(),
+    "dateModified": new Date().toISOString(),
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://classicalvirtues.com/stories/${params.slug}`
+    },
+    "articleSection": "Moral Stories",
+    "keywords": [post.virtue, "virtue", "moral story", "classical virtues"]
   }
 
   return (
@@ -75,10 +139,21 @@ export default function Post({ params }: { params: { slug: string } }) {
         <MDXRemote source={post.content} />
       </div>
       <Card className="bg-accent text-accent-foreground mt-8">
-        <CardContent className="p-6">
-          <CardTitle className="mb-2 p-4 italic font-heading">{post.virtue}</CardTitle>
+        <CardContent className="p-8">
+          <div className="space-y-6">
+            <div className="flex items-baseline ">
+              <span className="font-heading font-semibold text-2xl mr-1">Virtue:</span>
+              <span className="font-heading text-2xl">{post.virtue}</span>
+            </div>
+            <div className="border-t border-accent-foreground/20 pt-4">
+              <p className="font-heading text-lg italic leading-relaxed">
+                {post.virtueDescription}
+              </p>
+            </div>
+          </div>
         </CardContent>
       </Card>
+      <JsonLd data={articleStructuredData} />
     </div>
   );
 }

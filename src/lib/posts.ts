@@ -7,11 +7,11 @@ const postsDirectory = path.join(process.cwd(), 'src/stories');
 export interface PostData {
   fileName: string;
   title: string;
-  topic: string;
+  virtue: string;
   image: string;
   summary: string;
   content: string;
-  virtue: string;
+  virtueDescription: string;
   audioUrl: string;
 }
 
@@ -34,10 +34,10 @@ export function getPostBySlug(slug: string): PostData {
   return {
     fileName: `${slug}.mdx`,
     title: data.title || '',
-    topic: data.topic || '',
+    virtue: data.virtue || '',
     image: data.image || '',
     summary: data.summary || '',
-    virtue: data.virtue || '',
+    virtueDescription: data['virtue-description'] || '',
     audioUrl: data.audioUrl || '',
     content,
   };
