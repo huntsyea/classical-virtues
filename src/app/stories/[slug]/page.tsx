@@ -1,9 +1,24 @@
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
-import AudioPlayer from '@/components/AudioPlayer'; // Import the client component
 import type { Metadata } from 'next'
+
+// Lazy load the AudioPlayer
+const AudioPlayer = dynamic(
+  () => import('@/components/AudioPlayer'),
+  {
+    loading: () => (
+      <Card className="my-8 p-4 bg-transparent w-full border">
+        <h2 className="text-2xl font-bold mb-1 font-heading">Listen to the Story</h2>
+        <div className="bg-background rounded-lg p-4 w-full h-[100px] animate-pulse" />
+      </Card>
+    ),
+    ssr: false // Disable SSR for audio player
+  }
+);
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -133,7 +148,16 @@ export default function Post({ params }: { params: { slug: string } }) {
           className="rounded-lg"
         />
       </div>
-      {post.audioUrl && <AudioPlayer audioUrl={post.audioUrl} />} {/* Use the client component */}
+      {post.audioUrl && (
+        <Suspense fallback={
+          <Card className="my-8 p-4 bg-transparent w-full border">
+            <h2 className="text-2xl font-bold mb-1 font-heading">Listen to the Story</h2>
+            <div className="bg-background rounded-lg p-4 w-full h-[100px] animate-pulse" />
+          </Card>
+        }>
+          <AudioPlayer audioUrl={post.audioUrl} />
+        </Suspense>
+      )}
       <h1 className="text-4xl font-bold mb-4 font-heading">{post.title}</h1>
       <div className="prose prose-lg max-w-none">
         <MDXRemote source={post.content} />

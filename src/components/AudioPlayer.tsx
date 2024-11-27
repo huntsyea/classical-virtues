@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card } from '@/components/ui/card';
+import { PlayIcon, PauseIcon } from 'lucide-react';
 
 interface AudioPlayerProps {
   audioUrl: string;
@@ -13,47 +14,68 @@ export default function AudioPlayer({ audioUrl }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const togglePlayPause = () => {
+  useEffect(() => {
+    const audio = new Audio();
+    audio.preload = "metadata";
+    audio.src = audioUrl;
+    audioRef.current = audio;
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+      setIsLoaded(true);
+    };
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [audioUrl]);
+
+  const initializeAudio = async () => {
+    if (!audioRef.current) return;
+    
+    try {
+      if (!isLoaded) {
+        await audioRef.current.load();
+        setIsLoaded(true);
+      }
+    } catch (error) {
+      console.error('Error loading audio:', error);
+    }
+  };
+
+  const togglePlayPause = async () => {
+    if (!isLoaded) {
+      await initializeAudio();
+    }
+
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play().catch(e => console.error("Playback failed", e));
+        try {
+          await audioRef.current.play();
+        } catch (error) {
+          console.error('Playback failed:', error);
+        }
       }
       setIsPlaying(!isPlaying);
     }
   };
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const updateTime = () => {
-      setCurrentTime(audio.currentTime);
-    };
-
-    const setAudioData = () => {
-      setDuration(audio.duration);
-    };
-
-    const handlePlayPause = () => {
-      setIsPlaying(!audio.paused);
-    };
-
-    audio.addEventListener('timeupdate', updateTime);
-    audio.addEventListener('loadedmetadata', setAudioData);
-    audio.addEventListener('play', handlePlayPause);
-    audio.addEventListener('pause', handlePlayPause);
-
-    return () => {
-      audio.removeEventListener('timeupdate', updateTime);
-      audio.removeEventListener('loadedmetadata', setAudioData);
-      audio.removeEventListener('play', handlePlayPause);
-      audio.removeEventListener('pause', handlePlayPause);
-    };
-  }, []);
 
   const handleSliderChange = (value: number[]) => {
     if (audioRef.current) {
@@ -90,45 +112,6 @@ export default function AudioPlayer({ audioUrl }: AudioPlayerProps) {
         <audio ref={audioRef} src={audioUrl} />
       </div>
     </Card>
-  );
-}
-
-function PlayIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polygon points="6 3 20 12 6 21 6 3" />
-    </svg>
-  );
-}
-
-function PauseIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="6" y="4" width="4" height="16" />
-      <rect x="14" y="4" width="4" height="16" />
-    </svg>
   );
 }
 
