@@ -8,10 +8,13 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
+  images: {
+    domains: ['classicalvirtues.com'],
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@/src': path.join(__dirname, 'src'), // Add this line
+      '@/src': path.join(__dirname, 'src'),
       '@/stories': path.join(__dirname, 'src/stories'),
     };
     return config;

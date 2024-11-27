@@ -3,12 +3,52 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import AudioPlayer from '@/components/AudioPlayer'; // Import the client component
+import type { Metadata } from 'next'
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
   return posts.map((post) => ({
     slug: post.fileName.replace('.mdx', ''),
   }));
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const post = getPostBySlug(params.slug)
+  
+  if (!post) {
+    return {
+      title: 'Story Not Found',
+      description: 'The requested story could not be found.'
+    }
+  }
+
+  const ogImage = `/api/og?title=${encodeURIComponent(post.title)}&virtue=${encodeURIComponent(post.virtue)}`
+
+  return {
+    title: post.title,
+    description: post.summary,
+    keywords: [post.topic, 'virtue', 'moral story', 'classical virtues'],
+    openGraph: {
+      type: 'article',
+      url: `https://classicalvirtues.com/stories/${params.slug}`,
+      title: post.title,
+      description: post.summary,
+      images: [{
+        url: ogImage,
+        width: 1200,
+        height: 630,
+        alt: post.title
+      }],
+      siteName: 'Classical Virtues',
+      publishedTime: new Date().toISOString(),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.summary,
+      images: [ogImage]
+    }
+  }
 }
 
 export default function Post({ params }: { params: { slug: string } }) {
