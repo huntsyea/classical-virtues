@@ -1,6 +1,6 @@
 # Classical Virtues
 
-[![Deployment Status](https://img.shields.io/badge/deployment-vercel-black)](https://vercel.com)
+![Vercel Deploy](https://deploy-badge.vercel.app/vercel/classical-virtues)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-blue)](https://tailwindcss.com)
