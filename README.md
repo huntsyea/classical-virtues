@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Classical Virtues
+
+[![Deployment Status](https://img.shields.io/badge/deployment-vercel-black)](https://vercel.com)
+[![Next.js](https://img.shields.io/badge/Next.js-14.2-black)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-blue)](https://tailwindcss.com)
+[![MDX](https://img.shields.io/badge/MDX-3.0-yellow)](https://mdxjs.com)
+[![shadcn/ui](https://img.shields.io/badge/shadcn/ui-latest-purple)](https://ui.shadcn.com)
+
+A modern web application exploring classical virtues through interactive storytelling and content. Built with Next.js and enhanced with beautiful typography and responsive design.
+
+## Tech Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Content**: MDX for rich content authoring
+- **Analytics**: Vercel Analytics
+- **Deployment**: Vercel Platform
+- **Performance**: Optimized fonts and images with next/font and next/image
+- **SEO**: Built-in sitemap and robots.txt generation
 
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/app/*` - Main application routes and pages
+- `src/components/*` - Reusable UI components
+- `src/stories/*` - MDX content for virtue stories
+- `public/*` - Static assets
+
+## Deployment
+
+The application is deployed on Vercel. Each commit to the main branch triggers an automatic deployment.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in this project:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [shadcn/ui](https://ui.shadcn.com)
+- [MDX](https://mdxjs.com)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
