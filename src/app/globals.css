@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    --font-heading: 'Times New Roman', 'Times', 'Georgia', 'Playfair Display', 'serif';
+    --font-body: 'Inter', 'Roboto', 'Arial', 'Helvetica', 'sans-serif';
     --destructive-foreground: 60 20% 95%;
     --secondary-foreground: 60 20% 95%;
     --popover-foreground: 60 10% 20%;
@@ -33,10 +35,19 @@
   }
 
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
+    font-family: var(--font-heading);
+  }
+
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
   }
 }
