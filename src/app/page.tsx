@@ -1,6 +1,13 @@
 import SummaryCard from "@/components/summaryCard";
 import { getAllPosts, PostData } from "@/lib/posts";
 import { useMemo } from 'react';
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+}
 
 export default function Home() {
   const virtues: PostData[] = useMemo(() => getAllPosts(), []);

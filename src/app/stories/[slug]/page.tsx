@@ -4,6 +4,7 @@ import { getAllPosts, getPostBySlug } from '@/lib/posts';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import type { Metadata } from 'next'
 
 // Lazy load the AudioPlayer
@@ -42,6 +43,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   return {
     title: post.title,
     description: post.summary,
+    alternates: {
+      canonical: `/stories/${params.slug}`,
+    },
     keywords: [post.virtue, 'virtue', 'moral story', 'classical virtues'],
     openGraph: {
       type: 'article',
@@ -113,6 +117,7 @@ export default function Post({ params }: { params: { slug: string } }) {
     "headline": post.title,
     "description": post.summary,
     "image": `https://classicalvirtues.com${post.image}`,
+    "wordCount": post.wordCount,
     "author": {
       "@type": "Organization",
       "name": "Classical Virtues",
@@ -134,11 +139,20 @@ export default function Post({ params }: { params: { slug: string } }) {
       "@id": `https://classicalvirtues.com/stories/${params.slug}`
     },
     "articleSection": "Moral Stories",
-    "keywords": [post.virtue, "virtue", "moral story", "classical virtues"]
+    "keywords": [post.virtue, "virtue", "moral story", "classical virtues"],
+    ...(post.audioUrl
+      ? {
+          "audio": {
+            "@type": "AudioObject",
+            "contentUrl": post.audioUrl,
+          },
+        }
+      : {})
   }
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <Breadcrumbs title={post.title} />
       <div className="relative w-full h-80 mb-8 overflow-hidden rounded-lg">
         <Image
           src={post.image}
