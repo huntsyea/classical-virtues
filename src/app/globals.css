@@ -4,8 +4,6 @@
 
 @layer base {
   :root {
-    --font-heading: 'Times New Roman', 'Times', 'Georgia', 'Playfair Display', 'serif';
-    --font-body: 'Inter', 'Roboto', 'Arial', 'Helvetica', 'sans-serif';
     --destructive-foreground: 60 20% 95%;
     --secondary-foreground: 60 20% 95%;
     --popover-foreground: 60 10% 20%;

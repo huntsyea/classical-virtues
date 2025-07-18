@@ -13,7 +13,7 @@ A modern web application exploring classical virtues through interactive storyte
 
 - **Framework**: Next.js 14 with App Router
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS with Castoro and Inter via `next/font`
 - **UI Components**: shadcn/ui
 - **Content**: MDX for rich content authoring
 - **Analytics**: Vercel Analytics
