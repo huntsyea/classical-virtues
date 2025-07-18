@@ -8,6 +8,14 @@ const Navbar = () => {
           <Link href="/" className="text-2xl font-heading font-semibold">
             Classical Virtues
           </Link>
+          <div className="space-x-6">
+            <Link href="/stories" className="hover:underline">
+              Stories
+            </Link>
+            <Link href="/about" className="hover:underline">
+              About
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
