@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react"
 import { cn } from '@/lib/utils'
-import { fontHeading, fontBody } from '@/lib/fonts'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import './globals.css'
+import { fontHeading, fontBody } from '@/lib/fonts'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://classicalvirtues.com'),
