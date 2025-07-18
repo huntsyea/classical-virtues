@@ -1,0 +1,15 @@
+{
+  "name": "Classical Virtues",
+  "short_name": "Virtues",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#e6e6d2",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -13,6 +13,7 @@ export interface PostData {
   content: string;
   virtueDescription: string;
   audioUrl: string;
+  wordCount: number;
 }
 
 export function getAllPosts(): PostData[] {
@@ -40,5 +41,6 @@ export function getPostBySlug(slug: string): PostData {
     virtueDescription: data['virtue-description'] || '',
     audioUrl: data.audioUrl || '',
     content,
+    wordCount: content.split(/\s+/).length,
   };
 }

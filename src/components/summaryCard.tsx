@@ -16,7 +16,12 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ fileName, image, title, summa
       <Card className="rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 h-80 flex flex-col">
         {image && (
           <div className="h-60 relative">
-            <Image src={image} alt={title || 'Virtue image'} fill className="object-cover object-top rounded-t-lg"  />
+            <Image
+              src={image}
+              alt={(title ? `${title} illustration` : 'Virtue illustration')}
+              fill
+              className="object-cover object-top rounded-t-lg"
+            />
           </div>
         )}
         <CardContent className="p-4 space-y-2 flex-grow flex flex-col justify-between">

@@ -17,41 +17,31 @@ export async function GET(request: Request) {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: 'hsl(60 20% 95%)',
+          background: 'linear-gradient(135deg,#fafafa,#e6e6d2)',
+          color: '#222',
           padding: '40px',
+          textAlign: 'center',
         }}
       >
-        <div
+        <h1
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
+            fontSize: '64px',
+            fontFamily: 'Cormorant Garamond',
+            marginBottom: '20px',
           }}
         >
-          <h1
-            style={{
-              fontSize: '60px',
-              fontFamily: 'Cormorant Garamond',
-              color: 'hsl(60 10% 20%)',
-              marginBottom: '20px',
-            }}
+          {title || 'Classical Virtues'}
+        </h1>
+        {virtue && (
+          <p
+            style={{ fontSize: '36px', fontFamily: 'Nunito', marginBottom: '20px' }}
           >
-            {title || 'Classical Virtues'}
-          </h1>
-          {virtue && (
-            <p
-              style={{
-                fontSize: '32px',
-                fontFamily: 'Nunito',
-                color: 'hsl(60 10% 40%)',
-              }}
-            >
-              {virtue}
-            </p>
-          )}
-        </div>
+            {virtue}
+          </p>
+        )}
+        <span style={{ fontSize: '28px', fontFamily: 'Nunito', opacity: 0.7 }}>
+          classicalvirtues.com
+        </span>
       </div>
     ),
     {
@@ -59,4 +49,4 @@ export async function GET(request: Request) {
       height: 630,
     },
   )
-} 
+}
