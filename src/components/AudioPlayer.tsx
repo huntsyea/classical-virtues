@@ -149,7 +149,13 @@ export default function AudioPlayer({ audioUrl, title, image }: AudioPlayerProps
           </div>
         ) : (
           <div className="flex items-center space-x-4">
-            <Button variant="outline" size="icon" onClick={togglePlayPause} aria-label={isPlaying ? "Pause" : "Play"}>
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-10 w-10"
+              onClick={togglePlayPause}
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
               {isPlaying ? (
                 <PauseIcon className="w-5 h-5 text-muted-foreground" />
               ) : (
