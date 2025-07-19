@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card } from '@/components/ui/card';
@@ -8,9 +8,11 @@ import { PlayIcon, PauseIcon } from 'lucide-react';
 
 interface AudioPlayerProps {
   audioUrl: string;
+  title: string;
+  image: string;
 }
 
-export default function AudioPlayer({ audioUrl }: AudioPlayerProps) {
+export default function AudioPlayer({ audioUrl, title, image }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -54,7 +56,7 @@ export default function AudioPlayer({ audioUrl }: AudioPlayerProps) {
     };
   }, [audioUrl]);
 
-  const initializeAudio = async () => {
+  const initializeAudio = useCallback(async () => {
     if (!audioRef.current) return;
     
     try {
@@ -67,7 +69,35 @@ export default function AudioPlayer({ audioUrl }: AudioPlayerProps) {
       console.error('Error loading audio:', error);
       setError('Failed to load audio. Please check your connection.');
     }
-  };
+  }, [isLoaded]);
+
+  useEffect(() => {
+    if (typeof navigator !== 'undefined' && 'mediaSession' in navigator) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title,
+        artist: 'Classical Virtues',
+        artwork: [{ src: image, sizes: '512x512', type: 'image/png' }]
+      });
+
+      navigator.mediaSession.setActionHandler('play', async () => {
+        await initializeAudio();
+        audioRef.current?.play();
+        setIsPlaying(true);
+      });
+
+      navigator.mediaSession.setActionHandler('pause', () => {
+        audioRef.current?.pause();
+        setIsPlaying(false);
+      });
+
+      navigator.mediaSession.setActionHandler('seekto', (event) => {
+        if (audioRef.current && event.seekTime != null) {
+          audioRef.current.currentTime = event.seekTime;
+          setCurrentTime(event.seekTime);
+        }
+      });
+    }
+  }, [title, image, initializeAudio]);
 
   const togglePlayPause = async () => {
     if (error) {
@@ -119,7 +149,7 @@ export default function AudioPlayer({ audioUrl }: AudioPlayerProps) {
           </div>
         ) : (
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" onClick={togglePlayPause} aria-label={isPlaying ? "Pause" : "Play"}>
+            <Button variant="outline" size="icon" onClick={togglePlayPause} aria-label={isPlaying ? "Pause" : "Play"}>
               {isPlaying ? (
                 <PauseIcon className="w-5 h-5 text-muted-foreground" />
               ) : (

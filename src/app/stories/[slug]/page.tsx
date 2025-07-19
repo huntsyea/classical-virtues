@@ -169,7 +169,7 @@ export default function Post({ params }: { params: { slug: string } }) {
             <div className="bg-background rounded-lg p-4 w-full h-[100px] animate-pulse" />
           </Card>
         }>
-          <AudioPlayer audioUrl={post.audioUrl} />
+          <AudioPlayer audioUrl={post.audioUrl} title={post.title} image={post.image} />
         </Suspense>
       )}
       <h1 className="text-4xl font-bold mb-4 font-heading">{post.title}</h1>
