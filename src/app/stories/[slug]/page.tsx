@@ -180,8 +180,7 @@ export default function Post({ params }: { params: { slug: string } }) {
         <CardContent className="p-8">
           <div className="space-y-6">
             <div className="flex items-baseline ">
-              <span className="font-heading font-semibold text-2xl mr-1">Virtue:</span>
-              <span className="font-heading text-2xl">{post.virtue}</span>
+              <span className="font-heading font-semibold text-2xl">Moral Of The Story</span>
             </div>
             <div className="border-t border-accent-foreground/20 pt-4">
               <p className="font-heading text-lg italic leading-relaxed">
