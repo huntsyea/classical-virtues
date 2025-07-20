@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
-    domains: ['classicalvirtues.com'],
+    domains: ['classicalvirtues.com', 'assets.basehub.com'],
   },
   webpack: (config) => {
     config.resolve.alias = {

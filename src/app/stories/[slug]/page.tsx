@@ -1,7 +1,9 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { getAllPosts, getPostBySlug } from '@/lib/posts';
+import { getAllStories, getStoryBySlug } from '@/lib/stories';
 import { MDXRemote } from 'next-mdx-remote/rsc';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import Breadcrumbs from '@/components/Breadcrumbs';
@@ -22,49 +24,49 @@ const AudioPlayer = dynamic(
 );
 
 export async function generateStaticParams() {
-  const posts = getAllPosts();
-  return posts.map((post) => ({
-    slug: post.fileName.replace('.mdx', ''),
+  const stories = await getAllStories();
+  return stories.map((story) => ({
+    slug: story.slug,
   }));
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = getPostBySlug(params.slug)
+  const story = await getStoryBySlug(params.slug)
   
-  if (!post) {
+  if (!story) {
     return {
       title: 'Story Not Found',
       description: 'The requested story could not be found.'
     }
   }
 
-  const ogImage = `/api/og?title=${encodeURIComponent(post.title)}&virtue=${encodeURIComponent(post.virtueDescription)}`
+  const ogImage = `/api/og?title=${encodeURIComponent(story.title)}&virtue=${encodeURIComponent(story.virtueDescription)}`
 
   return {
-    title: post.title,
-    description: post.summary,
+    title: story.title,
+    description: story.summary,
     alternates: {
       canonical: `/stories/${params.slug}`,
     },
-    keywords: [post.virtue, 'virtue', 'moral story', 'classical virtues'],
+    keywords: [story.virtue, 'virtue', 'moral story', 'classical virtues'],
     openGraph: {
       type: 'article',
       url: `https://classicalvirtues.com/stories/${params.slug}`,
-      title: post.title,
-      description: post.summary,
+      title: story.title,
+      description: story.summary,
       images: [{
         url: ogImage,
         width: 1200,
         height: 630,
-        alt: post.title
+        alt: story.title
       }],
       siteName: 'Classical Virtues',
       publishedTime: new Date().toISOString(),
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.title,
-      description: post.summary,
+      title: story.title,
+      description: story.summary,
       images: [ogImage]
     }
   }
@@ -104,20 +106,20 @@ const JsonLd = ({ data }: JsonLdProps) => (
   />
 )
 
-export default function Post({ params }: { params: { slug: string } }) {
-  const post = getPostBySlug(params.slug);
+export default async function Post({ params }: { params: { slug: string } }) {
+  const story = await getStoryBySlug(params.slug);
 
-  if (!post) {
-    return <div>Post not found</div>; // Error handling for missing post
+  if (!story) {
+    return <div>Story not found</div>; // Error handling for missing story
   }
 
   const articleStructuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": post.title,
-    "description": post.summary,
-    "image": `https://classicalvirtues.com${post.image}`,
-    "wordCount": post.wordCount,
+    "headline": story.title,
+    "description": story.summary,
+    "image": story.image.startsWith('http') ? story.image : `https://classicalvirtues.com${story.image}`,
+    "wordCount": story.wordCount,
     "author": {
       "@type": "Organization",
       "name": "Classical Virtues",
@@ -139,12 +141,12 @@ export default function Post({ params }: { params: { slug: string } }) {
       "@id": `https://classicalvirtues.com/stories/${params.slug}`
     },
     "articleSection": "Moral Stories",
-    "keywords": [post.virtue, "virtue", "moral story", "classical virtues"],
-    ...(post.audioUrl
+    "keywords": [story.virtue, "virtue", "moral story", "classical virtues"],
+    ...(story.audioUrl
       ? {
           "audio": {
             "@type": "AudioObject",
-            "contentUrl": post.audioUrl,
+            "contentUrl": story.audioUrl,
           },
         }
       : {})
@@ -152,29 +154,38 @@ export default function Post({ params }: { params: { slug: string } }) {
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <Breadcrumbs title={post.title} />
+      <Breadcrumbs title={story.title} />
       <div className="relative w-full h-80 mb-8 overflow-hidden rounded-lg">
         <Image
-          src={post.image}
-          alt={post.title}
+          src={story.image}
+          alt={story.title}
           fill
           style={{ objectFit: 'cover', objectPosition: 'top' }}
           className="rounded-lg"
         />
       </div>
-      {post.audioUrl && (
+      {story.audioUrl && (
         <Suspense fallback={
           <Card className="my-8 p-4 bg-transparent w-full border">
             <h2 className="text-2xl font-bold mb-1 font-heading">Listen to the Story</h2>
             <div className="bg-background rounded-lg p-4 w-full h-[100px] animate-pulse" />
           </Card>
         }>
-          <AudioPlayer audioUrl={post.audioUrl} title={post.title} image={post.image} />
+          <AudioPlayer audioUrl={story.audioUrl} title={story.title} image={story.image} />
         </Suspense>
       )}
-      <h1 className="text-4xl font-bold mb-4 font-heading">{post.title}</h1>
+      <h1 className="text-4xl font-bold mb-4 font-heading">{story.title}</h1>
       <div className="prose prose-lg max-w-none">
-        <MDXRemote source={post.content} />
+        {/* Check if content is MDX (contains JSX) or plain markdown */}
+        {story.content.includes('<') || story.content.includes('import') ? (
+          <MDXRemote source={story.content} />
+        ) : (
+          <div className="prose prose-lg max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {story.content}
+            </ReactMarkdown>
+          </div>
+        )}
       </div>
       <Card className="bg-accent text-accent-foreground mt-8">
         <CardContent className="p-8">
@@ -184,7 +195,7 @@ export default function Post({ params }: { params: { slug: string } }) {
             </div>
             <div className="border-t border-accent-foreground/20 pt-4">
               <p className="font-heading text-lg italic leading-relaxed">
-                {post.virtueDescription}
+                {story.virtueDescription}
               </p>
             </div>
           </div>

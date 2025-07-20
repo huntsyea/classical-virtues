@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "basehub dev & next dev",
+    "build": "basehub && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "basehub": "basehub"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.0.1",
@@ -17,6 +18,7 @@
     "@vercel/analytics": "^1.4.1",
     "@vercel/blob": "^0.24.1",
     "@vercel/og": "^0.6.2",
+    "basehub": "^9.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
@@ -25,13 +27,16 @@
     "next-mdx-remote": "^5.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^10.1.0",
     "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
     "remark-mdx": "^3.0.1",
     "remark-mdx-frontmatter": "^5.0.0",
     "remark-stringify": "^11.0.0",
     "shadcn-ui": "^0.2.3",
     "tailwind-merge": "^2.5.3",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "vercel": "^44.5.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",

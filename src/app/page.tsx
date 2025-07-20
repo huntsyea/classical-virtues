@@ -1,6 +1,5 @@
 import SummaryCard from "@/components/summaryCard";
-import { getAllPosts, PostData } from "@/lib/posts";
-import { useMemo } from 'react';
+import { getAllStories } from "@/lib/stories";
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -9,8 +8,8 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Home() {
-  const virtues: PostData[] = useMemo(() => getAllPosts(), []);
+export default async function Home() {
+  const stories = await getAllStories();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
@@ -24,13 +23,13 @@ export default function Home() {
 
         <main className="space-y-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {virtues.map((virtue) => (
+            {stories.map((story) => (
               <SummaryCard
-                key={virtue.fileName}
-                fileName={virtue.fileName}
-                image={virtue.image}
-                title={virtue.title}
-                summary={virtue.summary}
+                key={story.id}
+                fileName={story.slug}
+                image={story.image}
+                title={story.title}
+                summary={story.summary}
               />
             ))}
           </div>
