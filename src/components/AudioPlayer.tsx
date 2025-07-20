@@ -152,7 +152,7 @@ export default function AudioPlayer({ audioUrl, title, image }: AudioPlayerProps
             <Button
               variant="outline"
               size="icon"
-              className="h-10 w-10"
+              className="aspect-square rounded-md"
               onClick={togglePlayPause}
               aria-label={isPlaying ? "Pause" : "Play"}
             >
