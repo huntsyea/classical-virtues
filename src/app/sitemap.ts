@@ -1,5 +1,7 @@
 import { getAllPosts } from '@/lib/posts'
 
+export const revalidate = 60
+
 export default async function sitemap() {
   const posts = getAllPosts()
   const baseUrl = 'https://classicalvirtues.com'
