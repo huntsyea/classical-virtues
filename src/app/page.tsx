@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   },
 }
 
+// Use BaseHub's built-in caching
+
 export default async function Home() {
   const stories = await getAllStories();
 

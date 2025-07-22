@@ -1,6 +1,6 @@
 import { getAllStories } from '@/lib/stories'
 
-export const revalidate = 3600 // Revalidate every hour
+// Use BaseHub's built-in caching instead of custom revalidation
 
 export default async function sitemap() {
   const stories = await getAllStories()

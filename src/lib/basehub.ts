@@ -21,11 +21,12 @@ export interface Story {
   } | null
 }
 
-// Fetch all stories with ISR caching
+// Fetch all stories with proper BaseHub caching
 export async function getAllStories(): Promise<Story[]> {
   try {
-    const data = await basehub({
-      next: { revalidate: 3600 } // Cache for 1 hour
+    // Use BaseHub's recommended query method with proper caching
+    const data = await basehub({ 
+      draft: process.env.NODE_ENV === 'development' 
     }).query({
       stories: {
         items: {
@@ -56,11 +57,11 @@ export async function getAllStories(): Promise<Story[]> {
   }
 }
 
-// Fetch a single story by slug with ISR caching
+// Fetch a single story by slug with proper BaseHub caching
 export async function getStoryBySlug(slug: string): Promise<Story | null> {
   try {
-    const data = await basehub({
-      next: { revalidate: 3600 } // Cache for 1 hour
+    const data = await basehub({ 
+      draft: process.env.NODE_ENV === 'development' 
     }).query({
       stories: {
         __args: {

@@ -106,6 +106,8 @@ const JsonLd = ({ data }: JsonLdProps) => (
   />
 )
 
+// Use BaseHub's built-in caching
+
 export default async function Post({ params }: { params: { slug: string } }) {
   const story = await getStoryBySlug(params.slug);
 
