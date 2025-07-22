@@ -1,4 +1,3 @@
-import { getAllPosts, getPostBySlug, PostData } from './posts'
 import { getAllStories as getAllBasehubStories, getStoryBySlug as getBasehubStoryBySlug, Story } from './basehub'
 
 // Unified story interface
@@ -15,22 +14,6 @@ export interface StoryData {
   wordCount: number
 }
 
-// Convert MDX post to unified story format
-function postToStory(post: PostData): StoryData {
-  return {
-    id: post.fileName,
-    slug: post.fileName.replace('.mdx', ''),
-    title: post.title,
-    virtue: post.virtue,
-    image: post.image,
-    summary: post.summary,
-    content: post.content,
-    virtueDescription: post.virtueDescription,
-    audioUrl: post.audioUrl,
-    wordCount: post.wordCount,
-  }
-}
-
 // Convert Basehub story to unified format
 function basehubToStory(story: Story): StoryData | null {
   // Handle nullable content
@@ -42,7 +25,8 @@ function basehubToStory(story: Story): StoryData | null {
   return {
     id: story._id,
     slug: story._slug,
-    title: story._title, // Always use _title from Basehub
+    // Use _title from Basehub as the source for the unified title field
+    title: story._title,
     virtue: story.virtue,
     image: story.image.url,
     summary: story.summary,
@@ -53,63 +37,40 @@ function basehubToStory(story: Story): StoryData | null {
   }
 }
 
-// Get all stories - tries Basehub first, falls back to MDX
+// Get all stories from Basehub
 export async function getAllStories(): Promise<StoryData[]> {
-  if (process.env.BASEHUB_TOKEN) {
-    console.log('🔍 Attempting to fetch stories from Basehub...')
-    try {
-      const basehubStories = await getAllBasehubStories()
-      console.log(`✅ Fetched ${basehubStories.length} stories from Basehub`)
-      if (basehubStories.length > 0) {
-        const convertedStories = basehubStories
-          .map(basehubToStory)
-          .filter((story): story is StoryData => story !== null)
-        return convertedStories
-      }
-    } catch (error) {
-      console.warn('⚠️ Basehub fetch failed, falling back to MDX files:', error)
-    }
-  } else {
-    console.log('ℹ️ BASEHUB_TOKEN not set, using MDX files')
+  if (!process.env.BASEHUB_TOKEN) {
+    console.warn('⚠️ BASEHUB_TOKEN not set')
+    return []
   }
-  
-  // Fallback to MDX files
-  const posts = getAllPosts()
-  console.log(`📁 Using ${posts.length} MDX files`)
-  return posts.map(postToStory)
+
+  try {
+    const basehubStories = await getAllBasehubStories()
+    const convertedStories = basehubStories
+      .map(basehubToStory)
+      .filter((story): story is StoryData => story !== null)
+    return convertedStories
+  } catch (error) {
+    console.error('❌ Failed to fetch stories from Basehub:', error)
+    return []
+  }
 }
 
-// Get single story by slug - tries Basehub first, falls back to MDX
+// Get single story by slug from Basehub
 export async function getStoryBySlug(slug: string): Promise<StoryData | null> {
-  console.log(`🔎 Looking for story with slug: "${slug}"`)
-  
-  if (process.env.BASEHUB_TOKEN) {
-    console.log('🔍 Attempting to fetch story from Basehub...')
-    try {
-      const basehubStory = await getBasehubStoryBySlug(slug)
-      if (basehubStory) {
-        console.log(`✅ Found story in Basehub: "${basehubStory._title}"`)
-        const converted = basehubToStory(basehubStory)
-        if (converted) {
-          return converted
-        }
-      } else {
-        console.log(`❌ Story not found in Basehub for slug: "${slug}"`)
-      }
-    } catch (error) {
-      console.warn('⚠️ Basehub fetch failed, falling back to MDX files:', error)
-    }
-  } else {
-    console.log('ℹ️ BASEHUB_TOKEN not set, using MDX files')
+  if (!process.env.BASEHUB_TOKEN) {
+    console.warn('⚠️ BASEHUB_TOKEN not set')
+    return null
   }
-  
-  // Fallback to MDX files
+
   try {
-    const post = getPostBySlug(slug)
-    console.log(`📁 Found MDX file for: "${post.title}"`)
-    return postToStory(post)
-  } catch {
-    console.log(`❌ No MDX file found for slug: "${slug}"`)
+    const basehubStory = await getBasehubStoryBySlug(slug)
+    if (basehubStory) {
+      return basehubToStory(basehubStory)
+    }
+    return null
+  } catch (error) {
+    console.error('❌ Failed to fetch story from Basehub:', error)
     return null
   }
 } 

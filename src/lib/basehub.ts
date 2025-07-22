@@ -21,10 +21,13 @@ export interface Story {
   } | null
 }
 
-// Fetch all stories
+// Fetch all stories with ISR caching
 export async function getAllStories(): Promise<Story[]> {
   try {
-    const data = await basehub().query({
+    const data = await basehub({
+      cache: 'force-cache',
+      next: { revalidate: 3600 } // Cache for 1 hour
+    }).query({
       stories: {
         items: {
           _id: true,
@@ -50,18 +53,20 @@ export async function getAllStories(): Promise<Story[]> {
     return data.stories.items as Story[]
   } catch (error) {
     console.error('Error fetching stories from Basehub:', error)
-    // Fallback to empty array if Basehub is not configured yet
     return []
   }
 }
 
-// Fetch a single story by slug
+// Fetch a single story by slug with ISR caching
 export async function getStoryBySlug(slug: string): Promise<Story | null> {
   try {
-    const data = await basehub().query({
+    const data = await basehub({
+      cache: 'force-cache',
+      next: { revalidate: 3600 } // Cache for 1 hour
+    }).query({
       stories: {
         __args: {
-          first: 100, // Get more items to search through
+          first: 100,
         },
         items: {
           _id: true,
