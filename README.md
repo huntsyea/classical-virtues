@@ -48,6 +48,24 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The application is deployed on Vercel. Each commit to the main branch triggers an automatic deployment.
 
+## Basehub CMS Integration
+
+This project can pull stories from [Basehub](https://basehub.com) and automatically refresh the sitemap when new content is committed.
+
+1. Add `BASEHUB_TOKEN` and `BASEHUB_WEBHOOK_SECRET` to `.env.local` (see `.env.example`).
+2. In Basehub create a workflow triggered when a commit happens. Add a Webhook block pointing to `https://YOUR_DOMAIN.com/revalidate-sitemap` and enable signature verification with the same secret.
+3. Deploy the site so the variables are available.
+
+When the webhook is received, the endpoint verifies the signature and revalidates the sitemap and story pages:
+
+```ts
+revalidatePath('/sitemap.xml')
+revalidatePath('/stories')
+```
+
+New URLs will appear in `/sitemap.xml` after the next request.
+
+
 ## Learn More
 
 To learn more about the technologies used in this project:

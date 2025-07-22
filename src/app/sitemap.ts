@@ -1,11 +1,13 @@
-import { getAllPosts } from '@/lib/posts'
+import { getAllStories } from '@/lib/stories'
+
+export const revalidate = 60
 
 export default async function sitemap() {
-  const posts = getAllPosts()
+  const stories = await getAllStories()
   const baseUrl = 'https://classicalvirtues.com'
 
-  const stories = posts.map((post) => ({
-    url: `${baseUrl}/stories/${post.fileName.replace('.mdx', '')}`,
+  const storyUrls = stories.map((story) => ({
+    url: `${baseUrl}/stories/${story.slug}`,
     lastModified: new Date().toISOString(),
     changefreq: 'monthly' as const,
     priority: 0.8,
@@ -18,6 +20,6 @@ export default async function sitemap() {
       changefreq: 'weekly' as const,
       priority: 1.0,
     },
-    ...stories,
+    ...storyUrls,
   ]
 }
