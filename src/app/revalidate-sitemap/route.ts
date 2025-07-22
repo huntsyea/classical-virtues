@@ -5,7 +5,7 @@ import { createHmac } from 'crypto'
 export async function POST(req: NextRequest) {
   const body = await req.text()
   
-  // Get Svix headers
+  // Get Svix headers from webhook request
   const svixId = req.headers.get('svix-id')
   const svixTimestamp = req.headers.get('svix-timestamp')
   const svixSignature = req.headers.get('svix-signature')
