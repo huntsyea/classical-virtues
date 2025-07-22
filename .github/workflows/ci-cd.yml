@@ -10,6 +10,9 @@ jobs:
   lint-and-test:
     runs-on: ubuntu-latest
     
+    env:
+      BASEHUB_TOKEN: ${{ secrets.BASEHUB_TOKEN }}
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -41,6 +44,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     needs: lint-and-test
+    
+    env:
+      BASEHUB_TOKEN: ${{ secrets.BASEHUB_TOKEN }}
     
     steps:
     - name: Checkout code
