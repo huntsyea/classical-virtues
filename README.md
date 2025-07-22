@@ -1,7 +1,7 @@
 # Classical Virtues
 
 ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/classical-virtues)
-[![Next.js](https://img.shields.io/badge/Next.js-14.2-black)](https://nextjs.org)
+[![Next.js](https://img.shields.io/badge/Next.js-15.4-black)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-blue)](https://tailwindcss.com)
 [![MDX](https://img.shields.io/badge/MDX-3.0-yellow)](https://mdxjs.com)
@@ -9,9 +9,13 @@
 
 A modern web application exploring classical virtues through interactive storytelling and content. Built with Next.js and enhanced with beautiful typography and responsive design.
 
+## Requirements
+
+- Node.js 18.18 or newer is required by Next.js 15
+
 ## Tech Stack
 
-- **Framework**: Next.js 14 with App Router
+- **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS with Castoro and Inter via `next/font`
 - **UI Components**: shadcn/ui
