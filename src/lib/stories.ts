@@ -25,6 +25,7 @@ function basehubToStory(story: Story): StoryData | null {
   return {
     id: story._id,
     slug: story._slug,
+    // Use _title from Basehub as the source for the unified title field
     title: story._title,
     virtue: story.virtue,
     image: story.image.url,
