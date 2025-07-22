@@ -59,6 +59,11 @@ export interface Scalars {
     Int: number,
     JSON: any,
     String: string,
+    bshb_workflow_1007636546: `bshb_workflow_1007636546:${string}`,
+    schema_bshb_workflow_1007636546: { timestamp: string, type: 'block.updated', data: {
+  blockId: string;
+  blockIdPath: string
+} },
 }
 
 export type AnalyticsKeyScope = 'query' | 'send'
@@ -100,7 +105,7 @@ export interface BlockColor {
     __typename: 'BlockColor'
 }
 
-export type BlockDocument = (Stories | StoriesItem | _AgentSTART | storiesItem_AsList) & { __isUnion?: true }
+export type BlockDocument = (Stories | StoriesItem | Workflow | _AgentSTART | _AgentUntitled_1 | storiesItem_AsList) & { __isUnion?: true }
 
 export interface BlockDocumentSys {
     apiNamePath: Scalars['String']
@@ -262,6 +267,7 @@ export interface Query {
     _structure: Scalars['JSON']
     _sys: RepoSys
     stories: Stories
+    workflow: Workflow
     __typename: 'Query'
 }
 
@@ -310,12 +316,13 @@ export interface StoriesItem {
     image: BlockImage
     summary: Scalars['String']
     untitled: BlockOgImage
+    untitled_1: (BlockAudio | null)
     virtue: Scalars['String']
     virtueDescription: Scalars['String']
     __typename: 'StoriesItem'
 }
 
-export type StoriesItemOrderByEnum = '_sys_createdAt__ASC' | '_sys_createdAt__DESC' | '_sys_hash__ASC' | '_sys_hash__DESC' | '_sys_id__ASC' | '_sys_id__DESC' | '_sys_lastModifiedAt__ASC' | '_sys_lastModifiedAt__DESC' | '_sys_slug__ASC' | '_sys_slug__DESC' | '_sys_title__ASC' | '_sys_title__DESC' | 'audioUrl__ASC' | 'audioUrl__DESC' | 'content__ASC' | 'content__DESC' | 'image__ASC' | 'image__DESC' | 'summary__ASC' | 'summary__DESC' | 'untitled__ASC' | 'untitled__DESC' | 'virtueDescription__ASC' | 'virtueDescription__DESC' | 'virtue__ASC' | 'virtue__DESC'
+export type StoriesItemOrderByEnum = '_sys_createdAt__ASC' | '_sys_createdAt__DESC' | '_sys_hash__ASC' | '_sys_hash__DESC' | '_sys_id__ASC' | '_sys_id__DESC' | '_sys_lastModifiedAt__ASC' | '_sys_lastModifiedAt__DESC' | '_sys_slug__ASC' | '_sys_slug__DESC' | '_sys_title__ASC' | '_sys_title__DESC' | 'audioUrl__ASC' | 'audioUrl__DESC' | 'content__ASC' | 'content__DESC' | 'image__ASC' | 'image__DESC' | 'summary__ASC' | 'summary__DESC' | 'untitled_1__ASC' | 'untitled_1__DESC' | 'untitled__ASC' | 'untitled__DESC' | 'virtueDescription__ASC' | 'virtueDescription__DESC' | 'virtue__ASC' | 'virtue__DESC'
 
 export interface TransactionStatus {
     /** Duration in milliseconds. */
@@ -330,6 +337,12 @@ export interface TransactionStatus {
 
 export type TransactionStatusEnum = 'Cancelled' | 'Completed' | 'Failed' | 'Running' | 'Scheduled'
 
+export interface Untitled {
+    /** The `webhookSecret` is used to verify the authenticity of the webhook request, and also to type the payload. */
+    webhookSecret: Scalars['bshb_workflow_1007636546']
+    __typename: 'Untitled'
+}
+
 export interface Variant {
     apiName: Scalars['String']
     color: Scalars['String']
@@ -337,6 +350,19 @@ export interface Variant {
     isDefault: Scalars['Boolean']
     label: Scalars['String']
     __typename: 'Variant'
+}
+
+export interface Workflow {
+    _analyticsKey: Scalars['String']
+    _dashboardUrl: Scalars['String']
+    _id: Scalars['String']
+    _idPath: Scalars['String']
+    _slug: Scalars['String']
+    _slugPath: Scalars['String']
+    _sys: BlockDocumentSys
+    _title: Scalars['String']
+    untitled: Untitled
+    __typename: 'Workflow'
 }
 
 export interface _AgentSTART {
@@ -365,6 +391,34 @@ export interface _AgentSTART {
     slackInstallUrl: Scalars['String']
     systemPrompt: Scalars['String']
     __typename: '_AgentSTART'
+}
+
+export interface _AgentUntitled_1 {
+    _agentKey: Scalars['String']
+    _analyticsKey: Scalars['String']
+    _dashboardUrl: Scalars['String']
+    _id: Scalars['String']
+    _idPath: Scalars['String']
+    _slug: Scalars['String']
+    _slugPath: Scalars['String']
+    _sys: BlockDocumentSys
+    _title: Scalars['String']
+    accent: Scalars['String']
+    avatar: Scalars['String']
+    chatUrl: Scalars['String']
+    commit: Scalars['Boolean']
+    description: Scalars['String']
+    edit: Scalars['Boolean']
+    embedUrl: Scalars['String']
+    getUserInfo: Scalars['Boolean']
+    grayscale: Scalars['String']
+    manageBranches: Scalars['Boolean']
+    mcpUrl: Scalars['String']
+    model: Scalars['String']
+    searchTheWeb: Scalars['Boolean']
+    slackInstallUrl: Scalars['String']
+    systemPrompt: Scalars['String']
+    __typename: '_AgentUntitled_1'
 }
 
 export interface _BranchInfo {
@@ -434,6 +488,7 @@ export type _StructureFormatEnum = 'json' | 'xml'
 
 export interface _agents {
     start: _AgentSTART
+    untitled1: _AgentUntitled_1
     __typename: '_agents'
 }
 
@@ -517,7 +572,9 @@ export interface BlockDocumentGenqlSelection{
     _title?: boolean | number
     on_Stories?: StoriesGenqlSelection
     on_StoriesItem?: StoriesItemGenqlSelection
+    on_Workflow?: WorkflowGenqlSelection
     on__AgentSTART?: _AgentSTARTGenqlSelection
+    on__AgentUntitled_1?: _AgentUntitled_1GenqlSelection
     on_storiesItem_AsList?: storiesItem_AsListGenqlSelection
     __typename?: boolean | number
 }
@@ -793,6 +850,7 @@ export interface QueryGenqlSelection{
     orderBy?: (StoriesItemOrderByEnum | null), 
     /** Skip the first n items. */
     skip?: (Scalars['Int'] | null)} })
+    workflow?: WorkflowGenqlSelection
     __typename?: boolean | number
 }
 
@@ -861,6 +919,7 @@ export interface StoriesItemGenqlSelection{
     image?: BlockImageGenqlSelection
     summary?: boolean | number
     untitled?: BlockOgImageGenqlSelection
+    untitled_1?: BlockAudioGenqlSelection
     virtue?: boolean | number
     virtueDescription?: boolean | number
     __typename?: boolean | number
@@ -885,6 +944,12 @@ export interface TransactionStatusGenqlSelection{
     __typename?: boolean | number
 }
 
+export interface UntitledGenqlSelection{
+    /** The `webhookSecret` is used to verify the authenticity of the webhook request, and also to type the payload. */
+    webhookSecret?: boolean | number
+    __typename?: boolean | number
+}
+
 export interface VariantGenqlSelection{
     apiName?: boolean | number
     color?: boolean | number
@@ -894,7 +959,60 @@ export interface VariantGenqlSelection{
     __typename?: boolean | number
 }
 
+export interface WorkflowGenqlSelection{
+    _analyticsKey?: { __args: {
+    /**
+     * The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
+     * 
+     * Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
+     */
+    scope?: (AnalyticsKeyScope | null)} } | boolean | number
+    _dashboardUrl?: boolean | number
+    _id?: boolean | number
+    _idPath?: boolean | number
+    _slug?: boolean | number
+    _slugPath?: boolean | number
+    _sys?: BlockDocumentSysGenqlSelection
+    _title?: boolean | number
+    untitled?: UntitledGenqlSelection
+    __typename?: boolean | number
+}
+
 export interface _AgentSTARTGenqlSelection{
+    _agentKey?: boolean | number
+    _analyticsKey?: { __args: {
+    /**
+     * The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
+     * 
+     * Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
+     */
+    scope?: (AnalyticsKeyScope | null)} } | boolean | number
+    _dashboardUrl?: boolean | number
+    _id?: boolean | number
+    _idPath?: boolean | number
+    _slug?: boolean | number
+    _slugPath?: boolean | number
+    _sys?: BlockDocumentSysGenqlSelection
+    _title?: boolean | number
+    accent?: boolean | number
+    avatar?: boolean | number
+    chatUrl?: boolean | number
+    commit?: boolean | number
+    description?: boolean | number
+    edit?: boolean | number
+    embedUrl?: boolean | number
+    getUserInfo?: boolean | number
+    grayscale?: boolean | number
+    manageBranches?: boolean | number
+    mcpUrl?: boolean | number
+    model?: boolean | number
+    searchTheWeb?: boolean | number
+    slackInstallUrl?: boolean | number
+    systemPrompt?: boolean | number
+    __typename?: boolean | number
+}
+
+export interface _AgentUntitled_1GenqlSelection{
     _agentKey?: boolean | number
     _analyticsKey?: { __args: {
     /**
@@ -991,6 +1109,7 @@ export interface _PlaygroundInfoGenqlSelection{
 
 export interface _agentsGenqlSelection{
     start?: _AgentSTARTGenqlSelection
+    untitled1?: _AgentUntitled_1GenqlSelection
     __typename?: boolean | number
 }
 
@@ -1129,13 +1248,25 @@ export interface FragmentsMap {
     root: TransactionStatus,
     selection: TransactionStatusGenqlSelection,
 }
+  Untitled: {
+    root: Untitled,
+    selection: UntitledGenqlSelection,
+}
   Variant: {
     root: Variant,
     selection: VariantGenqlSelection,
 }
+  Workflow: {
+    root: Workflow,
+    selection: WorkflowGenqlSelection,
+}
   _AgentSTART: {
     root: _AgentSTART,
     selection: _AgentSTARTGenqlSelection,
+}
+  _AgentUntitled_1: {
+    root: _AgentUntitled_1,
+    selection: _AgentUntitled_1GenqlSelection,
 }
   _BranchInfo: {
     root: _BranchInfo,
