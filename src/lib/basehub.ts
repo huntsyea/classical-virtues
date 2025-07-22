@@ -1,25 +1,9 @@
 import { basehub } from 'basehub'
+import type { StoriesItem } from '../../basehub-types'
 import '../../basehub.config' // Import the config to ensure it's loaded
 
-// Define story type based on generated Basehub schema
-export interface Story {
-  _id: string
-  _slug: string
-  _title: string
-  virtue: string
-  image: {
-    url: string
-    alt?: string | null
-  }
-  summary: string
-  virtueDescription: string
-  audioUrl: string | null
-  content: {
-    markdown: string
-    plainText: string
-    readingTime: number
-  } | null
-}
+// Use BaseHub's generated types for full type safety
+export type Story = StoriesItem
 
 // Fetch all stories with proper BaseHub caching
 export async function getAllStories(): Promise<Story[]> {
