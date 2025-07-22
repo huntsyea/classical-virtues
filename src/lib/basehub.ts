@@ -1,32 +1,15 @@
 import { basehub } from 'basehub'
+import type { StoriesItem } from '../../basehub-types'
 import '../../basehub.config' // Import the config to ensure it's loaded
 
-// Define story type based on generated Basehub schema
-export interface Story {
-  _id: string
-  _slug: string
-  _title: string
-  virtue: string
-  image: {
-    url: string
-    alt?: string | null
-  }
-  summary: string
-  virtueDescription: string
-  audioUrl: string | null
-  content: {
-    markdown: string
-    plainText: string
-    readingTime: number
-  } | null
-}
+// Use BaseHub's generated types for full type safety
+export type Story = StoriesItem
 
-// Fetch all stories with ISR caching
+// Fetch all stories with proper BaseHub caching
 export async function getAllStories(): Promise<Story[]> {
   try {
-    const data = await basehub({
-      next: { revalidate: 3600 } // Cache for 1 hour
-    }).query({
+    // Use BaseHub's recommended query method (draft config handled in basehub.config.ts)
+    const data = await basehub().query({
       stories: {
         items: {
           _id: true,
@@ -56,12 +39,10 @@ export async function getAllStories(): Promise<Story[]> {
   }
 }
 
-// Fetch a single story by slug with ISR caching
+// Fetch a single story by slug with proper BaseHub caching
 export async function getStoryBySlug(slug: string): Promise<Story | null> {
   try {
-    const data = await basehub({
-      next: { revalidate: 3600 } // Cache for 1 hour
-    }).query({
+    const data = await basehub().query({
       stories: {
         __args: {
           first: 100,
