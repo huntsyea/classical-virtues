@@ -25,7 +25,6 @@ export interface Story {
 export async function getAllStories(): Promise<Story[]> {
   try {
     const data = await basehub({
-      cache: 'force-cache',
       next: { revalidate: 3600 } // Cache for 1 hour
     }).query({
       stories: {
@@ -61,7 +60,6 @@ export async function getAllStories(): Promise<Story[]> {
 export async function getStoryBySlug(slug: string): Promise<Story | null> {
   try {
     const data = await basehub({
-      cache: 'force-cache',
       next: { revalidate: 3600 } // Cache for 1 hour
     }).query({
       stories: {
