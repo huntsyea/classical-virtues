@@ -1,6 +1,6 @@
 import { getAllStories } from '@/lib/stories'
 
-export const revalidate = 60
+export const revalidate = 3600 // Revalidate every hour
 
 export default async function sitemap() {
   const stories = await getAllStories()
