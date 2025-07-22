@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { getAllStories } from '@/lib/basehub'
 
+// Force dynamic for API routes to prevent build-time execution
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const stories = await getAllStories()
