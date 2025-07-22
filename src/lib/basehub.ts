@@ -24,10 +24,8 @@ export interface Story {
 // Fetch all stories with proper BaseHub caching
 export async function getAllStories(): Promise<Story[]> {
   try {
-    // Use BaseHub's recommended query method with proper caching
-    const data = await basehub({ 
-      draft: process.env.NODE_ENV === 'development' 
-    }).query({
+    // Use BaseHub's recommended query method (draft config handled in basehub.config.ts)
+    const data = await basehub().query({
       stories: {
         items: {
           _id: true,
@@ -60,9 +58,7 @@ export async function getAllStories(): Promise<Story[]> {
 // Fetch a single story by slug with proper BaseHub caching
 export async function getStoryBySlug(slug: string): Promise<Story | null> {
   try {
-    const data = await basehub({ 
-      draft: process.env.NODE_ENV === 'development' 
-    }).query({
+    const data = await basehub().query({
       stories: {
         __args: {
           first: 100,
