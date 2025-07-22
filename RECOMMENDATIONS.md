@@ -10,7 +10,7 @@ The Classical Virtues project is a well-structured Next.js application with good
 - **Critical**: Next.js authorization bypass vulnerability (requires immediate update)
 - **Moderate**: Multiple dependency vulnerabilities including nanoid, undici, and estree-util-value-to-estree
 - **Impact**: Potential security breaches and data exposure
-- **Action**: Run `npm audit fix` and `npm audit fix --force` for Next.js update
+- **Action**: Run `pnpm audit fix` and `pnpm update` for Next.js update
 
 ### 2. Build System Issues 🔴
 - **Issue**: Google Fonts network failures preventing builds
@@ -69,22 +69,21 @@ The Classical Virtues project is a well-structured Next.js application with good
 ### Security & Dependencies
 ```bash
 # Fix vulnerabilities
-npm audit fix
-npm audit fix --force
+pnpm audit fix
 
 # Update to latest secure versions
-npm update next@latest
-npm update nanoid@latest
-npm update undici@latest
+pnpm update next@latest
+pnpm update nanoid@latest
+pnpm update undici@latest
 ```
 
 ### Code Quality Setup
 ```bash
 # Add development dependencies
-npm install --save-dev prettier eslint-config-prettier eslint-plugin-prettier
-npm install --save-dev husky lint-staged
-npm install --save-dev @types/jest jest jest-environment-jsdom
-npm install --save-dev @testing-library/react @testing-library/jest-dom
+pnpm add -D prettier eslint-config-prettier eslint-plugin-prettier
+pnpm add -D husky lint-staged
+pnpm add -D @types/jest jest jest-environment-jsdom
+pnpm add -D @testing-library/react @testing-library/jest-dom
 ```
 
 ### Build System Improvements

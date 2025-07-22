@@ -26,17 +26,13 @@ A modern web application exploring classical virtues through interactive storyte
 First, install the dependencies:
 
 ```bash
-npm install
-# or
-yarn install
+pnpm install
 ```
 
 Then, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
+pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
