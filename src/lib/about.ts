@@ -1,12 +1,9 @@
 import { basehub } from 'basehub'
-import type { AboutSingleton } from '../../basehub-types'
+import type { Query } from '../../basehub-types'
 import '../../basehub.config' // Import the config to ensure it's loaded
 
-// Use BaseHub's generated types for full type safety
-export type About = AboutSingleton
-
 // Fetch the about page content with proper BaseHub caching
-export async function getAboutPage(): Promise<About | null> {
+export async function getAboutPage(): Promise<Query['about'] | null> {
   try {
     // Use BaseHub's recommended query method (draft config handled in basehub.config.ts)
     const data = await basehub().query({
@@ -19,7 +16,7 @@ export async function getAboutPage(): Promise<About | null> {
       },
     })
 
-    return data.about as About
+    return data.about
   } catch (error) {
     console.error('Error fetching about page from Basehub:', error)
     return null
