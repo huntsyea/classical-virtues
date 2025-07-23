@@ -20,7 +20,9 @@ export default async function AboutPage() {
     <div className="max-w-3xl mx-auto py-8 px-4 space-y-6">
       <h1 className="text-4xl font-heading font-bold">{about._title}</h1>
       <p className="italic">{about.subtitle}</p>
-      <div dangerouslySetInnerHTML={{ __html: about.content.markdown }} />
+      {about.content && (
+        <div dangerouslySetInnerHTML={{ __html: about.content.markdown }} />
+      )}
     </div>
   );
 }
