@@ -1,4 +1,4 @@
-import { setGlobalConfig } from 'basehub'
+import { define, setGlobalConfig } from 'basehub'
 
 // Configure Basehub globally with better error handling
 if (process.env.BASEHUB_TOKEN) {
@@ -17,4 +17,14 @@ if (process.env.BASEHUB_TOKEN) {
 } else {
   console.warn('⚠️ BASEHUB_TOKEN not found - Basehub features will be disabled')
 }
+
+export default define({
+  about: {
+    _title: 'About Page',
+    subtitle: 'A short subtitle for the about page',
+    content: {
+      type: 'rich-text',
+    },
+  },
+})
   

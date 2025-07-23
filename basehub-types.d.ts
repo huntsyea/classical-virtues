@@ -105,7 +105,7 @@ export interface BlockColor {
     __typename: 'BlockColor'
 }
 
-export type BlockDocument = (Stories | StoriesItem | Workflow | _AgentSTART | _AgentUntitled_1 | storiesItem_AsList) & { __isUnion?: true }
+export type BlockDocument = (Stories | StoriesItem | Workflows | _AgentSTART | _AgentUntitled_1 | storiesItem_AsList) & { __isUnion?: true }
 
 export interface BlockDocumentSys {
     apiNamePath: Scalars['String']
@@ -267,7 +267,7 @@ export interface Query {
     _structure: Scalars['JSON']
     _sys: RepoSys
     stories: Stories
-    workflow: Workflow
+    workflows: Workflows
     __typename: 'Query'
 }
 
@@ -315,14 +315,13 @@ export interface StoriesItem {
     content: (Content | null)
     image: BlockImage
     summary: Scalars['String']
-    untitled: BlockOgImage
-    untitled_1: (BlockAudio | null)
+    untitled: (BlockAudio | null)
     virtue: Scalars['String']
     virtueDescription: Scalars['String']
     __typename: 'StoriesItem'
 }
 
-export type StoriesItemOrderByEnum = '_sys_createdAt__ASC' | '_sys_createdAt__DESC' | '_sys_hash__ASC' | '_sys_hash__DESC' | '_sys_id__ASC' | '_sys_id__DESC' | '_sys_lastModifiedAt__ASC' | '_sys_lastModifiedAt__DESC' | '_sys_slug__ASC' | '_sys_slug__DESC' | '_sys_title__ASC' | '_sys_title__DESC' | 'audioUrl__ASC' | 'audioUrl__DESC' | 'content__ASC' | 'content__DESC' | 'image__ASC' | 'image__DESC' | 'summary__ASC' | 'summary__DESC' | 'untitled_1__ASC' | 'untitled_1__DESC' | 'untitled__ASC' | 'untitled__DESC' | 'virtueDescription__ASC' | 'virtueDescription__DESC' | 'virtue__ASC' | 'virtue__DESC'
+export type StoriesItemOrderByEnum = '_sys_createdAt__ASC' | '_sys_createdAt__DESC' | '_sys_hash__ASC' | '_sys_hash__DESC' | '_sys_id__ASC' | '_sys_id__DESC' | '_sys_lastModifiedAt__ASC' | '_sys_lastModifiedAt__DESC' | '_sys_slug__ASC' | '_sys_slug__DESC' | '_sys_title__ASC' | '_sys_title__DESC' | 'audioUrl__ASC' | 'audioUrl__DESC' | 'content__ASC' | 'content__DESC' | 'image__ASC' | 'image__DESC' | 'summary__ASC' | 'summary__DESC' | 'untitled__ASC' | 'untitled__DESC' | 'virtueDescription__ASC' | 'virtueDescription__DESC' | 'virtue__ASC' | 'virtue__DESC'
 
 export interface TransactionStatus {
     /** Duration in milliseconds. */
@@ -352,7 +351,7 @@ export interface Variant {
     __typename: 'Variant'
 }
 
-export interface Workflow {
+export interface Workflows {
     _analyticsKey: Scalars['String']
     _dashboardUrl: Scalars['String']
     _id: Scalars['String']
@@ -362,7 +361,7 @@ export interface Workflow {
     _sys: BlockDocumentSys
     _title: Scalars['String']
     untitled: Untitled
-    __typename: 'Workflow'
+    __typename: 'Workflows'
 }
 
 export interface _AgentSTART {
@@ -572,7 +571,7 @@ export interface BlockDocumentGenqlSelection{
     _title?: boolean | number
     on_Stories?: StoriesGenqlSelection
     on_StoriesItem?: StoriesItemGenqlSelection
-    on_Workflow?: WorkflowGenqlSelection
+    on_Workflows?: WorkflowsGenqlSelection
     on__AgentSTART?: _AgentSTARTGenqlSelection
     on__AgentUntitled_1?: _AgentUntitled_1GenqlSelection
     on_storiesItem_AsList?: storiesItem_AsListGenqlSelection
@@ -850,7 +849,7 @@ export interface QueryGenqlSelection{
     orderBy?: (StoriesItemOrderByEnum | null), 
     /** Skip the first n items. */
     skip?: (Scalars['Int'] | null)} })
-    workflow?: WorkflowGenqlSelection
+    workflows?: WorkflowsGenqlSelection
     __typename?: boolean | number
 }
 
@@ -918,8 +917,7 @@ export interface StoriesItemGenqlSelection{
     content?: ContentGenqlSelection
     image?: BlockImageGenqlSelection
     summary?: boolean | number
-    untitled?: BlockOgImageGenqlSelection
-    untitled_1?: BlockAudioGenqlSelection
+    untitled?: BlockAudioGenqlSelection
     virtue?: boolean | number
     virtueDescription?: boolean | number
     __typename?: boolean | number
@@ -959,7 +957,7 @@ export interface VariantGenqlSelection{
     __typename?: boolean | number
 }
 
-export interface WorkflowGenqlSelection{
+export interface WorkflowsGenqlSelection{
     _analyticsKey?: { __args: {
     /**
      * The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
@@ -1256,9 +1254,9 @@ export interface FragmentsMap {
     root: Variant,
     selection: VariantGenqlSelection,
 }
-  Workflow: {
-    root: Workflow,
-    selection: WorkflowGenqlSelection,
+  Workflows: {
+    root: Workflows,
+    selection: WorkflowsGenqlSelection,
 }
   _AgentSTART: {
     root: _AgentSTART,
