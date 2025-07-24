@@ -1,10 +1,23 @@
 import type { Metadata } from 'next';
+import { defaultMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = {
+  ...defaultMetadata,
   title: 'About',
   description: 'Learn about Classical Virtues',
   alternates: {
     canonical: '/about',
+  },
+  openGraph: {
+    ...defaultMetadata.openGraph,
+    title: 'About',
+    description: 'Learn about Classical Virtues',
+    url: 'https://classicalvirtues.com/about',
+  },
+  twitter: {
+    ...defaultMetadata.twitter,
+    title: 'About',
+    description: 'Learn about Classical Virtues',
   },
 };
 
