@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-export const defaultMetadata: Metadata = {
+export const defaultMetadata = {
   metadataBase: new URL('https://classicalvirtues.com'),
   title: {
     default: 'Classical Virtues | Timeless Stories of Character',
@@ -63,4 +63,4 @@ export const defaultMetadata: Metadata = {
     canonical: '/',
   },
   manifest: '/manifest.json',
-};
+} satisfies Metadata;
