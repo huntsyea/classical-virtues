@@ -13,14 +13,14 @@ interface SummaryCardProps {
 const SummaryCard: React.FC<SummaryCardProps> = ({ fileName, image, title, summary }) => {
   return (
     <Link href={`/stories/${fileName.replace('.mdx', '')}`}>
-      <Card className="rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 h-80 flex flex-col">
+      <Card className="shadow-sm hover:shadow-md transition-shadow duration-200 h-80 flex flex-col">
         {image && (
           <div className="h-60 relative">
             <Image
               src={image}
               alt={(title ? `${title} illustration` : 'Virtue illustration')}
               fill
-              className="object-cover object-top rounded-t-lg"
+              className="object-cover object-top rounded-t-[4px]"
             />
           </div>
         )}

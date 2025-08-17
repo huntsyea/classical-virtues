@@ -16,7 +16,7 @@ const AudioPlayer = dynamic(
     loading: () => (
       <Card className="my-8 p-4 bg-transparent w-full border">
         <h2 className="text-2xl font-bold mb-1 font-heading">Listen to the Story</h2>
-        <div className="bg-background rounded-lg p-4 w-full h-[100px] animate-pulse" />
+        <div className="bg-background rounded-[4px] p-4 w-full h-[100px] animate-pulse" />
       </Card>
     ),
     ssr: false // Disable SSR for audio player
@@ -157,26 +157,26 @@ export default async function Post({ params }: { params: { slug: string } }) {
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <Breadcrumbs title={story.title} />
-      <div className="relative w-full h-80 mb-8 overflow-hidden rounded-lg">
+      <div className="relative w-full h-80 mb-8 overflow-hidden rounded-[4px]">
         <Image
           src={story.image}
           alt={story.title}
           fill
           style={{ objectFit: 'cover', objectPosition: 'top' }}
-          className="rounded-lg"
+          className="rounded-[4px]"
         />
       </div>
       {story.audioUrl && (
         <Suspense fallback={
           <Card className="my-8 p-4 bg-transparent w-full border">
             <h2 className="text-2xl font-bold mb-1 font-heading">Listen to the Story</h2>
-            <div className="bg-background rounded-lg p-4 w-full h-[100px] animate-pulse" />
+            <div className="bg-background rounded-[4px] p-4 w-full h-[100px] animate-pulse" />
           </Card>
         }>
           <AudioPlayer audioUrl={story.audioUrl} title={story.title} image={story.image} />
         </Suspense>
       )}
-      <h1 className="text-4xl font-bold mb-4 font-heading">{story.title}</h1>
+      <h1 className="text-4xl font-bold mb-4 font-heading tracking-wide">{story.title}</h1>
       <div className="prose prose-lg max-w-none">
         {/* Check if content is MDX (contains JSX) or plain markdown */}
         {story.content.includes('<') || story.content.includes('import') ? (
