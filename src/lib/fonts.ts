@@ -1,6 +1,6 @@
-import { Castoro, Inter } from 'next/font/google'
+import { Instrument_Serif, Inter } from 'next/font/google'
 
-export const fontHeading = Castoro({
+export const fontHeading = Instrument_Serif({
   variable: '--font-heading',
   subsets: ['latin'],
   weight: '400',

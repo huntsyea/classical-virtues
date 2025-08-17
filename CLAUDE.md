@@ -30,7 +30,7 @@ Content switching logic is in `src/lib/stories.ts` which checks for `BASEHUB_TOK
 - Handles content source switching and error recovery
 
 **Font System** (`src/lib/fonts.ts`):
-- Uses Castoro (serif/heading) and Inter (sans/body) fonts via `next/font`
+- Uses Instrument Serif (serif/heading) and Inter (sans/body) fonts via `next/font`
 - Font variables are set in root layout and available globally
 
 **Component Structure**:
