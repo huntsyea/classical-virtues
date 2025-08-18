@@ -17,7 +17,7 @@ export default async function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
       <div className="max-w-5xl w-full space-y-8">
         <header className="text-center space-y-4">
-          <h1 className="text-4xl font-bold tracking-tighter">Classical Virtues</h1>
+          <h1 className="text-4xl font-bold tracking-wide">Classical Virtues</h1>
           <p className="text-muted-foreground text-lg">
             Timeless virtues taught through tales from the past.
           </p>

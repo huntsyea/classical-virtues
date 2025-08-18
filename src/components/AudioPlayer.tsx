@@ -136,7 +136,7 @@ export default function AudioPlayer({ audioUrl, title, image }: AudioPlayerProps
   return (
     <Card className="my-8 p-4 bg-transparent w-full border">
       <h2 className="text-2xl font-bold mb-1 font-heading">Listen to the Story</h2>
-      <div className="bg-background rounded-lg p-4 w-full">
+      <div className="bg-background rounded-[4px] p-4 w-full">
         {error ? (
           <div className="text-center py-8">
             <p className="text-red-500 mb-2">{error}</p>
