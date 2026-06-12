@@ -1,4 +1,5 @@
 import SummaryCard from "@/components/summaryCard";
+import JsonLd from "@/components/JsonLd";
 import { getAllStories } from "@/lib/stories";
 import type { Metadata } from 'next'
 
@@ -8,10 +9,20 @@ export const metadata: Metadata = {
   },
 }
 
-// Use BaseHub's built-in caching
-
 export default async function Home() {
   const stories = await getAllStories();
+
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Classical Virtue Stories",
+    "itemListElement": stories.map((story, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": story.title,
+      "url": `https://classicalvirtues.com/stories/${story.slug}`,
+    })),
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
@@ -28,7 +39,7 @@ export default async function Home() {
             {stories.map((story) => (
               <SummaryCard
                 key={story.id}
-                fileName={story.slug}
+                slug={story.slug}
                 image={story.image}
                 title={story.title}
                 summary={story.summary}
@@ -37,6 +48,7 @@ export default async function Home() {
           </div>
         </main>
       </div>
+      <JsonLd data={itemListSchema} />
     </div>
   );
 }

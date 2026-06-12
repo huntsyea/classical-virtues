@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react"
+import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next"
 import { cn } from '@/lib/utils'
 import ErrorBoundary from '@/components/ErrorBoundary'
+import JsonLd from '@/components/JsonLd'
 import './globals.css'
 import { fontHeading, fontBody } from '@/lib/fonts'
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
     template: "%s | Classical Virtues"
   },
   description: "Discover timeless virtues through classical stories. Our collection of moral tales teaches enduring values of character, ethics, and wisdom for modern times.",
+  applicationName: "Classical Virtues",
   keywords: [
     "virtues",
     "classical stories",
@@ -65,27 +67,37 @@ export const metadata: Metadata = {
   manifest: '/manifest.json'
 }
 
-interface SchemaData {
-  '@context': string;
-  '@type': string;
-  name: string;
-  url: string;
-  description: string;
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#e6e6d2',
 }
 
-const JsonLd = ({ data }: { data: SchemaData }) => (
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-  />
-)
-
-const websiteSchema: SchemaData = {
+const organizationSchema = {
   "@context": "https://schema.org",
-  "@type": "WebSite",
+  "@type": "Organization",
+  "@id": "https://classicalvirtues.com/#organization",
   "name": "Classical Virtues",
   "url": "https://classicalvirtues.com",
-  "description": "Discover timeless virtues through classical stories. Our collection of moral tales teaches enduring values of character, ethics, and wisdom for modern times."
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://classicalvirtues.com/logo.png",
+    "width": 512,
+    "height": 512
+  }
+}
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "https://classicalvirtues.com/#website",
+  "name": "Classical Virtues",
+  "url": "https://classicalvirtues.com",
+  "description": "Discover timeless virtues through classical stories. Our collection of moral tales teaches enduring values of character, ethics, and wisdom for modern times.",
+  "inLanguage": "en",
+  "publisher": {
+    "@id": "https://classicalvirtues.com/#organization"
+  }
 }
 
 export default function RootLayout({
@@ -107,6 +119,7 @@ export default function RootLayout({
         </ErrorBoundary>
         <Analytics />
         <JsonLd data={websiteSchema} />
+        <JsonLd data={organizationSchema} />
       </body>
     </html>
   );

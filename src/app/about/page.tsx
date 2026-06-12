@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'Learn about Classical Virtues',
+  description: 'Why virtue, and why stories? Learn how Classical Virtues uses timeless narratives to cultivate character, wisdom, and moral imagination.',
   alternates: {
     canonical: '/about',
   },
