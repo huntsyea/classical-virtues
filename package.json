@@ -2,6 +2,9 @@
   "name": "classical-virtues",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "basehub dev & next dev",
     "build": "basehub && next build",
