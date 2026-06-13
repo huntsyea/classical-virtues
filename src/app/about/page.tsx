@@ -45,13 +45,13 @@ export default function AboutPage() {
       </p>
       <h2 className="text-2xl font-heading mt-6">What We Are</h2>
       <p className="leading-relaxed">
-        Classical Virtues is a small, curated anthology of fables and classic
-        tales, each chosen for the virtue at its heart and lightly edited for
-        read-aloud length, usually a few minutes from first line to moral.
-        Every story is free. Each one includes the full text and narrated
-        audio, so you can read aloud yourself or press play and listen
-        together. There are no ads and nothing to sign up for; the stories are
-        the whole point.
+        Classical Virtues is a small anthology of fables and classic tales,
+        chosen and edited by hand by Hunter, each picked for the virtue at its
+        heart and trimmed to read-aloud length, usually a few minutes from
+        first line to moral. Every story is free. Each one includes the full
+        text and narrated audio, so you can read aloud yourself or press play
+        and listen together. There are no ads and nothing to sign up for; the
+        stories are the whole point.
       </p>
       <h2 className="text-2xl font-heading mt-6">Our Invitation</h2>
       <p className="leading-relaxed">
@@ -60,6 +60,10 @@ export default function AboutPage() {
         conversation follows. Character is built in small, repeated choices,
         and a story before bed is a fine place to start.
       </p>
+      <div className="pt-4">
+        <p className="font-heading text-2xl leading-tight">Hunter</p>
+        <p className="font-body text-sm text-muted-foreground">Curator, Classical Virtues</p>
+      </div>
       <p className="pt-2">
         <Link
           href="/stories"
