@@ -6,6 +6,7 @@ export const fontHeading = Instrument_Serif({
   variable: '--font-heading',
   subsets: ['latin'],
   weight: '400',
+  style: ['normal', 'italic'],
   display: 'swap'
 })
 

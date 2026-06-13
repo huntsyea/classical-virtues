@@ -22,7 +22,7 @@
     --destructive-foreground: #ffffff;
     --border: #cecfca;
     --input: #a8aaa0;
-    --ring: #b0874e;
+    --ring: #8a6a38; /* 4.35:1 on --background; focus indicators need ≥3:1 (WCAG 1.4.11) */
     --chart-1: #957640;
     --chart-2: #b788e1;
     --chart-3: #cfd2bb;

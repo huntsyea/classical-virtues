@@ -110,7 +110,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(
-        'min-h-screen bg-background font-body antialiased',
+        'flex min-h-screen flex-col bg-background font-body antialiased',
         fontHeading.variable,
         fontBody.variable,
         fontText.variable,
@@ -124,9 +124,9 @@ export default function RootLayout({
           Skip to content
         </a>
         <Navbar />
-        <ErrorBoundary>
-          <main id="main">{children}</main>
-        </ErrorBoundary>
+        <main id="main" className="flex-1">
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </main>
         <Footer />
         <Analytics />
         <JsonLd data={websiteSchema} />

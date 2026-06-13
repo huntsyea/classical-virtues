@@ -42,7 +42,7 @@ export default async function StoriesIndex() {
           The stories are being prepared. Please come back soon.
         </p>
       ) : (
-        <ol className="list-none border-t border-border p-0">
+        <ol role="list" className="list-none border-t border-border p-0">
           {stories.map((story, index) => (
             <li key={story.id}>
               <SummaryCard

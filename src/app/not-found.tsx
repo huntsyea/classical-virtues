@@ -4,6 +4,8 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Page Not Found',
   description: 'The page you followed is not in the collection, but the stories are all still here.',
+  robots: { index: false, follow: true },
+  alternates: { canonical: null },
 }
 
 export default function NotFound() {
