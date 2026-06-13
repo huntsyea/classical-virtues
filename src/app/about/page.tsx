@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="max-w-xl mx-auto py-12 px-4 space-y-6">
+    <div className="font-text text-lg max-w-xl mx-auto py-12 px-4 space-y-6">
       <h1 className="text-4xl font-heading">About</h1>
       <p className="leading-relaxed">
         It is almost bedtime. The lamp is on, a child is tucked under your arm,
@@ -63,7 +63,7 @@ export default function AboutPage() {
       <p className="pt-2">
         <Link
           href="/stories"
-          className="inline-block bg-primary text-primary-foreground px-8 py-4 hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className="inline-block font-body text-base bg-primary text-primary-foreground px-8 py-4 hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           Begin with a story
         </Link>
