@@ -1,15 +1,19 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { Card } from '@/components/ui/card'
 
 // next/dynamic with ssr: false must live in a client component in Next 15+
+// The skeleton mirrors the rendered player chrome (same container, heading,
+// and 44px control row) so loading causes no layout shift.
 const LazyAudioPlayer = dynamic(() => import('@/components/AudioPlayer'), {
   loading: () => (
-    <Card className="my-8 p-4 bg-transparent w-full border">
-      <h2 className="text-2xl font-bold mb-1 font-heading">Listen to the Story</h2>
-      <div className="bg-background rounded-[4px] p-4 w-full h-[100px] animate-pulse" />
-    </Card>
+    <section className="my-8 w-full border border-border bg-background p-4 sm:p-5">
+      <h2 className="mb-3 font-heading text-2xl">Listen to the Story</h2>
+      <div
+        className="h-11 w-full animate-pulse bg-muted motion-reduce:animate-none"
+        aria-hidden="true"
+      />
+    </section>
   ),
   ssr: false,
 })

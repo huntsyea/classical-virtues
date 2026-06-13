@@ -32,9 +32,9 @@ export default function Breadcrumbs({ title, slug }: { title: string; slug?: str
       <JsonLd data={breadcrumbSchema} />
       <nav aria-label="Breadcrumb" className="text-sm mb-6 text-muted-foreground">
         <Link href="/">Home</Link>
-        <span className="mx-2">/</span>
+        <span className="mx-2" aria-hidden="true">/</span>
         <Link href="/stories">Stories</Link>
-        <span className="mx-2">/</span>
+        <span className="mx-2" aria-hidden="true">/</span>
         <span aria-current="page">{title}</span>
       </nav>
     </>

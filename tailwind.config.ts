@@ -13,7 +13,53 @@ const config: Config = {
     extend: {
       fontFamily: {
         heading: ['var(--font-heading)', ...fontFamily.serif],
-        body: ['var(--font-body)', ...fontFamily.sans]
+        body: ['var(--font-body)', ...fontFamily.sans],
+        text: ['var(--font-text)', 'Literata', 'Georgia', ...fontFamily.serif]
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            // Warm ink from the site's own tokens, not typography's cool grays.
+            '--tw-prose-body': 'var(--foreground)',
+            '--tw-prose-headings': 'var(--foreground)',
+            '--tw-prose-lead': 'var(--foreground)',
+            '--tw-prose-links': 'var(--primary)',
+            '--tw-prose-bold': 'var(--foreground)',
+            '--tw-prose-counters': 'var(--muted-foreground)',
+            '--tw-prose-bullets': 'var(--muted-foreground)',
+            '--tw-prose-hr': 'var(--border)',
+            '--tw-prose-quotes': 'var(--foreground)',
+            '--tw-prose-quote-borders': 'var(--border)',
+            '--tw-prose-captions': 'var(--muted-foreground)',
+            '--tw-prose-kbd': 'var(--foreground)',
+            '--tw-prose-code': 'var(--foreground)',
+            '--tw-prose-pre-code': 'var(--background)',
+            '--tw-prose-pre-bg': 'var(--foreground)',
+            '--tw-prose-th-borders': 'var(--border)',
+            '--tw-prose-td-borders': 'var(--border)',
+            // Book measure: prose never needs max-w-none hacks.
+            maxWidth: '68ch',
+            // Literata text face for story prose; Georgia as the book-serif fallback.
+            fontFamily: "var(--font-text, Literata), Georgia, 'Times New Roman', serif",
+            // Display headings stay Instrument Serif at its single natural weight.
+            'h1, h2, h3, h4, h5, h6': {
+              fontFamily: 'var(--font-heading), ui-serif, Georgia, serif',
+              fontWeight: '400'
+            },
+            a: {
+              color: 'var(--primary)',
+              textUnderlineOffset: '3px',
+              textDecorationThickness: '1px'
+            },
+            blockquote: {
+              fontWeight: '400',
+              fontStyle: 'italic'
+            },
+            strong: {
+              fontWeight: '700'
+            }
+          }
+        }
       },
       colors: {
         border: 'var(--border)',

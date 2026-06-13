@@ -6,7 +6,7 @@ import JsonLd from '@/components/JsonLd'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import './globals.css'
-import { fontHeading, fontBody } from '@/lib/fonts'
+import { fontHeading, fontBody, fontText } from '@/lib/fonts'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://classicalvirtues.com'),
@@ -113,6 +113,7 @@ export default function RootLayout({
         'min-h-screen bg-background font-body antialiased',
         fontHeading.variable,
         fontBody.variable,
+        fontText.variable,
         fontHeading.className || 'font-serif',
         fontBody.className || 'font-sans'
       )}>

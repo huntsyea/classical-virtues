@@ -15,7 +15,7 @@ const Navbar = () => {
     <nav aria-label="Main" className="bg-background border-b border-muted">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          <Link href="/" className="text-2xl font-heading font-semibold tracking-wide py-3">
+          <Link href="/" className="text-2xl font-heading tracking-wide py-3">
             Classical Virtues
           </Link>
           <div className="flex items-center gap-1">
