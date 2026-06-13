@@ -20,14 +20,15 @@ const Navbar = () => {
           </Link>
           <div className="flex items-center gap-1">
             {links.map(({ href, label }) => {
-              const active = pathname === href || pathname.startsWith(`${href}/`);
+              const isCurrent = pathname === href;
+              const inSection = isCurrent || pathname.startsWith(`${href}/`);
               return (
                 <Link
                   key={href}
                   href={href}
-                  aria-current={active ? 'page' : undefined}
+                  aria-current={isCurrent ? 'page' : undefined}
                   className={`inline-flex items-center px-3 py-3 hover:underline underline-offset-4 ${
-                    active ? 'underline font-medium' : ''
+                    inSection ? 'underline font-medium' : ''
                   }`}
                 >
                   {label}
