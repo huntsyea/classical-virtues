@@ -1,14 +1,16 @@
 import { getAllStories, getStoryBySlug } from '@/lib/stories';
-import { MDXRemote } from 'next-mdx-remote/rsc';
+import { compileMDX } from 'next-mdx-remote/rsc';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import JsonLd from '@/components/JsonLd';
 import LazyAudioPlayer from '@/components/LazyAudioPlayer';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 
 type Params = Promise<{ slug: string }>
 
@@ -61,6 +63,31 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   }
 }
 
+/**
+ * Render story content. Content that looks like MDX (imports or JSX tags) is
+ * compiled with MDX inside a try/catch; anything else, including MDX that
+ * fails to compile (e.g. a literal '<' in plain prose), falls back to
+ * Markdown so a stray character can never take the page down.
+ */
+async function renderStoryContent(content: string): Promise<ReactNode> {
+  const looksLikeMdx = /^\s*(import\s|<[A-Za-z])/m.test(content)
+
+  if (looksLikeMdx) {
+    try {
+      const { content: mdxContent } = await compileMDX({ source: content })
+      return mdxContent
+    } catch {
+      // Fall through to plain Markdown rendering below.
+    }
+  }
+
+  return (
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      {content}
+    </ReactMarkdown>
+  )
+}
+
 export default async function Post({ params }: { params: Params }) {
   const { slug } = await params
   const story = await getStoryBySlug(slug);
@@ -68,6 +95,16 @@ export default async function Post({ params }: { params: Params }) {
   if (!story) {
     notFound();
   }
+
+  const allStories = await getAllStories();
+  const otherStories = allStories.filter((s) => s.slug !== story.slug);
+  const relatedStories = [
+    ...otherStories.filter((s) => s.virtue === story.virtue),
+    ...otherStories.filter((s) => s.virtue !== story.virtue),
+  ].slice(0, 3);
+
+  const minutes = Math.max(1, Math.round(story.wordCount / 140));
+  const storyContent = await renderStoryContent(story.content);
 
   const articleStructuredData = {
     "@context": "https://schema.org",
@@ -111,7 +148,13 @@ export default async function Post({ params }: { params: Params }) {
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <Breadcrumbs title={story.title} slug={slug} />
-      <div className="relative w-full h-80 mb-8 overflow-hidden rounded-[4px]">
+      <header className="mb-8">
+        <h1 className="text-4xl sm:text-5xl font-heading tracking-wide">{story.title}</h1>
+        <p className="mt-3 text-muted-foreground">
+          A story of {story.virtue.toLowerCase()} · About {minutes} {minutes === 1 ? 'minute' : 'minutes'}
+        </p>
+      </header>
+      <div className="relative w-full h-80 mb-8 overflow-hidden">
         <Image
           src={story.image}
           alt={`Illustration for ${story.title}`}
@@ -119,31 +162,18 @@ export default async function Post({ params }: { params: Params }) {
           priority
           sizes="(max-width: 768px) 100vw, 768px"
           style={{ objectFit: 'cover', objectPosition: 'top' }}
-          className="rounded-[4px]"
         />
       </div>
       {story.audioUrl && (
         <LazyAudioPlayer audioUrl={story.audioUrl} title={story.title} image={story.image} />
       )}
-      <h1 className="text-4xl font-bold mb-4 font-heading tracking-wide">{story.title}</h1>
-      <div className="prose prose-lg max-w-none">
-        {/* Check if content is MDX (contains JSX) or plain markdown */}
-        {story.content.includes('<') || story.content.includes('import') ? (
-          <MDXRemote source={story.content} />
-        ) : (
-          <div className="prose prose-lg max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {story.content}
-            </ReactMarkdown>
-          </div>
-        )}
+      <div className="prose prose-lg">
+        {storyContent}
       </div>
       <Card className="bg-accent text-accent-foreground mt-8">
         <CardContent className="p-8">
           <div className="space-y-6">
-            <div className="flex items-baseline ">
-              <span className="font-heading font-semibold text-2xl">Moral Of The Story</span>
-            </div>
+            <h2 className="font-heading text-2xl">The Moral of the Story</h2>
             <div className="border-t border-accent-foreground/20 pt-4">
               <p className="font-heading text-lg italic leading-relaxed">
                 {story.virtueDescription}
@@ -152,6 +182,30 @@ export default async function Post({ params }: { params: Params }) {
           </div>
         </CardContent>
       </Card>
+      {relatedStories.length > 0 && (
+        <section aria-labelledby="read-another" className="mt-16 border-t border-border pt-10">
+          <h2 id="read-another" className="font-heading text-2xl mb-6">Read another story</h2>
+          <ul className="space-y-5">
+            {relatedStories.map((related) => (
+              <li key={related.slug}>
+                <Link href={`/stories/${related.slug}`} className="group inline-block py-1">
+                  <span className="font-heading text-xl underline-offset-4 group-hover:underline">
+                    {related.title}
+                  </span>
+                  <span className="mt-1 block text-sm text-muted-foreground">
+                    A story of {related.virtue.toLowerCase()}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-8">
+            <Link href="/stories" className="inline-block py-2 underline underline-offset-4 text-primary">
+              Browse the whole collection
+            </Link>
+          </p>
+        </section>
+      )}
       <JsonLd data={articleStructuredData} />
     </div>
   );

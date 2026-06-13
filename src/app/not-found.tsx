@@ -1,13 +1,33 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Page Not Found',
+  description: 'The page you followed is not in the collection, but the stories are all still here.',
+  robots: { index: false, follow: true },
+  alternates: { canonical: null },
+}
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-center p-8">
-      <h1 className="text-5xl font-heading mb-4">Page Not Found</h1>
-      <p className="mb-8 text-muted-foreground">The page you are looking for does not exist.</p>
-      <Link href="/" className="underline text-primary">
-        Return Home
-      </Link>
+    <div className="max-w-2xl mx-auto px-4 py-24 text-center">
+      <h1 className="text-4xl sm:text-5xl font-heading mb-6">This page has wandered off</h1>
+      <p className="mb-10 text-muted-foreground leading-relaxed">
+        The page you followed is not in the collection, but the stories are all still here.
+      </p>
+      <p>
+        <Link
+          href="/stories"
+          className="inline-block bg-primary text-primary-foreground px-8 py-4 hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Browse the stories
+        </Link>
+      </p>
+      <p className="mt-6">
+        <Link href="/" className="inline-block px-4 py-3 underline underline-offset-4 text-primary">
+          Return home
+        </Link>
+      </p>
     </div>
   )
 }

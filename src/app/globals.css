@@ -15,14 +15,14 @@
     --secondary: #dcded1;
     --secondary-foreground: #4b4d44;
     --muted: #e1e2d2;
-    --muted-foreground: #7b7c78;
+    --muted-foreground: #63645c; /* 5.2:1 on --background; keep ≥4.5:1 (WCAG AA) */
     --accent: #dcded1;
     --accent-foreground: #23241c;
     --destructive: #1a1a19;
     --destructive-foreground: #ffffff;
     --border: #cecfca;
     --input: #a8aaa0;
-    --ring: #b0874e;
+    --ring: #8a6a38; /* 4.35:1 on --background; focus indicators need ≥3:1 (WCAG 1.4.11) */
     --chart-1: #957640;
     --chart-2: #b788e1;
     --chart-3: #cfd2bb;
@@ -36,9 +36,10 @@
     --sidebar-accent-foreground: #343434;
     --sidebar-border: #ebebeb;
     --sidebar-ring: #b5b5b5;
-    --font-sans: Host Grotesk, ui-sans-serif, sans-serif, system-ui;
-    --font-serif: Instrument Serif, ui-serif, serif;
-    --font-mono: Anonymous Pro, ui-monospace, monospace;
+    /* Font tokens point at the faces actually loaded via next/font (src/lib/fonts.ts). */
+    --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    --font-serif: var(--font-heading), ui-serif, Georgia, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     --radius: 0rem;
     --shadow-2xs: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
     --shadow-xs: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
@@ -85,9 +86,9 @@
     --sidebar-accent-foreground: #b7b8ae;
     --sidebar-border: #ebebeb;
     --sidebar-ring: #b5b5b5;
-    --font-sans: Host Grotesk, ui-sans-serif, sans-serif, system-ui;
-    --font-serif: Instrument Serif, ui-serif, serif;
-    --font-mono: Anonymous Pro, ui-monospace, monospace;
+    --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    --font-serif: var(--font-heading), ui-serif, Georgia, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     --radius: 0rem;
     --shadow-2xs: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
     --shadow-xs: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
@@ -110,16 +111,55 @@
     font-family: var(--font-body);
   }
 
+  /*
+   * Instrument Serif ships weight 400 only. Headings always render at
+   * their natural weight; hierarchy comes from size, not boldness.
+   */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  /*
+   * Faux-bold guard: neutralize legacy bold utilities on display-serif
+   * elements so the browser never synthesizes a smeared bold.
+   */
+  :is(h1, h2, h3, h4, h5, h6, .font-heading):is(.font-medium, .font-semibold, .font-bold, .font-extrabold, .font-black) {
+    font-weight: 400;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 
   .font-heading {
     font-family: var(--font-heading);
+    font-weight: 400;
   }
 
   .font-body {
     font-family: var(--font-body);
+  }
+
+  /*
+   * Text face for long-form prose. Falls back to Georgia (a true book
+   * serif) wherever the next/font variable is not on an ancestor.
+   */
+  .font-text {
+    font-family: var(--font-text, Literata), Georgia, 'Times New Roman', serif;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
