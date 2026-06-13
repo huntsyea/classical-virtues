@@ -15,7 +15,7 @@
     --secondary: #dcded1;
     --secondary-foreground: #4b4d44;
     --muted: #e1e2d2;
-    --muted-foreground: #7b7c78;
+    --muted-foreground: #63645c; /* 5.2:1 on --background; keep ≥4.5:1 (WCAG AA) */
     --accent: #dcded1;
     --accent-foreground: #23241c;
     --destructive: #1a1a19;
@@ -112,6 +112,11 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
   }
 
   .font-heading {

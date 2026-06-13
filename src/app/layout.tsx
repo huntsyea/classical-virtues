@@ -3,6 +3,8 @@ import { Analytics } from "@vercel/analytics/next"
 import { cn } from '@/lib/utils'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import JsonLd from '@/components/JsonLd'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 import './globals.css'
 import { fontHeading, fontBody } from '@/lib/fonts'
 
@@ -70,7 +72,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#e6e6d2',
+  themeColor: '#eff0e6',
 }
 
 const organizationSchema = {
@@ -114,9 +116,17 @@ export default function RootLayout({
         fontHeading.className || 'font-serif',
         fontBody.className || 'font-sans'
       )}>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-background focus:px-4 focus:py-3"
+        >
+          Skip to content
+        </a>
+        <Navbar />
         <ErrorBoundary>
-          {children}
+          <main id="main">{children}</main>
         </ErrorBoundary>
+        <Footer />
         <Analytics />
         <JsonLd data={websiteSchema} />
         <JsonLd data={organizationSchema} />
