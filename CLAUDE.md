@@ -13,21 +13,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture Overview
 
-This is a Next.js 14 application using the App Router that displays classical virtue stories through interactive storytelling. The application has a dual-content architecture:
+This is a Next.js 16 application (React 19) using the App Router that displays classical virtue stories through interactive storytelling.
 
 ### Content Strategy
-The app supports **two content sources** with automatic fallback:
-1. **Basehub CMS** (primary) - For dynamic content management
-2. **Local MDX files** (fallback) - In `src/stories/` directory
-
-Content switching logic is in `src/lib/stories.ts` which checks for `BASEHUB_TOKEN` environment variable and gracefully falls back to MDX files if Basehub is unavailable.
+All content comes from **Basehub CMS**. Content access logic is in `src/lib/stories.ts`, which checks for the `BASEHUB_TOKEN` environment variable and degrades gracefully (empty story list / null story) when Basehub is unavailable, so builds never fail on missing content.
 
 ### Key Architecture Components
 
 **Content Abstraction Layer** (`src/lib/stories.ts`):
 - `getAllStories()` and `getStoryBySlug()` provide unified interface
-- Converts both Basehub and MDX content to common `StoryData` interface
-- Handles content source switching and error recovery
+- Converts Basehub content to the common `StoryData` interface
+- Handles missing-token and error recovery
 
 **Font System** (`src/lib/fonts.ts`):
 - Uses Instrument Serif (serif/heading) and Inter (sans/body) fonts via `next/font`
@@ -39,7 +35,7 @@ Content switching logic is in `src/lib/stories.ts` which checks for `BASEHUB_TOK
 - Dynamic imports used for heavy components (AudioPlayer)
 
 **Content Rendering**:
-- Story pages (`src/app/stories/[slug]/page.tsx`) support both MDX and Markdown content
+- Story pages (`src/app/stories/[slug]/page.tsx`) support both MDX and Markdown content from Basehub
 - MDX content (with JSX) uses `next-mdx-remote`
 - Plain Markdown uses `react-markdown` with GitHub Flavored Markdown
 
@@ -53,10 +49,11 @@ When `BASEHUB_TOKEN` is set:
 
 ### SEO & Performance
 - Comprehensive metadata and OpenGraph tags
-- Dynamic OG image generation at `/api/og`
-- Structured data (JSON-LD) for articles and website
+- Dynamic OG image generation at `/api/og`; publisher logo served at `/logo.png` via `ImageResponse`
+- Native App Router `sitemap.ts` (includes Basehub story URLs) and `robots.ts`
+- Structured data (JSON-LD) for articles, breadcrumbs, item lists, website, and organization (shared `src/components/JsonLd.tsx`)
 - Static site generation with `generateStaticParams`
-- Optimized images and fonts
+- Optimized images (AVIF/WebP, `sizes`, priority hero) and fonts
 
 ## Environment Variables
 
@@ -84,7 +81,7 @@ interface StoryData {
 
 ## Important Patterns
 
-- Use the unified story interface from `src/lib/stories.ts` rather than calling Basehub or MDX directly
+- Use the unified story interface from `src/lib/stories.ts` rather than calling Basehub directly
 - Always handle the case where content sources might be unavailable
-- Audio components should be dynamically imported with SSR disabled
+- Audio components should be dynamically imported with SSR disabled via a client wrapper (`src/components/LazyAudioPlayer.tsx`) — `ssr: false` is not allowed in Server Components in Next 15+
 - Font classes use CSS variables: `font-heading` and `font-body`

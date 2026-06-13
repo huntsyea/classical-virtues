@@ -1,5 +1,3 @@
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
 import { getAllStories, getStoryBySlug } from '@/lib/stories';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import ReactMarkdown from 'react-markdown';
@@ -7,21 +5,12 @@ import remarkGfm from 'remark-gfm';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import JsonLd from '@/components/JsonLd';
+import LazyAudioPlayer from '@/components/LazyAudioPlayer';
+import { notFound } from 'next/navigation';
 import type { Metadata } from 'next'
 
-// Lazy load the AudioPlayer
-const AudioPlayer = dynamic(
-  () => import('@/components/AudioPlayer'),
-  {
-    loading: () => (
-      <Card className="my-8 p-4 bg-transparent w-full border">
-        <h2 className="text-2xl font-bold mb-1 font-heading">Listen to the Story</h2>
-        <div className="bg-background rounded-[4px] p-4 w-full h-[100px] animate-pulse" />
-      </Card>
-    ),
-    ssr: false // Disable SSR for audio player
-  }
-);
+type Params = Promise<{ slug: string }>
 
 export async function generateStaticParams() {
   const stories = await getAllStories();
@@ -30,9 +19,10 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const story = await getStoryBySlug(params.slug)
-  
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { slug } = await params
+  const story = await getStoryBySlug(slug)
+
   if (!story) {
     return {
       title: 'Story Not Found',
@@ -46,12 +36,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title: story.title,
     description: story.summary,
     alternates: {
-      canonical: `/stories/${params.slug}`,
+      canonical: `/stories/${slug}`,
     },
     keywords: [story.virtue, 'virtue', 'moral story', 'classical virtues'],
     openGraph: {
       type: 'article',
-      url: `https://classicalvirtues.com/stories/${params.slug}`,
+      url: `https://classicalvirtues.com/stories/${slug}`,
       title: story.title,
       description: story.summary,
       images: [{
@@ -61,7 +51,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         alt: story.title
       }],
       siteName: 'Classical Virtues',
-      publishedTime: new Date().toISOString(),
     },
     twitter: {
       card: 'summary_large_image',
@@ -72,47 +61,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-interface JsonLdProps {
-  data: {
-    '@context': string;
-    '@type': string;
-    headline: string;
-    description: string;
-    image: string;
-    author: {
-      '@type': string;
-      name: string;
-    };
-    publisher: {
-      '@type': string;
-      name: string;
-      logo: {
-        '@type': string;
-        url: string;
-      };
-    };
-    datePublished: string;
-    mainEntityOfPage: {
-      '@type': string;
-      '@id': string;
-    };
-  }
-}
-
-const JsonLd = ({ data }: JsonLdProps) => (
-  <script
-    type="application/ld+json"
-    dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-  />
-)
-
-// Use BaseHub's built-in caching
-
-export default async function Post({ params }: { params: { slug: string } }) {
-  const story = await getStoryBySlug(params.slug);
+export default async function Post({ params }: { params: Params }) {
+  const { slug } = await params
+  const story = await getStoryBySlug(slug);
 
   if (!story) {
-    return <div>Story not found</div>; // Error handling for missing story
+    notFound();
   }
 
   const articleStructuredData = {
@@ -122,6 +76,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
     "description": story.summary,
     "image": story.image.startsWith('http') ? story.image : `https://classicalvirtues.com${story.image}`,
     "wordCount": story.wordCount,
+    "inLanguage": "en",
     "author": {
       "@type": "Organization",
       "name": "Classical Virtues",
@@ -136,11 +91,9 @@ export default async function Post({ params }: { params: { slug: string } }) {
         "url": "https://classicalvirtues.com/logo.png"
       }
     },
-    "datePublished": new Date().toISOString(),
-    "dateModified": new Date().toISOString(),
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": `https://classicalvirtues.com/stories/${params.slug}`
+      "@id": `https://classicalvirtues.com/stories/${slug}`
     },
     "articleSection": "Moral Stories",
     "keywords": [story.virtue, "virtue", "moral story", "classical virtues"],
@@ -149,6 +102,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
           "audio": {
             "@type": "AudioObject",
             "contentUrl": story.audioUrl,
+            "name": story.title,
           },
         }
       : {})
@@ -156,25 +110,20 @@ export default async function Post({ params }: { params: { slug: string } }) {
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <Breadcrumbs title={story.title} />
+      <Breadcrumbs title={story.title} slug={slug} />
       <div className="relative w-full h-80 mb-8 overflow-hidden rounded-[4px]">
         <Image
           src={story.image}
-          alt={story.title}
+          alt={`Illustration for ${story.title}`}
           fill
+          priority
+          sizes="(max-width: 768px) 100vw, 768px"
           style={{ objectFit: 'cover', objectPosition: 'top' }}
           className="rounded-[4px]"
         />
       </div>
       {story.audioUrl && (
-        <Suspense fallback={
-          <Card className="my-8 p-4 bg-transparent w-full border">
-            <h2 className="text-2xl font-bold mb-1 font-heading">Listen to the Story</h2>
-            <div className="bg-background rounded-[4px] p-4 w-full h-[100px] animate-pulse" />
-          </Card>
-        }>
-          <AudioPlayer audioUrl={story.audioUrl} title={story.title} image={story.image} />
-        </Suspense>
+        <LazyAudioPlayer audioUrl={story.audioUrl} title={story.title} image={story.image} />
       )}
       <h1 className="text-4xl font-bold mb-4 font-heading tracking-wide">{story.title}</h1>
       <div className="prose prose-lg max-w-none">

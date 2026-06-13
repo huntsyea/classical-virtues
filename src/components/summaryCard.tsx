@@ -4,15 +4,15 @@ import Link from 'next/link';
 import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 
 interface SummaryCardProps {
-  fileName: string;
+  slug: string;
   image?: string;
   title?: string;
   summary?: string;
 }
 
-const SummaryCard: React.FC<SummaryCardProps> = ({ fileName, image, title, summary }) => {
+const SummaryCard: React.FC<SummaryCardProps> = ({ slug, image, title, summary }) => {
   return (
-    <Link href={`/stories/${fileName.replace('.mdx', '')}`}>
+    <Link href={`/stories/${slug}`}>
       <Card className="shadow-sm hover:shadow-md transition-shadow duration-200 h-80 flex flex-col">
         {image && (
           <div className="h-60 relative">
@@ -20,6 +20,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ fileName, image, title, summa
               src={image}
               alt={(title ? `${title} illustration` : 'Virtue illustration')}
               fill
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
               className="object-cover object-top rounded-t-[4px]"
             />
           </div>

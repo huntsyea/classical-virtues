@@ -1,31 +1,12 @@
-import createMDX from '@next/mdx'
-import { fileURLToPath } from 'url';
-import path from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
-    domains: ['classicalvirtues.com', 'assets.basehub.com'],
-  },
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@/src': path.join(__dirname, 'src'),
-      '@/stories': path.join(__dirname, 'src/stories'),
-    };
-    return config;
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'assets.basehub.com' },
+      { protocol: 'https', hostname: 'classicalvirtues.com' },
+    ],
   },
 }
 
-const withMDX = createMDX({
-  options: {
-    remarkPlugins: [],
-    rehypePlugins: [],
-  },
-})
-
-export default withMDX(nextConfig)
+export default nextConfig

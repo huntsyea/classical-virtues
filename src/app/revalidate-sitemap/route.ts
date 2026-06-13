@@ -37,7 +37,9 @@ export async function POST(req: NextRequest) {
   }
 
   revalidatePath('/sitemap.xml')
+  revalidatePath('/')
   revalidatePath('/stories')
+  revalidatePath('/stories/[slug]', 'page')
 
   return NextResponse.json({ revalidated: true })
 }

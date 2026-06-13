@@ -1,6 +1,7 @@
 {
   "name": "Classical Virtues",
   "short_name": "Virtues",
+  "description": "Timeless virtues taught through classical stories of character, ethics, and wisdom.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fafafa",
@@ -10,6 +11,12 @@
       "src": "/favicon.ico",
       "sizes": "48x48",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
