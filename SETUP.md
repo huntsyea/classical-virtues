@@ -43,6 +43,19 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_APP_NAME` | No | Display name |
 | `NEXT_TELEMETRY_DISABLED` | No | Set to `1` to opt out of Next telemetry |
 
+### Fastest path: pull secrets from Vercel
+
+If you have access to the `dudesdesign/classical-virtues` Vercel project, you don't need
+to copy tokens by hand — pull them straight into a git-ignored `.env.local`:
+
+```bash
+npx vercel link --yes --project classical-virtues --scope dudesdesign  # writes .vercel/ (git-ignored)
+npx vercel env pull .env.local                                          # downloads development env vars
+```
+
+This populates `BASEHUB_TOKEN`, `BASEHUB_WEBHOOK_SECRET`, and `BLOB_READ_WRITE_TOKEN`.
+Add `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_APP_NAME` from `.env.example` if you want them.
+
 **Graceful degradation (verified):** with `BASEHUB_TOKEN` empty, the app still runs.
 `getAllStories()` returns `[]` and `getStoryBySlug()` returns `null`
 (see `src/lib/stories.ts`), so the home page, `/stories`, `/about`, and `/api/stories`
