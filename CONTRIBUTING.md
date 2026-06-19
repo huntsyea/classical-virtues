@@ -12,8 +12,10 @@ Thank you for your interest in contributing to Classical Virtues! This document 
 
 2. **Install Dependencies**
    ```bash
-   npm install
+   pnpm install
    ```
+   This project uses **pnpm only** (a `pnpm-lock.yaml` is committed). Install pnpm
+   with `corepack enable` or see https://pnpm.io/installation.
 
 3. **Environment Setup**
    ```bash
@@ -23,7 +25,7 @@ Thank you for your interest in contributing to Classical Virtues! This document 
 
 4. **Run Development Server**
    ```bash
-   npm run dev
+   pnpm run dev
    ```
 
 ## Code Standards
@@ -90,8 +92,8 @@ src/
 
 3. **Test Your Changes**
    ```bash
-   npm run lint
-   npm run build
+   pnpm run lint
+   pnpm run build
    ```
 
 4. **Commit and Push**
