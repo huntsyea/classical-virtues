@@ -46,8 +46,7 @@ export interface Scalars {
   options: string[];
   multiple: boolean
 } | {
-  type: "file";
-  private: boolean
+  type: "file"
 }))[],
     BSHBRichTextContentSchema: RichTextNode[],
     BSHBRichTextTOCSchema: RichTextTocNode[],
@@ -64,6 +63,20 @@ export interface Scalars {
   blockId: string;
   blockIdPath: string
 } },
+}
+
+export interface About {
+    _analyticsKey: Scalars['String']
+    _dashboardUrl: Scalars['String']
+    _id: Scalars['String']
+    _idPath: Scalars['String']
+    _slug: Scalars['String']
+    _slugPath: Scalars['String']
+    _sys: BlockDocumentSys
+    _title: Scalars['String']
+    content: (Content | null)
+    subtitle: (Scalars['String'] | null)
+    __typename: 'About'
 }
 
 export type AnalyticsKeyScope = 'query' | 'send'
@@ -105,7 +118,7 @@ export interface BlockColor {
     __typename: 'BlockColor'
 }
 
-export type BlockDocument = (Stories | StoriesItem | Workflow | _AgentSTART | _AgentUntitled_1 | storiesItem_AsList) & { __isUnion?: true }
+export type BlockDocument = (About | Stories | StoriesItem | Workflows | _AgentStart | storiesItem_AsList) & { __isUnion?: true }
 
 export interface BlockDocumentSys {
     apiNamePath: Scalars['String']
@@ -175,7 +188,7 @@ export interface BlockOgImage {
 
 
 /** Rich text block */
-export type BlockRichText = (Content) & { __isUnion?: true }
+export type BlockRichText = (Content | Content_1) & { __isUnion?: true }
 
 export interface BlockVideo {
     aspectRatio: Scalars['String']
@@ -204,6 +217,21 @@ export interface ContentRichText {
     content: Scalars['BSHBRichTextContentSchema']
     toc: Scalars['BSHBRichTextTOCSchema']
     __typename: 'ContentRichText'
+}
+
+export interface Content_1 {
+    html: Scalars['String']
+    json: Content_1RichText
+    markdown: Scalars['String']
+    plainText: Scalars['String']
+    readingTime: Scalars['Int']
+    __typename: 'Content_1'
+}
+
+export interface Content_1RichText {
+    content: Scalars['BSHBRichTextContentSchema']
+    toc: Scalars['BSHBRichTextTOCSchema']
+    __typename: 'Content_1RichText'
 }
 
 export interface GetUploadSignedURL {
@@ -258,21 +286,26 @@ export interface Mutation {
 }
 
 export interface Query {
-    _agent: (_AgentSTART | null)
+    _agent: (_AgentStart | null)
     /** Query across the custom AI agents in the repository. */
     _agents: _agents
     /** Query across all of the instances of a component. Pass in filters and sorts if you want, and get each instance via the `items` key. */
     _componentInstances: _components
+    /** The diff between the current branch and the head commit. */
+    _diff: Scalars['JSON']
     /** The structure of the repository. Used by START. */
     _structure: Scalars['JSON']
     _sys: RepoSys
+    about: About
     stories: Stories
-    workflow: Workflow
+    workflows: Workflows
     __typename: 'Query'
 }
 
 export interface RepoSys {
     branches: _Branches
+    dashboardUrl: Scalars['String']
+    forkUrl: Scalars['String']
     hash: Scalars['String']
     id: Scalars['ID']
     playgroundInfo: (_PlaygroundInfo | null)
@@ -281,7 +314,15 @@ export interface RepoSys {
     __typename: 'RepoSys'
 }
 
-export type RichTextJson = (BaseRichTextJson | ContentRichText) & { __isUnion?: true }
+export type RichTextJson = (BaseRichTextJson | ContentRichText | Content_1RichText) & { __isUnion?: true }
+
+export interface SearchHighlight {
+    /** The field/path that was matched (e.g., "title", "body.content") */
+    by: Scalars['String']
+    /** HTML snippet with <mark> tags around the matched terms */
+    snippet: Scalars['String']
+    __typename: 'SearchHighlight'
+}
 
 export interface Stories {
     _analyticsKey: Scalars['String']
@@ -305,6 +346,8 @@ export interface Stories {
 export interface StoriesItem {
     _analyticsKey: Scalars['String']
     _dashboardUrl: Scalars['String']
+    /** Array of search highlight information with field names and HTML markup */
+    _highlight: (SearchHighlight[] | null)
     _id: Scalars['String']
     _idPath: Scalars['String']
     _slug: Scalars['String']
@@ -312,17 +355,15 @@ export interface StoriesItem {
     _sys: BlockDocumentSys
     _title: Scalars['String']
     audioUrl: (Scalars['String'] | null)
-    content: (Content | null)
+    content: (Content_1 | null)
     image: BlockImage
     summary: Scalars['String']
-    untitled: BlockOgImage
-    untitled_1: (BlockAudio | null)
     virtue: Scalars['String']
     virtueDescription: Scalars['String']
     __typename: 'StoriesItem'
 }
 
-export type StoriesItemOrderByEnum = '_sys_createdAt__ASC' | '_sys_createdAt__DESC' | '_sys_hash__ASC' | '_sys_hash__DESC' | '_sys_id__ASC' | '_sys_id__DESC' | '_sys_lastModifiedAt__ASC' | '_sys_lastModifiedAt__DESC' | '_sys_slug__ASC' | '_sys_slug__DESC' | '_sys_title__ASC' | '_sys_title__DESC' | 'audioUrl__ASC' | 'audioUrl__DESC' | 'content__ASC' | 'content__DESC' | 'image__ASC' | 'image__DESC' | 'summary__ASC' | 'summary__DESC' | 'untitled_1__ASC' | 'untitled_1__DESC' | 'untitled__ASC' | 'untitled__DESC' | 'virtueDescription__ASC' | 'virtueDescription__DESC' | 'virtue__ASC' | 'virtue__DESC'
+export type StoriesItemOrderByEnum = '_sys_createdAt__ASC' | '_sys_createdAt__DESC' | '_sys_hash__ASC' | '_sys_hash__DESC' | '_sys_id__ASC' | '_sys_id__DESC' | '_sys_lastModifiedAt__ASC' | '_sys_lastModifiedAt__DESC' | '_sys_slug__ASC' | '_sys_slug__DESC' | '_sys_title__ASC' | '_sys_title__DESC' | 'audioUrl__ASC' | 'audioUrl__DESC' | 'content__ASC' | 'content__DESC' | 'image__ASC' | 'image__DESC' | 'summary__ASC' | 'summary__DESC' | 'virtueDescription__ASC' | 'virtueDescription__DESC' | 'virtue__ASC' | 'virtue__DESC'
 
 export interface TransactionStatus {
     /** Duration in milliseconds. */
@@ -352,7 +393,7 @@ export interface Variant {
     __typename: 'Variant'
 }
 
-export interface Workflow {
+export interface Workflows {
     _analyticsKey: Scalars['String']
     _dashboardUrl: Scalars['String']
     _id: Scalars['String']
@@ -362,10 +403,10 @@ export interface Workflow {
     _sys: BlockDocumentSys
     _title: Scalars['String']
     untitled: Untitled
-    __typename: 'Workflow'
+    __typename: 'Workflows'
 }
 
-export interface _AgentSTART {
+export interface _AgentStart {
     _agentKey: Scalars['String']
     _analyticsKey: Scalars['String']
     _dashboardUrl: Scalars['String']
@@ -387,38 +428,11 @@ export interface _AgentSTART {
     manageBranches: Scalars['Boolean']
     mcpUrl: Scalars['String']
     model: Scalars['String']
+    openRouterKey: (Scalars['String'] | null)
     searchTheWeb: Scalars['Boolean']
     slackInstallUrl: Scalars['String']
     systemPrompt: Scalars['String']
-    __typename: '_AgentSTART'
-}
-
-export interface _AgentUntitled_1 {
-    _agentKey: Scalars['String']
-    _analyticsKey: Scalars['String']
-    _dashboardUrl: Scalars['String']
-    _id: Scalars['String']
-    _idPath: Scalars['String']
-    _slug: Scalars['String']
-    _slugPath: Scalars['String']
-    _sys: BlockDocumentSys
-    _title: Scalars['String']
-    accent: Scalars['String']
-    avatar: Scalars['String']
-    chatUrl: Scalars['String']
-    commit: Scalars['Boolean']
-    description: Scalars['String']
-    edit: Scalars['Boolean']
-    embedUrl: Scalars['String']
-    getUserInfo: Scalars['Boolean']
-    grayscale: Scalars['String']
-    manageBranches: Scalars['Boolean']
-    mcpUrl: Scalars['String']
-    model: Scalars['String']
-    searchTheWeb: Scalars['Boolean']
-    slackInstallUrl: Scalars['String']
-    systemPrompt: Scalars['String']
-    __typename: '_AgentUntitled_1'
+    __typename: '_AgentStart'
 }
 
 export interface _BranchInfo {
@@ -487,8 +501,7 @@ export type _ResolveTargetsWithEnum = 'id' | 'objectName'
 export type _StructureFormatEnum = 'json' | 'xml'
 
 export interface _agents {
-    start: _AgentSTART
-    untitled1: _AgentUntitled_1
+    start: _AgentStart
     __typename: '_agents'
 }
 
@@ -516,11 +529,33 @@ export interface storiesItem_AsList {
     __typename: 'storiesItem_AsList'
 }
 
+export interface AboutGenqlSelection{
+    _analyticsKey?: { __args: {
+    /**
+     * The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
+     * 
+     * Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
+     */
+    scope?: (AnalyticsKeyScope | null)} } | boolean | number
+    _dashboardUrl?: boolean | number
+    _id?: boolean | number
+    _idPath?: boolean | number
+    _slug?: boolean | number
+    _slugPath?: boolean | number
+    _sys?: BlockDocumentSysGenqlSelection
+    _title?: boolean | number
+    content?: ContentGenqlSelection
+    subtitle?: boolean | number
+    __typename?: boolean | number
+    __fragmentOn?: "About"
+}
+
 export interface BaseRichTextJsonGenqlSelection{
     blocks?: boolean | number
     content?: boolean | number
     toc?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "BaseRichTextJson"
 }
 
 export interface BlockAudioGenqlSelection{
@@ -532,6 +567,7 @@ export interface BlockAudioGenqlSelection{
     mimeType?: boolean | number
     url?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "BlockAudio"
 }
 
 export interface BlockCodeSnippetGenqlSelection{
@@ -543,6 +579,7 @@ export interface BlockCodeSnippetGenqlSelection{
     theme?: (Scalars['String'] | null)} } | boolean | number
     language?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "BlockCodeSnippet"
 }
 
 export interface BlockColorGenqlSelection{
@@ -553,6 +590,7 @@ export interface BlockColorGenqlSelection{
     r?: boolean | number
     rgb?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "BlockColor"
 }
 
 export interface BlockDocumentGenqlSelection{
@@ -570,13 +608,14 @@ export interface BlockDocumentGenqlSelection{
     _slugPath?: boolean | number
     _sys?: BlockDocumentSysGenqlSelection
     _title?: boolean | number
+    on_About?: AboutGenqlSelection
     on_Stories?: StoriesGenqlSelection
     on_StoriesItem?: StoriesItemGenqlSelection
-    on_Workflow?: WorkflowGenqlSelection
-    on__AgentSTART?: _AgentSTARTGenqlSelection
-    on__AgentUntitled_1?: _AgentUntitled_1GenqlSelection
+    on_Workflows?: WorkflowsGenqlSelection
+    on__AgentStart?: _AgentStartGenqlSelection
     on_storiesItem_AsList?: storiesItem_AsListGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "BlockDocument"
 }
 
 export interface BlockDocumentSysGenqlSelection{
@@ -590,6 +629,7 @@ export interface BlockDocumentSysGenqlSelection{
     slugPath?: boolean | number
     title?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "BlockDocumentSys"
 }
 
 export interface BlockFileGenqlSelection{
@@ -599,6 +639,7 @@ export interface BlockFileGenqlSelection{
     mimeType?: boolean | number
     url?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "BlockFile"
 }
 
 export interface BlockImageGenqlSelection{
@@ -634,6 +675,7 @@ export interface BlockImageGenqlSelection{
     url?: { __args: {anim?: (Scalars['String'] | null), background?: (Scalars['String'] | null), blur?: (Scalars['Int'] | null), border?: (Scalars['String'] | null), brightness?: (Scalars['Int'] | null), compression?: (Scalars['String'] | null), contrast?: (Scalars['Int'] | null), dpr?: (Scalars['Int'] | null), fit?: (Scalars['String'] | null), format?: (Scalars['String'] | null), gamma?: (Scalars['String'] | null), gravity?: (Scalars['String'] | null), height?: (Scalars['Int'] | null), metadata?: (Scalars['String'] | null), quality?: (Scalars['Int'] | null), rotate?: (Scalars['String'] | null), sharpen?: (Scalars['String'] | null), trim?: (Scalars['String'] | null), width?: (Scalars['Int'] | null)} } | boolean | number
     width?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "BlockImage"
 }
 
 export interface BlockListGenqlSelection{
@@ -657,6 +699,7 @@ export interface BlockListGenqlSelection{
     on_Stories?: StoriesGenqlSelection
     on_storiesItem_AsList?: storiesItem_AsListGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "BlockList"
 }
 
 export interface BlockOgImageGenqlSelection{
@@ -664,6 +707,7 @@ export interface BlockOgImageGenqlSelection{
     url?: boolean | number
     width?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "BlockOgImage"
 }
 
 
@@ -681,7 +725,9 @@ export interface BlockRichTextGenqlSelection{
     /** Words per minute, defaults to average 183wpm */
     wpm?: (Scalars['Int'] | null)} } | boolean | number
     on_Content?: ContentGenqlSelection
+    on_Content_1?: Content_1GenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "BlockRichText"
 }
 
 export interface BlockVideoGenqlSelection{
@@ -696,6 +742,7 @@ export interface BlockVideoGenqlSelection{
     url?: boolean | number
     width?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "BlockVideo"
 }
 
 export interface ContentGenqlSelection{
@@ -711,12 +758,37 @@ export interface ContentGenqlSelection{
     /** Words per minute, defaults to average 183wpm */
     wpm?: (Scalars['Int'] | null)} } | boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "Content"
 }
 
 export interface ContentRichTextGenqlSelection{
     content?: boolean | number
     toc?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "ContentRichText"
+}
+
+export interface Content_1GenqlSelection{
+    html?: { __args: {
+    /** It automatically generates a unique id for each heading present in the HTML. Enabled by default. */
+    slugs?: (Scalars['Boolean'] | null), 
+    /** Inserts a table of contents at the beginning of the HTML. */
+    toc?: (Scalars['Boolean'] | null)} } | boolean | number
+    json?: Content_1RichTextGenqlSelection
+    markdown?: boolean | number
+    plainText?: boolean | number
+    readingTime?: { __args: {
+    /** Words per minute, defaults to average 183wpm */
+    wpm?: (Scalars['Int'] | null)} } | boolean | number
+    __typename?: boolean | number
+    __fragmentOn?: "Content_1"
+}
+
+export interface Content_1RichTextGenqlSelection{
+    content?: boolean | number
+    toc?: boolean | number
+    __typename?: boolean | number
+    __fragmentOn?: "Content_1RichText"
 }
 
 export interface DateFilter {eq?: (Scalars['DateTime'] | null),isAfter?: (Scalars['DateTime'] | null),isBefore?: (Scalars['DateTime'] | null),isNull?: (Scalars['Boolean'] | null),neq?: (Scalars['DateTime'] | null),onOrAfter?: (Scalars['DateTime'] | null),onOrBefore?: (Scalars['DateTime'] | null)}
@@ -725,6 +797,7 @@ export interface GetUploadSignedURLGenqlSelection{
     signedURL?: boolean | number
     uploadURL?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "GetUploadSignedURL"
 }
 
 export interface ListFilter {isEmpty?: (Scalars['Boolean'] | null),length?: (Scalars['Int'] | null)}
@@ -735,6 +808,7 @@ export interface ListMetaGenqlSelection{
     /** Total number of items in collection before any filtering/pagination */
     totalCount?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "ListMeta"
 }
 
 export interface MediaBlockGenqlSelection{
@@ -748,6 +822,7 @@ export interface MediaBlockGenqlSelection{
     on_BlockImage?: BlockImageGenqlSelection
     on_BlockVideo?: BlockVideoGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "MediaBlock"
 }
 
 export interface MediaBlockUnionGenqlSelection{
@@ -756,7 +831,8 @@ export interface MediaBlockUnionGenqlSelection{
     on_BlockImage?:BlockImageGenqlSelection,
     on_BlockVideo?:BlockVideoGenqlSelection,
     on_MediaBlock?: MediaBlockGenqlSelection,
-    __typename?: boolean | number
+    __typename?: boolean | number,
+    __fragmentOn?: "MediaBlockUnion"
 }
 
 export interface MutationGenqlSelection{
@@ -814,18 +890,23 @@ export interface MutationGenqlSelection{
     /** Transaction ID */
     id: Scalars['String']} })
     __typename?: boolean | number
+    __fragmentOn?: "Mutation"
 }
 
 export interface NumberFilter {eq?: (Scalars['Float'] | null),gt?: (Scalars['Float'] | null),gte?: (Scalars['Float'] | null),isNull?: (Scalars['Boolean'] | null),lt?: (Scalars['Float'] | null),lte?: (Scalars['Float'] | null),neq?: (Scalars['Float'] | null)}
 
 export interface QueryGenqlSelection{
-    _agent?: (_AgentSTARTGenqlSelection & { __args: {
+    _agent?: (_AgentStartGenqlSelection & { __args: {
     /** The ID of the agent. */
     id: Scalars['String']} })
     /** Query across the custom AI agents in the repository. */
     _agents?: _agentsGenqlSelection
     /** Query across all of the instances of a component. Pass in filters and sorts if you want, and get each instance via the `items` key. */
     _componentInstances?: _componentsGenqlSelection
+    /** The diff between the current branch and the head commit. */
+    _diff?: { __args: {
+    /** Simplified diff returns only the items array showing statuses. */
+    simplified?: (Scalars['Boolean'] | null)} } | boolean | number
     /** The structure of the repository. Used by START. */
     _structure?: { __args: {
     /** The format of the structure. */
@@ -841,6 +922,7 @@ export interface QueryGenqlSelection{
     /** Whether to include type options in the structure. */
     withTypeOptions?: (Scalars['Boolean'] | null)} } | boolean | number
     _sys?: RepoSysGenqlSelection
+    about?: AboutGenqlSelection
     stories?: (StoriesGenqlSelection & { __args?: {
     /** Filter by a field. */
     filter?: (StoriesItemFilterInput | null), 
@@ -848,20 +930,26 @@ export interface QueryGenqlSelection{
     first?: (Scalars['Int'] | null), 
     /** Order by a field. */
     orderBy?: (StoriesItemOrderByEnum | null), 
+    /** Search configuration */
+    search?: (StoriesItemSearchInput | null), 
     /** Skip the first n items. */
     skip?: (Scalars['Int'] | null)} })
-    workflow?: WorkflowGenqlSelection
+    workflows?: WorkflowsGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "Query"
 }
 
 export interface RepoSysGenqlSelection{
     branches?: (_BranchesGenqlSelection & { __args?: {limit?: (Scalars['Int'] | null), offset?: (Scalars['Int'] | null)} })
+    dashboardUrl?: boolean | number
+    forkUrl?: boolean | number
     hash?: boolean | number
     id?: boolean | number
     playgroundInfo?: _PlaygroundInfoGenqlSelection
     slug?: boolean | number
     title?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "RepoSys"
 }
 
 export interface RichTextJsonGenqlSelection{
@@ -869,7 +957,18 @@ export interface RichTextJsonGenqlSelection{
     toc?: boolean | number
     on_BaseRichTextJson?: BaseRichTextJsonGenqlSelection
     on_ContentRichText?: ContentRichTextGenqlSelection
+    on_Content_1RichText?: Content_1RichTextGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "RichTextJson"
+}
+
+export interface SearchHighlightGenqlSelection{
+    /** The field/path that was matched (e.g., "title", "body.content") */
+    by?: boolean | number
+    /** HTML snippet with <mark> tags around the matched terms */
+    snippet?: boolean | number
+    __typename?: boolean | number
+    __fragmentOn?: "SearchHighlight"
 }
 
 export interface SelectFilter {excludes?: (Scalars['String'] | null),excludesAll?: (Scalars['String'][] | null),includes?: (Scalars['String'] | null),includesAll?: (Scalars['String'][] | null),includesAny?: (Scalars['String'][] | null),isEmpty?: (Scalars['Boolean'] | null)}
@@ -897,6 +996,7 @@ export interface StoriesGenqlSelection{
     /** Returns the list of items after filtering and paginating according to the arguments sent by the client. */
     items?: StoriesItemGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "Stories"
 }
 
 export interface StoriesItemGenqlSelection{
@@ -908,6 +1008,8 @@ export interface StoriesItemGenqlSelection{
      */
     scope?: (AnalyticsKeyScope | null)} } | boolean | number
     _dashboardUrl?: boolean | number
+    /** Array of search highlight information with field names and HTML markup */
+    _highlight?: SearchHighlightGenqlSelection
     _id?: boolean | number
     _idPath?: boolean | number
     _slug?: boolean | number
@@ -915,17 +1017,22 @@ export interface StoriesItemGenqlSelection{
     _sys?: BlockDocumentSysGenqlSelection
     _title?: boolean | number
     audioUrl?: boolean | number
-    content?: ContentGenqlSelection
+    content?: Content_1GenqlSelection
     image?: BlockImageGenqlSelection
     summary?: boolean | number
-    untitled?: BlockOgImageGenqlSelection
-    untitled_1?: BlockAudioGenqlSelection
     virtue?: boolean | number
     virtueDescription?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "StoriesItem"
 }
 
 export interface StoriesItemFilterInput {AND?: (StoriesItemFilterInput | null),OR?: (StoriesItemFilterInput | null),_id?: (StringFilter | null),_slug?: (StringFilter | null),_sys_apiNamePath?: (StringFilter | null),_sys_createdAt?: (DateFilter | null),_sys_hash?: (StringFilter | null),_sys_id?: (StringFilter | null),_sys_idPath?: (StringFilter | null),_sys_lastModifiedAt?: (DateFilter | null),_sys_slug?: (StringFilter | null),_sys_slugPath?: (StringFilter | null),_sys_title?: (StringFilter | null),_title?: (StringFilter | null),audioUrl?: (StringFilter | null),summary?: (StringFilter | null),virtue?: (StringFilter | null),virtueDescription?: (StringFilter | null)}
+
+export interface StoriesItemSearchInput {
+/** Searchable fields for query */
+by?: (Scalars['String'][] | null),
+/** Search query */
+q?: (Scalars['String'] | null)}
 
 export interface StringFilter {contains?: (Scalars['String'] | null),endsWith?: (Scalars['String'] | null),eq?: (Scalars['String'] | null),in?: (Scalars['String'][] | null),isNull?: (Scalars['Boolean'] | null),matches?: (StringMatchesFilter | null),notEq?: (Scalars['String'] | null),notIn?: (Scalars['String'][] | null),startsWith?: (Scalars['String'] | null)}
 
@@ -942,12 +1049,14 @@ export interface TransactionStatusGenqlSelection{
     startedAt?: boolean | number
     status?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "TransactionStatus"
 }
 
 export interface UntitledGenqlSelection{
     /** The `webhookSecret` is used to verify the authenticity of the webhook request, and also to type the payload. */
     webhookSecret?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "Untitled"
 }
 
 export interface VariantGenqlSelection{
@@ -957,9 +1066,10 @@ export interface VariantGenqlSelection{
     isDefault?: boolean | number
     label?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "Variant"
 }
 
-export interface WorkflowGenqlSelection{
+export interface WorkflowsGenqlSelection{
     _analyticsKey?: { __args: {
     /**
      * The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
@@ -976,9 +1086,10 @@ export interface WorkflowGenqlSelection{
     _title?: boolean | number
     untitled?: UntitledGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "Workflows"
 }
 
-export interface _AgentSTARTGenqlSelection{
+export interface _AgentStartGenqlSelection{
     _agentKey?: boolean | number
     _analyticsKey?: { __args: {
     /**
@@ -1006,44 +1117,12 @@ export interface _AgentSTARTGenqlSelection{
     manageBranches?: boolean | number
     mcpUrl?: boolean | number
     model?: boolean | number
+    openRouterKey?: boolean | number
     searchTheWeb?: boolean | number
     slackInstallUrl?: boolean | number
     systemPrompt?: boolean | number
     __typename?: boolean | number
-}
-
-export interface _AgentUntitled_1GenqlSelection{
-    _agentKey?: boolean | number
-    _analyticsKey?: { __args: {
-    /**
-     * The scope of the analytics key. Use `send` for just ingesting data. Use `query` if you need to show an analytics data in your website.
-     * 
-     * Have in mind, if you expose your `query` analytics key in the frontend, you'll be exposing all of this block's analytics data to the public. This is generally safe, but it might not be in your case.
-     */
-    scope?: (AnalyticsKeyScope | null)} } | boolean | number
-    _dashboardUrl?: boolean | number
-    _id?: boolean | number
-    _idPath?: boolean | number
-    _slug?: boolean | number
-    _slugPath?: boolean | number
-    _sys?: BlockDocumentSysGenqlSelection
-    _title?: boolean | number
-    accent?: boolean | number
-    avatar?: boolean | number
-    chatUrl?: boolean | number
-    commit?: boolean | number
-    description?: boolean | number
-    edit?: boolean | number
-    embedUrl?: boolean | number
-    getUserInfo?: boolean | number
-    grayscale?: boolean | number
-    manageBranches?: boolean | number
-    mcpUrl?: boolean | number
-    model?: boolean | number
-    searchTheWeb?: boolean | number
-    slackInstallUrl?: boolean | number
-    systemPrompt?: boolean | number
-    __typename?: boolean | number
+    __fragmentOn?: "_AgentStart"
 }
 
 export interface _BranchInfoGenqlSelection{
@@ -1068,12 +1147,14 @@ export interface _BranchInfoGenqlSelection{
     updatedAt?: boolean | number
     workingRootBlockId?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "_BranchInfo"
 }
 
 export interface _BranchesGenqlSelection{
     _meta?: ListMetaGenqlSelection
     items?: _BranchInfoGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "_Branches"
 }
 
 export interface _CommitInfoGenqlSelection{
@@ -1091,12 +1172,14 @@ export interface _CommitInfoGenqlSelection{
     repoId?: boolean | number
     rootBlockId?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "_CommitInfo"
 }
 
 export interface _GitInfoGenqlSelection{
     branch?: boolean | number
     deploymentUrl?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "_GitInfo"
 }
 
 export interface _PlaygroundInfoGenqlSelection{
@@ -1105,12 +1188,13 @@ export interface _PlaygroundInfoGenqlSelection{
     expiresAt?: boolean | number
     id?: boolean | number
     __typename?: boolean | number
+    __fragmentOn?: "_PlaygroundInfo"
 }
 
 export interface _agentsGenqlSelection{
-    start?: _AgentSTARTGenqlSelection
-    untitled1?: _AgentUntitled_1GenqlSelection
+    start?: _AgentStartGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "_agents"
 }
 
 export interface _componentsGenqlSelection{
@@ -1121,9 +1205,12 @@ export interface _componentsGenqlSelection{
     first?: (Scalars['Int'] | null), 
     /** Order by a field. */
     orderBy?: (StoriesItemOrderByEnum | null), 
+    /** Search configuration */
+    search?: (StoriesItemSearchInput | null), 
     /** Skip the first n items. */
     skip?: (Scalars['Int'] | null)} })
     __typename?: boolean | number
+    __fragmentOn?: "_components"
 }
 
 export interface storiesItem_AsListGenqlSelection{
@@ -1149,9 +1236,14 @@ export interface storiesItem_AsListGenqlSelection{
     /** Returns the list of items after filtering and paginating according to the arguments sent by the client. */
     items?: StoriesItemGenqlSelection
     __typename?: boolean | number
+    __fragmentOn?: "storiesItem_AsList"
 }
 
 export interface FragmentsMap {
+  About: {
+    root: About,
+    selection: AboutGenqlSelection,
+}
   BaseRichTextJson: {
     root: BaseRichTextJson,
     selection: BaseRichTextJsonGenqlSelection,
@@ -1208,6 +1300,14 @@ export interface FragmentsMap {
     root: ContentRichText,
     selection: ContentRichTextGenqlSelection,
 }
+  Content_1: {
+    root: Content_1,
+    selection: Content_1GenqlSelection,
+}
+  Content_1RichText: {
+    root: Content_1RichText,
+    selection: Content_1RichTextGenqlSelection,
+}
   GetUploadSignedURL: {
     root: GetUploadSignedURL,
     selection: GetUploadSignedURLGenqlSelection,
@@ -1236,6 +1336,10 @@ export interface FragmentsMap {
     root: RichTextJson,
     selection: RichTextJsonGenqlSelection,
 }
+  SearchHighlight: {
+    root: SearchHighlight,
+    selection: SearchHighlightGenqlSelection,
+}
   Stories: {
     root: Stories,
     selection: StoriesGenqlSelection,
@@ -1256,17 +1360,13 @@ export interface FragmentsMap {
     root: Variant,
     selection: VariantGenqlSelection,
 }
-  Workflow: {
-    root: Workflow,
-    selection: WorkflowGenqlSelection,
+  Workflows: {
+    root: Workflows,
+    selection: WorkflowsGenqlSelection,
 }
-  _AgentSTART: {
-    root: _AgentSTART,
-    selection: _AgentSTARTGenqlSelection,
-}
-  _AgentUntitled_1: {
-    root: _AgentUntitled_1,
-    selection: _AgentUntitled_1GenqlSelection,
+  _AgentStart: {
+    root: _AgentStart,
+    selection: _AgentStartGenqlSelection,
 }
   _BranchInfo: {
     root: _BranchInfo,
