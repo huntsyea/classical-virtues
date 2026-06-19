@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "basehub dev & next dev",
     "build": "basehub && next build",
+    "build:local": "next build",
     "start": "next start",
     "lint": "eslint .",
     "basehub": "basehub"
