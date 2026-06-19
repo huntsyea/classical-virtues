@@ -1,0 +1,53 @@
+[
+  {
+    "slug": "prudence",
+    "title": "Prudence",
+    "order": 1,
+    "tagline": "The wisdom to choose well.",
+    "description": "Prudence is the quiet art of seeing clearly before we act — weighing what is true, what is kind, and what is wise, then choosing the better path. It is the virtue that quietly guides all the others, the steady voice that asks, “What is the right thing to do, and how shall I do it well?” In these stories, prudence looks like patience, good judgment, and the courage to think before we leap."
+  },
+  {
+    "slug": "justice",
+    "title": "Justice",
+    "order": 2,
+    "tagline": "Giving each their due.",
+    "description": "Justice is the habit of treating others fairly and giving each person what they are owed — honesty, respect, and a fair share. It asks us to keep our promises, to make right what we have wronged, and to stand up for those who cannot stand for themselves. The stories gathered here show justice as something warm and human: the keeping of one’s word, the mending of a quarrel, the small acts of fairness that hold a family together."
+  },
+  {
+    "slug": "fortitude",
+    "title": "Fortitude",
+    "alternateName": "Courage",
+    "order": 3,
+    "tagline": "Standing firm when it is hard.",
+    "description": "Fortitude — the virtue we more often call courage — is the strength to do what is right even when it is difficult or frightening. It is not the absence of fear but the steadiness to act in spite of it: to endure hardship, to face danger for a good cause, and to hold fast to what is true. In these tales courage wears many faces, the bold and the quiet alike, but always it means standing firm when standing firm is hard."
+  },
+  {
+    "slug": "temperance",
+    "title": "Temperance",
+    "order": 4,
+    "tagline": "Moderation and gentle self-mastery.",
+    "description": "Temperance is the gift of self-mastery — knowing when enough is enough, and choosing balance over excess. It teaches us to govern our appetites and our tempers, to enjoy good things without being ruled by them, and to find the calm that comes from a well-ordered heart. The stories here show temperance as a quiet kind of freedom: the patience to wait, the grace to share, and the wisdom to keep ourselves in gentle check."
+  },
+  {
+    "slug": "faith",
+    "title": "Faith",
+    "order": 5,
+    "tagline": "Trust that holds fast.",
+    "description": "Faith is trust — in what is good, in one another, and in the promises we hold dear. It is the quiet confidence that carries us through uncertainty, the belief that keeps us steadfast when we cannot yet see the way. In these stories faith appears as loyalty kept, trust honored, and hearts that hold fast to hope even in the dark."
+  },
+  {
+    "slug": "hope",
+    "title": "Hope",
+    "order": 6,
+    "tagline": "Looking forward in good cheer.",
+    "description": "Hope is the bright expectation that good things lie ahead, and the courage to keep going until we reach them. It lifts our eyes past present troubles toward what may yet be, and it gives us patience to wait and strength to persevere. The tales gathered under hope remind us that even the longest night gives way to morning, and that to hope is itself a kind of quiet bravery."
+  },
+  {
+    "slug": "charity",
+    "title": "Charity",
+    "alternateName": "Love",
+    "order": 7,
+    "tagline": "Love that gives without counting the cost.",
+    "description": "Charity — the love that gives freely — is the greatest of the virtues and the warm heart of all the rest. It is kindness without keeping score, compassion for the stranger, and the willingness to put another’s good before our own. In these stories charity looks like an open hand and an open door: mercy shown, burdens shared, and love offered without counting the cost."
+  }
+]
