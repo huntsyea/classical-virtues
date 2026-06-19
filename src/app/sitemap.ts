@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { getAllStories } from '@/lib/stories'
+import { getVirtueSlugs } from '@/lib/virtues'
 
 const BASE_URL = 'https://classicalvirtues.com'
 
@@ -18,10 +19,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
+      url: `${BASE_URL}/virtues`,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
       url: `${BASE_URL}/about`,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
+    ...getVirtueSlugs().map((slug) => ({
+      url: `${BASE_URL}/virtues/${slug}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
     ...stories.map((story) => ({
       url: `${BASE_URL}/stories/${story.slug}`,
       changeFrequency: 'monthly' as const,
