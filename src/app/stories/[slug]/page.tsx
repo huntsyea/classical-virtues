@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import JsonLd from '@/components/JsonLd';
 import LazyAudioPlayer from '@/components/LazyAudioPlayer';
+import ShareStory from '@/components/ShareStory';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
@@ -182,6 +183,7 @@ export default async function Post({ params }: { params: Params }) {
           </div>
         </CardContent>
       </Card>
+      <ShareStory title={story.title} slug={slug} />
       {relatedStories.length > 0 && (
         <section aria-labelledby="read-another" className="mt-16 border-t border-border pt-10">
           <h2 id="read-another" className="font-heading text-2xl mb-6">Read another story</h2>
