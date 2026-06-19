@@ -88,16 +88,19 @@ export default function AudioPlayer({ audioUrl, title, image }: AudioPlayerProps
     };
 
     const handlePlay = () => {
+      // The 'play' event fires on intent; audio may still be buffering, so
+      // hold the spoken status at "Loading…" until 'playing' confirms sound.
       setIsPlaying(true);
-      setStatus('Playing');
     };
 
     const handlePlaying = () => {
       setIsBuffering(false);
+      setStatus('Playing');
     };
 
     const handleWaiting = () => {
       setIsBuffering(true);
+      setStatus('Loading…');
     };
 
     const handleCanPlay = () => {
@@ -214,6 +217,7 @@ export default function AudioPlayer({ audioUrl, title, image }: AudioPlayerProps
 
     try {
       setIsBuffering(true);
+      setStatus('Loading…');
       await audio.play();
     } catch (playError) {
       console.error('Playback failed:', playError);
@@ -273,9 +277,9 @@ export default function AudioPlayer({ audioUrl, title, image }: AudioPlayerProps
                 aria-hidden="true"
               />
             ) : isPlaying ? (
-              <PauseIcon className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+              <PauseIcon className="h-5 w-5 text-foreground" aria-hidden="true" />
             ) : (
-              <PlayIcon className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
+              <PlayIcon className="h-5 w-5 text-foreground" aria-hidden="true" />
             )}
           </Button>
           <Button
