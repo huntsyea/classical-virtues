@@ -1,4 +1,5 @@
 import { getAllStories, getStoryBySlug } from '@/lib/stories';
+import { getVirtueSlugForStoryVirtue } from '@/lib/virtues';
 import { compileMDX } from 'next-mdx-remote/rsc';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -104,6 +105,7 @@ export default async function Post({ params }: { params: Params }) {
   ].slice(0, 3);
 
   const minutes = Math.max(1, Math.round(story.wordCount / 140));
+  const virtueSlug = getVirtueSlugForStoryVirtue(story.virtue);
   const storyContent = await renderStoryContent(story.content);
 
   const articleStructuredData = {
@@ -151,13 +153,24 @@ export default async function Post({ params }: { params: Params }) {
       <header className="mb-8">
         <h1 className="text-4xl sm:text-5xl font-heading tracking-wide">{story.title}</h1>
         <p className="mt-3 text-muted-foreground">
-          A story of {story.virtue.toLowerCase()} · About {minutes} {minutes === 1 ? 'minute' : 'minutes'}
+          A story of{' '}
+          {virtueSlug ? (
+            <Link
+              href={`/virtues/${virtueSlug}`}
+              className="underline underline-offset-4 hover:text-foreground"
+            >
+              {story.virtue.toLowerCase()}
+            </Link>
+          ) : (
+            story.virtue.toLowerCase()
+          )}{' '}
+          · About {minutes} {minutes === 1 ? 'minute' : 'minutes'}
         </p>
       </header>
       <div className="relative w-full h-80 mb-8 overflow-hidden">
         <Image
           src={story.image}
-          alt={`Illustration for ${story.title}`}
+          alt={story.imageAlt || `Illustration for ${story.title}`}
           fill
           priority
           sizes="(max-width: 768px) 100vw, 768px"

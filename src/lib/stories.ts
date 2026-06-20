@@ -7,6 +7,8 @@ export interface StoryData {
   title: string
   virtue: string
   image: string
+  /** Concrete, descriptive alt text for the story image (from the CMS). */
+  imageAlt: string
   summary: string
   content: string
   virtueDescription: string
@@ -21,7 +23,7 @@ function basehubToStory(story: Story): StoryData | null {
     console.warn(`Story "${story._title}" has no content`)
     return null
   }
-  
+
   return {
     id: story._id,
     slug: story._slug,
@@ -29,6 +31,7 @@ function basehubToStory(story: Story): StoryData | null {
     title: story._title,
     virtue: story.virtue,
     image: story.image.url,
+    imageAlt: story.image.alt || '',
     summary: story.summary,
     content: story.content.markdown,
     virtueDescription: story.virtueDescription,
@@ -73,4 +76,4 @@ export async function getStoryBySlug(slug: string): Promise<StoryData | null> {
     console.error('❌ Failed to fetch story from Basehub:', error)
     return null
   }
-} 
+}
