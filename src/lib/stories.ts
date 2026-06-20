@@ -1,4 +1,5 @@
 import { getAllStories as getAllBasehubStories, getStoryBySlug as getBasehubStoryBySlug, Story } from './basehub'
+import { resolveSummary, resolveImageAlt } from './seo'
 
 // Unified story interface
 export interface StoryData {
@@ -12,6 +13,13 @@ export interface StoryData {
   summary: string
   content: string
   virtueDescription: string
+  /**
+   * Public-domain / classical source note (e.g. "From Aesop's Fables").
+   * Optional: rendered as a small provenance line outside the story body when
+   * present, omitted entirely otherwise. Lives in a structured field, never in
+   * the narrative `content`, per the SEO boundary in `writing.md`.
+   */
+  source?: string
   audioUrl: string
   wordCount: number
 }
@@ -31,10 +39,16 @@ function basehubToStory(story: Story): StoryData | null {
     title: story._title,
     virtue: story.virtue,
     image: story.image.url,
-    imageAlt: story.image.alt || '',
-    summary: story.summary,
+    // Always populated: concrete CMS alt, else a descriptive fallback.
+    imageAlt: resolveImageAlt(story.image.alt, story._title),
+    // Always populated: editorial summary, else prose excerpt, else brand default.
+    // Feeds meta description, OG, Twitter, and Article schema — no single point of failure.
+    summary: resolveSummary(story.summary, story.content.plainText),
     content: story.content.markdown,
     virtueDescription: story.virtueDescription,
+    // Optional provenance note; omit when empty so nothing renders. `source`
+    // is an additive Basehub field (PRO-62) and may be absent on older items.
+    source: story.source?.trim() || undefined,
     audioUrl: story.audioUrl || '',
     wordCount: story.content.plainText.split(/\s+/).length,
   }

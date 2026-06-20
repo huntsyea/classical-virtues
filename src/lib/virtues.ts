@@ -29,13 +29,54 @@ const VIRTUES: Virtue[] = (virtuesData as Virtue[])
   .slice()
   .sort((a, b) => a.order - b.order)
 
-/** True when a story's free-text virtue matches this virtue's name or alias. */
-function storyMatchesVirtue(virtue: Virtue, storyVirtue: string): boolean {
+/**
+ * Sub-virtue angle → canon virtue slug.
+ *
+ * `PRODUCT.md` and `writing.md` allow sub-virtues (kindness, mercy, honesty, …)
+ * as story *angles*, but every published story must still map back to one of the
+ * seven canon virtues so no story is orphaned and no virtue hub renders empty.
+ * The CMS `virtue` field stays free-text — it carries the angle shown in the
+ * story eyebrow — and this table is the authoritative bridge from that angle to
+ * canon. It is the engineering counterpart to a `canonicalVirtue` field: the
+ * canon never changes, so (like the seven virtues themselves) it lives in-repo
+ * rather than in the CMS.
+ *
+ * Mappings are sourced from the Writing Vault canon reference (PRO-57):
+ *   - kindness → charity   (compassion freely given)
+ *   - mercy    → charity   (covenant love shown where judgment is expected)
+ *   - honesty  → justice   (giving others the truth they are owed)
+ *
+ * When a new sub-virtue angle is introduced, add it here (see
+ * `content/vault/new-virtue-checklist.md`) rather than leaving an orphan label.
+ */
+const SUB_VIRTUE_TO_CANON_SLUG: Record<string, string> = {
+  kindness: 'charity',
+  mercy: 'charity',
+  honesty: 'justice',
+}
+
+/**
+ * Resolve a story's free-text `virtue` to its canon virtue, or `undefined` when
+ * it maps to no canon entry. Matches a canon title or familiar alternate name
+ * first (e.g. Courage→Fortitude, Love→Charity), then falls back to the
+ * sub-virtue bridge above.
+ */
+function resolveCanonVirtue(storyVirtue: string): Virtue | undefined {
   const needle = storyVirtue.trim().toLowerCase()
-  return (
-    needle === virtue.title.toLowerCase() ||
-    needle === virtue.alternateName?.toLowerCase()
+  const direct = VIRTUES.find(
+    (v) =>
+      needle === v.title.toLowerCase() ||
+      needle === v.alternateName?.toLowerCase(),
   )
+  if (direct) return direct
+
+  const canonSlug = SUB_VIRTUE_TO_CANON_SLUG[needle]
+  return canonSlug ? VIRTUES.find((v) => v.slug === canonSlug) : undefined
+}
+
+/** True when a story's free-text virtue resolves to this canon virtue. */
+function storyMatchesVirtue(virtue: Virtue, storyVirtue: string): boolean {
+  return resolveCanonVirtue(storyVirtue)?.slug === virtue.slug
 }
 
 /** All seven virtues, in canonical order, each with its attached stories. */
@@ -67,8 +108,8 @@ export function getVirtueSlugs(): string[] {
 /**
  * Resolve a story's free-text virtue to its canonical virtue-hub slug, or null
  * when it maps to no canon entry. Lets a story link back up to its virtue page
- * using the same name/alias matching the virtue pages use to gather stories.
+ * using the same resolution the virtue pages use to gather stories.
  */
 export function getVirtueSlugForStoryVirtue(storyVirtue: string): string | null {
-  return VIRTUES.find((v) => storyMatchesVirtue(v, storyVirtue))?.slug ?? null
+  return resolveCanonVirtue(storyVirtue)?.slug ?? null
 }

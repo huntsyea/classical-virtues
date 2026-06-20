@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og'
+import { fitOgText, fitOgTitle } from '@/lib/seo'
 
 export const runtime = 'edge'
 
@@ -6,6 +7,12 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const title = searchParams.get('title')
   const virtue = searchParams.get('virtue')
+
+  // Overflow guard: scale the font down for long strings and hard-truncate
+  // anything that would still spill past the 1200×630 canvas, so the footer
+  // branding can never be pushed off the image.
+  const heading = fitOgTitle(title ?? '')
+  const subtitle = virtue ? fitOgText(virtue) : null
 
   return new ImageResponse(
     (
@@ -25,18 +32,18 @@ export async function GET(request: Request) {
       >
         <h1
           style={{
-            fontSize: '64px',
+            fontSize: `${heading.fontSize}px`,
             fontFamily: 'Cormorant Garamond',
             marginBottom: '20px',
           }}
         >
-          {title || 'Classical Virtues'}
+          {heading.text}
         </h1>
-        {virtue && (
+        {subtitle && (
           <p
-            style={{ fontSize: '36px', fontFamily: 'Nunito', marginBottom: '20px' }}
+            style={{ fontSize: `${subtitle.fontSize}px`, fontFamily: 'Nunito', marginBottom: '20px' }}
           >
-            {virtue}
+            {subtitle.text}
           </p>
         )}
         <span style={{ fontSize: '28px', fontFamily: 'Nunito', opacity: 0.7 }}>

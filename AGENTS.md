@@ -12,6 +12,10 @@ affects the public reading experience:
   seven-virtue canon.
 - `@writing.md` — prose voice, approved story structure, field contract, canon
   mapping, and SEO boundaries.
+- `content/vault/new-virtue-checklist.md` — turnkey steps for adding a story so
+  it lands on the right canon hub and conforms to the field contract. Adding a
+  new sub-virtue angle requires one line in `SUB_VIRTUE_TO_CANON_SLUG`
+  (`src/lib/virtues.ts`); see also `content/vault/catalog-audit.md`.
 
 Engineering work must preserve approved editorial content unless the task
 explicitly asks for editorial changes. Do not rewrite story prose, titles,

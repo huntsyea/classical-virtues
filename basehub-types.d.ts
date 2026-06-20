@@ -373,13 +373,14 @@ export interface StoriesItem {
     audioUrl: (Scalars['String'] | null)
     content: (Content_1 | null)
     image: BlockImage
+    source: (Scalars['String'] | null)
     summary: Scalars['String']
     virtue: Scalars['String']
     virtueDescription: Scalars['String']
     __typename: 'StoriesItem'
 }
 
-export type StoriesItemOrderByEnum = '_sys_createdAt__ASC' | '_sys_createdAt__DESC' | '_sys_hash__ASC' | '_sys_hash__DESC' | '_sys_id__ASC' | '_sys_id__DESC' | '_sys_lastModifiedAt__ASC' | '_sys_lastModifiedAt__DESC' | '_sys_slug__ASC' | '_sys_slug__DESC' | '_sys_title__ASC' | '_sys_title__DESC' | 'audioUrl__ASC' | 'audioUrl__DESC' | 'content__ASC' | 'content__DESC' | 'image__ASC' | 'image__DESC' | 'summary__ASC' | 'summary__DESC' | 'virtueDescription__ASC' | 'virtueDescription__DESC' | 'virtue__ASC' | 'virtue__DESC'
+export type StoriesItemOrderByEnum = '_sys_createdAt__ASC' | '_sys_createdAt__DESC' | '_sys_hash__ASC' | '_sys_hash__DESC' | '_sys_id__ASC' | '_sys_id__DESC' | '_sys_lastModifiedAt__ASC' | '_sys_lastModifiedAt__DESC' | '_sys_slug__ASC' | '_sys_slug__DESC' | '_sys_title__ASC' | '_sys_title__DESC' | 'audioUrl__ASC' | 'audioUrl__DESC' | 'content__ASC' | 'content__DESC' | 'image__ASC' | 'image__DESC' | 'source__ASC' | 'source__DESC' | 'summary__ASC' | 'summary__DESC' | 'virtueDescription__ASC' | 'virtueDescription__DESC' | 'virtue__ASC' | 'virtue__DESC'
 
 export interface TransactionStatus {
     /** Duration in milliseconds. */
@@ -1135,6 +1136,7 @@ export interface StoriesItemGenqlSelection{
     audioUrl?: boolean | number
     content?: Content_1GenqlSelection
     image?: BlockImageGenqlSelection
+    source?: boolean | number
     summary?: boolean | number
     virtue?: boolean | number
     virtueDescription?: boolean | number
@@ -1142,7 +1144,7 @@ export interface StoriesItemGenqlSelection{
     __fragmentOn?: "StoriesItem"
 }
 
-export interface StoriesItemFilterInput {AND?: (StoriesItemFilterInput | null),OR?: (StoriesItemFilterInput | null),_id?: (StringFilter | null),_slug?: (StringFilter | null),_sys_apiNamePath?: (StringFilter | null),_sys_createdAt?: (DateFilter | null),_sys_hash?: (StringFilter | null),_sys_id?: (StringFilter | null),_sys_idPath?: (StringFilter | null),_sys_lastModifiedAt?: (DateFilter | null),_sys_slug?: (StringFilter | null),_sys_slugPath?: (StringFilter | null),_sys_title?: (StringFilter | null),_title?: (StringFilter | null),audioUrl?: (StringFilter | null),summary?: (StringFilter | null),virtue?: (StringFilter | null),virtueDescription?: (StringFilter | null)}
+export interface StoriesItemFilterInput {AND?: (StoriesItemFilterInput | null),OR?: (StoriesItemFilterInput | null),_id?: (StringFilter | null),_slug?: (StringFilter | null),_sys_apiNamePath?: (StringFilter | null),_sys_createdAt?: (DateFilter | null),_sys_hash?: (StringFilter | null),_sys_id?: (StringFilter | null),_sys_idPath?: (StringFilter | null),_sys_lastModifiedAt?: (DateFilter | null),_sys_slug?: (StringFilter | null),_sys_slugPath?: (StringFilter | null),_sys_title?: (StringFilter | null),_title?: (StringFilter | null),audioUrl?: (StringFilter | null),source?: (StringFilter | null),summary?: (StringFilter | null),virtue?: (StringFilter | null),virtueDescription?: (StringFilter | null)}
 
 export interface StoriesItemSearchInput {
 /** Searchable fields for query */
