@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next"
 import { cn } from '@/lib/utils'
 import ErrorBoundary from '@/components/ErrorBoundary'
@@ -129,6 +130,16 @@ export default function RootLayout({
         </main>
         <Footer />
         <Analytics />
+        {/* Umami analytics — self-hosted, public website-id (no secret).
+            Skipped in local dev (NODE_ENV !== 'production') to avoid polluting
+            traffic data; loads on production and preview builds. */}
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            src="https://analytics.dudesdesign.com/script.js"
+            data-website-id="3ec4b765-4eef-445d-89d8-db485a2eeba5"
+            strategy="afterInteractive"
+          />
+        )}
         <JsonLd data={websiteSchema} />
         <JsonLd data={organizationSchema} />
       </body>
