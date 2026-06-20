@@ -48,7 +48,7 @@ function buildItemSelection(withSource: boolean): StoriesItemGenqlSelection {
 // retries with the base selection if Basehub rejects it (i.e. the field has
 // not been added to the schema yet). This keeps the catalog rendering whether
 // or not `source` exists, and makes provenance self-activating once the field
-// lands — no second deploy required.
+// lands, with no second deploy required.
 export async function getAllStories(): Promise<Story[]> {
   try {
     let data

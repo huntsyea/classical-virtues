@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'The Virtues',
   description:
-    'The seven classical virtues — Prudence, Justice, Fortitude, Temperance, Faith, Hope, and Charity — each a home for the stories that teach it.',
+    'The seven classical virtues: Prudence, Justice, Fortitude, Temperance, Faith, Hope, and Charity. Each one gathers the stories that teach it.',
   alternates: {
     canonical: '/virtues',
   },
@@ -32,7 +32,7 @@ export default async function VirtuesIndex() {
       <header className="mb-8 space-y-3 sm:mb-10">
         <h1 className="font-heading text-4xl sm:text-5xl">The Virtues</h1>
         <p className="max-w-2xl text-muted-foreground">
-          The seven classical virtues that order this collection — four cardinal
+          The seven classical virtues that order this collection: four cardinal
           and three theological. Each one gathers the stories that teach it.
         </p>
       </header>

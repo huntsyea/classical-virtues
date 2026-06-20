@@ -42,7 +42,7 @@ function basehubToStory(story: Story): StoryData | null {
     // Always populated: concrete CMS alt, else a descriptive fallback.
     imageAlt: resolveImageAlt(story.image.alt, story._title),
     // Always populated: editorial summary, else prose excerpt, else brand default.
-    // Feeds meta description, OG, Twitter, and Article schema — no single point of failure.
+    // Feeds meta description, OG, Twitter, and Article schema with no single point of failure.
     summary: resolveSummary(story.summary, story.content.plainText),
     content: story.content.markdown,
     virtueDescription: story.virtueDescription,

@@ -105,7 +105,7 @@ export default async function VirtuePage({ params }: { params: Params }) {
         </h2>
         {virtue.stories.length === 0 ? (
           <p className="mt-4 text-muted-foreground">
-            No stories have been gathered here yet — they are being prepared.{' '}
+            No stories have been gathered here yet. They are being prepared.{' '}
             <Link href="/stories" className="underline underline-offset-4 hover:text-foreground">
               Browse the whole collection
             </Link>
