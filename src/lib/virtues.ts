@@ -63,3 +63,12 @@ export async function getVirtueBySlug(slug: string): Promise<VirtueData | null> 
 export function getVirtueSlugs(): string[] {
   return VIRTUES.map((v) => v.slug)
 }
+
+/**
+ * Resolve a story's free-text virtue to its canonical virtue-hub slug, or null
+ * when it maps to no canon entry. Lets a story link back up to its virtue page
+ * using the same name/alias matching the virtue pages use to gather stories.
+ */
+export function getVirtueSlugForStoryVirtue(storyVirtue: string): string | null {
+  return VIRTUES.find((v) => storyMatchesVirtue(v, storyVirtue))?.slug ?? null
+}
