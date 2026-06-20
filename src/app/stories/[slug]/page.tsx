@@ -146,6 +146,9 @@ export default async function Post({ params }: { params: Params }) {
     },
     "articleSection": "Moral Stories",
     "keywords": [story.virtue, "virtue", "moral story", "classical virtues"],
+    // Provenance as structured data (allowed SEO surface): the public-domain or
+    // classical source this retelling is based on.
+    ...(story.source ? { "isBasedOn": story.source } : {}),
     ...(story.audioUrl
       ? {
           "audio": {
@@ -193,6 +196,13 @@ export default async function Post({ params }: { params: Params }) {
       <div className="prose prose-lg">
         {storyContent}
       </div>
+      {story.source && (
+        // Provenance line: a quiet, structured attribution kept outside the
+        // narrative body and the moral card (SEO boundary, writing.md).
+        <p className="mt-6 text-sm italic text-muted-foreground">
+          Source: {story.source}
+        </p>
+      )}
       <Card className="bg-accent text-accent-foreground mt-8">
         <CardContent className="p-8">
           <div className="space-y-6">

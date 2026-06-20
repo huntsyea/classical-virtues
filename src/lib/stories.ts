@@ -13,6 +13,13 @@ export interface StoryData {
   summary: string
   content: string
   virtueDescription: string
+  /**
+   * Public-domain / classical source note (e.g. "From Aesop's Fables").
+   * Optional: rendered as a small provenance line outside the story body when
+   * present, omitted entirely otherwise. Lives in a structured field, never in
+   * the narrative `content`, per the SEO boundary in `writing.md`.
+   */
+  source?: string
   audioUrl: string
   wordCount: number
 }
@@ -39,6 +46,9 @@ function basehubToStory(story: Story): StoryData | null {
     summary: resolveSummary(story.summary, story.content.plainText),
     content: story.content.markdown,
     virtueDescription: story.virtueDescription,
+    // Optional provenance note; omit when empty so nothing renders. `source`
+    // is an additive Basehub field (PRO-62) and may be absent on older items.
+    source: story.source?.trim() || undefined,
     audioUrl: story.audioUrl || '',
     wordCount: story.content.plainText.split(/\s+/).length,
   }

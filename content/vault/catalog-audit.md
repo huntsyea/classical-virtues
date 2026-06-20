@@ -64,7 +64,7 @@ End-to-end wiring confirmed in `basehub.ts` → `stories.ts` → render/metadata
 | `virtue` | ✓ | ✓ | ✓ eyebrow + canon bridge | OK |
 | `imageAlt` (`image.alt`) | ✓ | ✓ | ✓ hero `alt` | wired; content gap (see below) |
 | `canonicalVirtue` | ✗ (derived in-repo) | n/a | ✓ via bridge | OK (by design) |
-| `source` | ✗ | ✗ | ✗ | **GAP** |
+| `source` | ✗ (CMS field pending) | ✓ (with fallback) | ✓ provenance line + JSON-LD | code wired (PRO-62); CMS field + backfill pending |
 
 ### Gaps (delegated, do not block C1 engineering)
 
@@ -73,9 +73,12 @@ End-to-end wiring confirmed in `basehub.ts` → `stories.ts` → render/metadata
    generic `Illustration for <title>`. This is a content backfill, not a code
    bug. Owner: Margaret / illustration. → child issue.
 2. **`source` schema gap** — the contract lists a `source` provenance note, but
-   Basehub's `StoriesItem` has no `source` field and nothing renders it. This is
-   the one true unmet contract field. Needs an additive Basehub schema field
-   plus wiring through `basehub.ts` → `stories.ts` → render. → child issue.
+   Basehub's `StoriesItem` has no `source` field. PRO-62 has wired it through
+   the code (`basehub.ts` → `stories.ts` → story page + Article JSON-LD), with a
+   query fallback so the catalog is safe whether or not the field exists.
+   Remaining: add the `source` Text field in Basehub and backfill notes —
+   turnkey steps and proposed notes in `content/vault/source-field-backfill.md`.
+   Owner: Margaret (CMS field + editorial backfill).
 
 ## Acceptance
 
