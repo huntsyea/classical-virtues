@@ -12,9 +12,27 @@ Parents and educators who read classical virtue stories aloud to children, often
 
 Classical Virtues presents timeless fables and stories organized around classical virtues (courage, temperance, honesty, and the like), each with a summary, full text, virtue explanation, and narrated audio. Success looks like a parent finding the right story in under a minute and the reading experience feeling like a well-bound book, not a website.
 
+The reading experience is anthology-first. Search, metadata, and internal linking support discovery, but they must not make a story read like an SEO article.
+
 ## Brand Personality
 
 Timeless, warm, literary. The voice of a trusted family anthology: classical gravitas softened by approachable warmth. Reading a story should feel calm and unhurried; browsing should feel like leafing through a beautiful book.
+
+Story prose is governed by `@writing.md`. Treat that file as the tactical style guide for titles, body structure, moral reflections, canon mapping, and SEO boundaries.
+
+## Virtue Canon
+
+The product canon is the seven classical virtues:
+
+- Prudence
+- Justice
+- Fortitude
+- Temperance
+- Faith
+- Hope
+- Charity
+
+Stories may use sub-virtues such as kindness, mercy, honesty, patience, or self-control as angles, but every published story should map back to the seven-virtue canon. Do not create orphan virtue labels that make canonical virtue pages appear empty.
 
 ## Anti-references
 
