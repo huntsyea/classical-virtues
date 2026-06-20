@@ -4,13 +4,13 @@
  * These keep the metadata / OpenGraph / structured-data path resilient: a
  * missing CMS field (summary, image alt) or an over-long string (OG overlay
  * text) degrades gracefully instead of producing an empty meta description or a
- * broken share image. None of these touch the story body or prose — they only
+ * broken share image. None of these touch the story body or prose. They only
  * harden the technical SEO surfaces named in the SEO contract (`SEO.md`).
  */
 
 /** Brand-safe default used when a story has no usable summary at all. */
 export const DEFAULT_SUMMARY =
-  'A short story from the Classical Virtues anthology — a timeless tale that teaches a virtue through character and choice.'
+  'A short story from the Classical Virtues anthology, teaching virtue through character and choice.'
 
 /**
  * Collapse whitespace and trim a string into a single clean line, or '' when

@@ -2,12 +2,12 @@ import virtuesData from '@/data/virtues.json'
 import { getAllStories, type StoryData } from './stories'
 
 /**
- * The seven classical virtues — the fixed canon (four cardinal, three
+ * The seven classical virtues: the fixed canon (four cardinal, three
  * theological). The descriptions are warm, family-anthology copy.
  *
  * This is the source of truth for the canon and is mirrored into Basehub by
  * `scripts/seed-virtues.mjs`. Because the canon never changes, it lives in the
- * repo so the site renders all seven regardless of CMS availability — the same
+ * repo so the site renders all seven regardless of CMS availability. The same
  * graceful-degradation principle used for stories in `src/lib/stories.ts`.
  */
 export interface Virtue {
@@ -35,8 +35,8 @@ const VIRTUES: Virtue[] = (virtuesData as Virtue[])
  * `PRODUCT.md` and `writing.md` allow sub-virtues (kindness, mercy, honesty, …)
  * as story *angles*, but every published story must still map back to one of the
  * seven canon virtues so no story is orphaned and no virtue hub renders empty.
- * The CMS `virtue` field stays free-text — it carries the angle shown in the
- * story eyebrow — and this table is the authoritative bridge from that angle to
+ * The CMS `virtue` field stays free-text. It carries the angle shown in the
+ * story eyebrow, and this table is the authoritative bridge from that angle to
  * canon. It is the engineering counterpart to a `canonicalVirtue` field: the
  * canon never changes, so (like the seven virtues themselves) it lives in-repo
  * rather than in the CMS.

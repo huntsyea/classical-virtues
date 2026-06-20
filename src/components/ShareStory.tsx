@@ -7,7 +7,7 @@ type ShareState = 'idle' | 'copied';
 /**
  * A restrained share affordance for story pages. On devices with the native
  * share sheet (mostly mobile) it opens that; everywhere else it copies the
- * link and quietly confirms. No counts, no logos, no "share to X" — just a
+ * link and quietly confirms. No counts, no logos, no "share to X": just a
  * way to pass a story along.
  */
 export default function ShareStory({ title, slug }: { title: string; slug: string }) {
@@ -25,7 +25,7 @@ export default function ShareStory({ title, slug }: { title: string; slug: strin
   async function handleShare() {
     if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
       try {
-        await navigator.share({ title, text: `“${title}” — a story from Classical Virtues`, url });
+        await navigator.share({ title, text: `“${title}”: a story from Classical Virtues`, url });
         return;
       } catch {
         // The reader dismissed the sheet, or it failed. Fall through to copy.

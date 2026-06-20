@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     default: "Classical Virtues | Timeless Stories of Character",
     template: "%s | Classical Virtues"
   },
-  description: "Discover timeless virtues through classical stories. Our collection of moral tales teaches enduring values of character, ethics, and wisdom for modern times.",
+  description: "Read classical virtue stories gathered for families: short moral tales with plain summaries, full text, and narrated audio.",
   applicationName: "Classical Virtues",
   keywords: [
     "virtues",
@@ -37,18 +37,18 @@ export const metadata: Metadata = {
     url: "https://classicalvirtues.com",
     siteName: "Classical Virtues",
     title: "Classical Virtues | Timeless Stories of Character",
-    description: "Discover timeless virtues through classical stories. Our collection of moral tales teaches enduring values of character, ethics, and wisdom for modern times.",
+    description: "Read classical virtue stories gathered for families: short moral tales with plain summaries, full text, and narrated audio.",
     images: [{
       url: "/api/og",
       width: 1200,
       height: 630,
-      alt: "Classical Virtues - Timeless Stories of Character"
+      alt: "Classical Virtues: Timeless Stories of Character"
     }]
   },
   twitter: {
     card: "summary_large_image",
     title: "Classical Virtues | Timeless Stories of Character",
-    description: "Discover timeless virtues through classical stories. Our collection of moral tales teaches enduring values of character, ethics, and wisdom for modern times.",
+    description: "Read classical virtue stories gathered for families: short moral tales with plain summaries, full text, and narrated audio.",
     images: ["/api/og"],
     creator: "@classicalvirtues"
   },
@@ -95,7 +95,7 @@ const websiteSchema = {
   "@id": "https://classicalvirtues.com/#website",
   "name": "Classical Virtues",
   "url": "https://classicalvirtues.com",
-  "description": "Discover timeless virtues through classical stories. Our collection of moral tales teaches enduring values of character, ethics, and wisdom for modern times.",
+  "description": "Read classical virtue stories gathered for families: short moral tales with plain summaries, full text, and narrated audio.",
   "inLanguage": "en",
   "publisher": {
     "@id": "https://classicalvirtues.com/#organization"

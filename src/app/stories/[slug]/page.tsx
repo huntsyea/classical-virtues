@@ -113,7 +113,7 @@ export default async function Post({ params }: { params: Params }) {
     // page rendering (plain-text virtue) per the graceful-degradation principle.
     console.error(
       `[virtue-mapping] Story "${story.slug}" has virtue "${story.virtue}" which maps to no canon entry. ` +
-        `The virtue-hub link will be missing — set the story virtue to a canon name or alias (see src/data/virtues.json).`,
+        `The virtue-hub link will be missing. Set the story virtue to a canon name or alias (see src/data/virtues.json).`,
     );
   }
   const storyContent = await renderStoryContent(story.content);
