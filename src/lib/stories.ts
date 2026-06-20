@@ -1,4 +1,5 @@
 import { getAllStories as getAllBasehubStories, getStoryBySlug as getBasehubStoryBySlug, Story } from './basehub'
+import { resolveSummary, resolveImageAlt } from './seo'
 
 // Unified story interface
 export interface StoryData {
@@ -31,8 +32,11 @@ function basehubToStory(story: Story): StoryData | null {
     title: story._title,
     virtue: story.virtue,
     image: story.image.url,
-    imageAlt: story.image.alt || '',
-    summary: story.summary,
+    // Always populated: concrete CMS alt, else a descriptive fallback.
+    imageAlt: resolveImageAlt(story.image.alt, story._title),
+    // Always populated: editorial summary, else prose excerpt, else brand default.
+    // Feeds meta description, OG, Twitter, and Article schema — no single point of failure.
+    summary: resolveSummary(story.summary, story.content.plainText),
     content: story.content.markdown,
     virtueDescription: story.virtueDescription,
     audioUrl: story.audioUrl || '',

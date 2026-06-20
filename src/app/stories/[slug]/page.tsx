@@ -107,6 +107,15 @@ export default async function Post({ params }: { params: Params }) {
 
   const minutes = Math.max(1, Math.round(story.wordCount / 140));
   const virtueSlug = getVirtueSlugForStoryVirtue(story.virtue);
+  if (!virtueSlug) {
+    // Fail loudly: an unmapped virtue silently drops the virtue-hub link. Surface
+    // it in build/runtime logs so the editorial mismatch gets fixed, but keep the
+    // page rendering (plain-text virtue) per the graceful-degradation principle.
+    console.error(
+      `[virtue-mapping] Story "${story.slug}" has virtue "${story.virtue}" which maps to no canon entry. ` +
+        `The virtue-hub link will be missing — set the story virtue to a canon name or alias (see src/data/virtues.json).`,
+    );
+  }
   const storyContent = await renderStoryContent(story.content);
 
   const articleStructuredData = {
@@ -171,7 +180,7 @@ export default async function Post({ params }: { params: Params }) {
       <div className="relative w-full h-80 mb-8 overflow-hidden">
         <Image
           src={story.image}
-          alt={story.imageAlt || `Illustration for ${story.title}`}
+          alt={story.imageAlt}
           fill
           priority
           sizes="(max-width: 768px) 100vw, 768px"
