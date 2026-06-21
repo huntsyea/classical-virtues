@@ -51,10 +51,13 @@ This project implements a **dual-content architecture** with BaseHub CMS as the 
 
 ## 🛠️ Getting Started
 
+> **New here?** [SETUP.md](./SETUP.md) is the concise, verified quickstart (prerequisites,
+> install, env vars, commands, and how to add a new virtue story). The notes below are an overview.
+
 ### Prerequisites
 
-- Node.js 18+ and pnpm
-- BaseHub account and project setup
+- Node.js `>=20.9.0` (verified on Node 24) and pnpm 10+
+- BaseHub account and project setup (optional locally — the app degrades gracefully without a token)
 - Vercel account for deployment
 
 ### Local Development
