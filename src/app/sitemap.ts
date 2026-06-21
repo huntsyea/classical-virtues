@@ -4,6 +4,9 @@ import { getVirtueSlugs } from '@/lib/virtues'
 
 const BASE_URL = 'https://classicalvirtues.com'
 
+// ISR: keep the sitemap fresh with newly published stories, no rebuild (PRO-86).
+export const revalidate = 300
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const stories = await getAllStories()
 

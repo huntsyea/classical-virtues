@@ -16,6 +16,11 @@ import type { ReactNode } from 'react'
 
 type Params = Promise<{ slug: string }>
 
+// ISR: refresh story pages at most every 5 minutes so Basehub publishes land in
+// production without an engineer rebuild (PRO-86). Must be a literal for Next's
+// static analysis; mirrors STORY_REVALIDATE_SECONDS in src/lib/basehub.ts.
+export const revalidate = 300
+
 export async function generateStaticParams() {
   const stories = await getAllStories();
   return stories.map((story) => ({
