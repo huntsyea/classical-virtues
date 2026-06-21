@@ -17,6 +17,11 @@ affects the public reading experience:
   new sub-virtue angle requires one line in `SUB_VIRTUE_TO_CANON_SLUG`
   (`src/lib/virtues.ts`); see also `content/vault/catalog-audit.md`.
 
+Story prose (title, summary, body, and `virtueDescription`) must contain no em or
+en dashes (`—`, `–`); they read as a machine-writing tell. Recast with standard
+punctuation and verify with `grep -nP "—|–"` before publish. See the punctuation
+rule in `@writing.md`.
+
 Engineering work must preserve approved editorial content unless the task
 explicitly asks for editorial changes. Do not rewrite story prose, titles,
 summaries, or moral reflections while fixing code, scripts, schema adapters, or

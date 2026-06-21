@@ -28,7 +28,7 @@ He took a deep breath, met his father’s gaze, and said, “Father, I cannot te
 
 For a moment, the air seemed heavy. Augustine Washington’s face softened. He put a hand on his son’s shoulder, nodding slowly. “My son, your honesty means more to me than a thousand cherry trees. You’ve shown great courage in telling the truth, and that is something I will always be proud of.”
 
-Though George had damaged the tree, he had done something far more valuable that day—he upheld his character. And in that moment, George learned that a man’s word, when given in truth, was worth more than anything material.
+Though George had damaged the tree, he had done something far more valuable that day. He upheld his character. And in that moment, George learned that a man’s word, when given in truth, was worth more than anything material.
 
 ## Editorial Annotation
 

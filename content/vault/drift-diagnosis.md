@@ -127,6 +127,21 @@ Fix for A2 and C1: every brief and catalog record must name a canonical virtue f
 
 Fix for A2/C1: reinforce that the story body is narrative only, and metadata/search work belongs in structured fields: summary, metadata, alt text, source note, and internal-link recommendations.
 
+### 9. Em Dashes Used As Connective Punctuation
+
+Recent and legacy stories lean on em dashes (`—`) for asides, dramatic pauses, and
+appositive clauses. `The Boy and the Filberts` used five in the body; the three
+locked originals each carried one. The dash reads as a machine-writing tell and
+flattens read-aloud cadence, and until 2026-06-21 no rule in `writing.md` named
+it, so every drafter reproduced the exemplars faithfully.
+
+Fix: ban em and en dashes (`—`, `–`) in story prose. Recast with a comma, period,
+colon, semicolon, or parentheses; a sentence that "needs" a dash usually wants to
+be two sentences. The straight hyphen in compound words is fine. Verify with
+`grep -nP "—|–"` over title, summary, body, and `virtueDescription` before
+publish. The locked exemplars were corrected on 2026-06-21 so the comparison gate
+no longer models the pattern.
+
 ## Story-by-Story Notes
 
 ### The Woodcutter's Axe
@@ -205,4 +220,5 @@ The writing-guide hardening should add:
 - a body-boundary rule: no separators, related links, FAQ/SEO copy, or second moral endings inside `content`;
 - a length rule: default 350-650 words unless the brief approves a longer treatment;
 - a canon rule: canonical virtue plus optional sub-virtue angle on every brief and record;
-- a read-aloud check: cut any sentence that sounds like promotional, devotional, or motivational copy rather than story.
+- a read-aloud check: cut any sentence that sounds like promotional, devotional, or motivational copy rather than story;
+- a punctuation rule: no em or en dashes (`—`, `–`) in story prose; recast with standard punctuation and verify with a dash grep before publish.

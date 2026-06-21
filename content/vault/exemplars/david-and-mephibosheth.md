@@ -16,7 +16,7 @@
 
 ## Locked Story Body
 
-Years had passed since David had become king of Israel, and his rule was marked by the justice and mercy that had guided him since his youth. Though he was now a powerful king, David had not forgotten his dear friend Jonathan, son of Saul, Israel’s former king. Jonathan had been more than a friend; he was a brother in spirit, standing by David’s side despite his father’s bitter jealousy and attempts to kill David. Jonathan’s loyalty and courage had saved David’s life on more than one occasion, and even after Jonathan’s death in battle, David’s heart held a sacred promise he had made to him—to show kindness to his family, no matter the cost.
+Years had passed since David had become king of Israel, and his rule was marked by the justice and mercy that had guided him since his youth. Though he was now a powerful king, David had not forgotten his dear friend Jonathan, son of Saul, Israel’s former king. Jonathan had been more than a friend; he was a brother in spirit, standing by David’s side despite his father’s bitter jealousy and attempts to kill David. Jonathan’s loyalty and courage had saved David’s life on more than one occasion, and even after Jonathan’s death in battle, David’s heart held a sacred promise he had made to him: to show kindness to his family, no matter the cost.
 
 One day, moved by this memory, David asked aloud in his palace, “Is there anyone left in the house of Saul to whom I can show kindness for Jonathan’s sake?” His words surprised those around him, for the custom was for kings to eliminate the families of their rivals, securing the throne. But David, ever faithful to his promises, chose a different path.
 
