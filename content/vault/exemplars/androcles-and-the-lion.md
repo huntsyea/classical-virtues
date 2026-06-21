@@ -7,7 +7,7 @@
 - Slug: `androcles-and-the-lion`
 - Stored virtue label: `Kindness`
 - Canon mapping for future use: `Charity` angle, because the central act is compassion freely given to a suffering creature, returned in loyal love.
-- Summary: Discover the timeless tale of Androcles and the Lion—a story of compassion, courage, and unexpected friendship in ancient Rome. Learn how a simple act of kindness changed two lives forever in this inspiring fable about empathy and the rewards of true loyalty.
+- Summary: Discover the timeless tale of Androcles and the Lion, a story of compassion, courage, and unexpected friendship in ancient Rome. Learn how a simple act of kindness changed two lives forever in this inspiring fable about empathy and the rewards of true loyalty.
 - Virtue reflection: Kindness, even in the smallest acts, can forge unbreakable bonds. When we show compassion, it can return to us in unexpected and powerful ways.
 - Image alt: 
 - Audio URL present: yes

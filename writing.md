@@ -34,7 +34,10 @@ Ban these drift patterns in first drafts and final edits:
 - polished moral triads used as padding, especially three abstract nouns in a
   row;
 - symbolic explanations that tell the reader what the image means after the
-  narrative has already shown it.
+  narrative has already shown it;
+- em dashes and en dashes (`—`, `–`) used as connective, parenthetical, or
+  dramatic punctuation. This is a common machine-writing tell and must be recast
+  with standard punctuation before publication.
 
 ## Story Shape
 
@@ -118,11 +121,21 @@ Use this rhythm standard:
   long, balanced, polished shape;
 - let short sentences carry fear, decision, and consequence;
 - use concrete nouns and verbs before adjectives and adverbs;
-- cut stacked modifiers unless a detail clarifies the scene.
+- cut stacked modifiers unless a detail clarifies the scene;
+- do not use em dashes or en dashes (`—`, `–`) for connective, parenthetical, or
+  dramatic punctuation. Recast with a comma, period, colon, semicolon, or
+  parentheses. If a sentence seems to need a dash, it usually wants to be two
+  sentences.
 
 As a practical edit, mark every adjective and adverb in a paragraph that feels
 ornamental. Keep the one concrete modifier that helps the child picture the
 moment; remove the rest.
+
+Em and en dashes are banned in story prose because they read as a machine-writing
+tell and flatten read-aloud cadence. The straight hyphen in compound words
+(`true-hearted`, `read-aloud`) is fine. Before any story is published, the prose
+must contain zero `—` and `–` glyphs in the title, summary, body, and
+`virtueDescription`. A quick check is `grep -nP "—|–"` over the rendered fields.
 
 ## SEO Boundary
 
@@ -166,6 +179,7 @@ The review note must name the two exemplars used and record:
 - whether sentence rhythm stays read-aloud plain;
 - whether the ending trusts an image or action instead of explaining the symbol;
 - whether `content` contains narrative only;
+- whether the prose is free of em and en dashes (`—`, `–`);
 - whether the canonical virtue and any sub-virtue angle are mapped cleanly.
 
 Use `content/vault/drift-diagnosis.md` as the current list of known failure
@@ -181,6 +195,7 @@ Before a story is published, Margaret should confirm:
 - the title is anthology-clean;
 - the story body contains no SEO scaffolding or related-reading block;
 - the moral/reflection appears once, through `virtueDescription`;
+- the prose uses no em or en dashes (`—`, `–`) as connective punctuation;
 - the story maps to the seven-virtue canon;
 - source/provenance is accurate or uncertainty is cut;
 - image alt text is meaningful;
