@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { createHmac } from 'crypto'
+import { BASEHUB_CACHE_TAG } from '@/lib/basehub'
 
 // Force dynamic for webhook endpoint
 export const dynamic = 'force-dynamic'
@@ -36,6 +37,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Request too old' }, { status: 401 })
   }
 
+  // Bust the Basehub data cache first so re-rendered pages fetch fresh content.
+  revalidateTag(BASEHUB_CACHE_TAG, 'max')
   revalidatePath('/sitemap.xml')
   revalidatePath('/')
   revalidatePath('/stories')
