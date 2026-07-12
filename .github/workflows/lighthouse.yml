@@ -5,9 +5,9 @@ name: Lighthouse CI
 # job produces the first *numeric* Lighthouse run and keeps it from regressing.
 #
 # It runs against the per-PR Vercel preview deployment (Vercel's GitHub
-# integration is connected, so every PR gets a preview), waits for that preview
-# to finish, then audits three anthology story pages and fails the check if
-# performance or SEO drops below 90.
+# integration is connected, so every PR gets a "Preview" GitHub Deployment),
+# waits for that preview to finish, then audits three anthology story pages and
+# fails the check if performance or SEO drops below 90.
 
 on:
   pull_request:
@@ -31,31 +31,57 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Wait for the Vercel preview deployment
-        id: preview
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # Give Vercel time to build + deploy the preview before auditing.
-          max_timeout: 600
-          check_interval: 10
-
-      - name: Resolve base URL to audit
+      - name: Resolve Vercel preview URL
         id: base
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          # PR head SHA is what Vercel deploys — NOT github.sha, which on a
+          # pull_request event is the synthetic merge commit that has no preview.
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          MANUAL_URL: ${{ github.event.inputs.preview_url }}
         run: |
-          URL="${{ steps.preview.outputs.url }}"
-          if [ -z "$URL" ]; then
-            URL="${{ github.event.inputs.preview_url }}"
+          set -euo pipefail
+
+          resolve_url=""
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Waiting for a successful Vercel Preview deployment for $HEAD_SHA ..."
+            # Poll the GitHub Deployments API (populated by vercel[bot]) for up to
+            # ~10 minutes. gh + GITHUB_TOKEN only; no extra secrets required.
+            for i in $(seq 1 60); do
+              dep_id="$(gh api "repos/$REPO/deployments?sha=$HEAD_SHA&environment=Preview" --jq '.[0].id // empty' 2>/dev/null || true)"
+              if [ -n "$dep_id" ]; then
+                state="$(gh api "repos/$REPO/deployments/$dep_id/statuses" --jq '.[0].state // empty' 2>/dev/null || true)"
+                target="$(gh api "repos/$REPO/deployments/$dep_id/statuses" --jq '.[0].environment_url // .[0].target_url // empty' 2>/dev/null || true)"
+                echo "  attempt $i: deployment $dep_id state=${state:-none}"
+                if [ "$state" = "success" ] && [ -n "$target" ]; then
+                  resolve_url="$target"
+                  break
+                fi
+                if [ "$state" = "failure" ] || [ "$state" = "error" ]; then
+                  echo "::error::Vercel Preview deployment $dep_id reported state=$state"
+                  exit 1
+                fi
+              else
+                echo "  attempt $i: no Preview deployment for $HEAD_SHA yet"
+              fi
+              sleep 10
+            done
+          else
+            resolve_url="$MANUAL_URL"
           fi
+
           # Strip any trailing slash so page paths concatenate cleanly.
-          URL="${URL%/}"
-          if [ -z "$URL" ]; then
-            echo "::error::No preview URL was resolved. On PRs this means the Vercel preview deployment never reported success; for manual runs pass the preview_url input."
+          resolve_url="${resolve_url%/}"
+
+          if [ -z "$resolve_url" ]; then
+            echo "::error::No preview URL resolved. On PRs this means no successful Vercel Preview deployment appeared for $HEAD_SHA within the timeout; for manual runs pass the preview_url input."
             exit 1
           fi
-          echo "Auditing base URL: $URL"
-          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+          echo "Auditing base URL: $resolve_url"
+          echo "url=$resolve_url" >> "$GITHUB_OUTPUT"
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
