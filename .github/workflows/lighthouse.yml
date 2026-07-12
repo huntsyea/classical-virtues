@@ -118,5 +118,8 @@ jobs:
             ${{ steps.base.outputs.url }}/stories/androcles-and-the-lion
             ${{ steps.base.outputs.url }}/stories/the-boy-and-the-filberts
           configPath: ./.lighthouserc.effective.json
+          # Median of 3 runs per URL for a stable gate (the action's own knob
+          # takes precedence over collect.numberOfRuns in the config).
+          runs: 3
           uploadArtifacts: true
           temporaryPublicStorage: true
