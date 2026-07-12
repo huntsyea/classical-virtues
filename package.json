@@ -10,7 +10,8 @@
     "build": "basehub && next build",
     "start": "next start",
     "lint": "eslint .",
-    "basehub": "basehub"
+    "basehub": "basehub",
+    "backup:basehub": "node scripts/backup-basehub.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slider": "^1.4.0",

@@ -1,0 +1,73 @@
+name: Basehub Content Backup
+
+# Weekly automated backup of ALL Basehub content (stories + virtues) — the
+# company's only real asset (PRO-94). Snapshots are committed back to the repo
+# (durable, versioned, restorable) and uploaded as workflow artifacts for
+# off-repo retention. Also runnable on demand via the Actions "Run workflow"
+# button.
+
+on:
+  schedule:
+    # Every Monday at 06:00 UTC.
+    - cron: '0 6 * * 1'
+  workflow_dispatch: {}
+
+# Needed so the job can commit the refreshed snapshot back to the default branch.
+permissions:
+  contents: write
+
+concurrency:
+  group: basehub-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    env:
+      BASEHUB_TOKEN: ${{ secrets.BASEHUB_TOKEN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Export Basehub content
+        run: pnpm run backup:basehub
+
+      - name: Verify snapshot is restorable
+        # Fail loudly if the newest snapshot is missing content or fields, so we
+        # never commit — or trust — a thin/partial backup.
+        run: node scripts/verify-basehub-backup.mjs
+
+      - name: Upload snapshot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: basehub-backup
+          path: backups/basehub/latest.json
+          retention-days: 90
+
+      - name: Commit refreshed snapshot
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backups/basehub
+          if git diff --cached --quiet; then
+            echo "No content changes since last backup — nothing to commit."
+          else
+            git commit -m "chore(backup): weekly Basehub content snapshot"
+            git push
+          fi
