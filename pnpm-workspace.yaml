@@ -3,3 +3,24 @@ packages:
 allowBuilds:
   sharp: true
   unrs-resolver: true
+# Force patched versions of transitive build/CLI-time tooling flagged by
+# `pnpm audit` (PRO-98, follow-up from the PRO-94 health audit). All entries are
+# transitive dev/build dependencies; scoped by major (pkg@N) so each consumer
+# stays on its own major line while landing on a patched release.
+overrides:
+  glob@10: ^10.5.0
+  glob@11: ^11.1.0
+  minimatch@3: ^3.1.4
+  minimatch@9: ^9.0.7
+  minimatch@10: ^10.2.3
+  "@isaacs/brace-expansion": ^5.0.1
+  brace-expansion@1: ^1.1.13
+  brace-expansion@2: ^2.0.3
+  picomatch@2: ^2.3.2
+  picomatch@4: ^4.0.4
+  "@xmldom/xmldom": ^0.9.10
+  flatted: ^3.4.2
+  mdast-util-to-hast: ^13.2.1
+  yaml: ^2.8.3
+  diff@4: ^4.0.4
+  postcss: ^8.5.10
