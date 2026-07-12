@@ -1,0 +1,70 @@
+name: Lighthouse CI
+
+# Enforce SEO & performance budgets on representative story pages (PRO-99,
+# follow-up from the PRO-94 audit). The static SEO/perf posture is strong; this
+# job produces the first *numeric* Lighthouse run and keeps it from regressing.
+#
+# It runs against the per-PR Vercel preview deployment (Vercel's GitHub
+# integration is connected, so every PR gets a preview), waits for that preview
+# to finish, then audits three anthology story pages and fails the check if
+# performance or SEO drops below 90.
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      preview_url:
+        description: "Base URL to audit (e.g. https://classical-virtues-xxxx.vercel.app). Used only for manual runs."
+        required: false
+
+# One Lighthouse run per PR head; cancel superseded runs.
+concurrency:
+  group: lighthouse-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse (story pages, >=90 SEO/perf)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Wait for the Vercel preview deployment
+        id: preview
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Give Vercel time to build + deploy the preview before auditing.
+          max_timeout: 600
+          check_interval: 10
+
+      - name: Resolve base URL to audit
+        id: base
+        run: |
+          URL="${{ steps.preview.outputs.url }}"
+          if [ -z "$URL" ]; then
+            URL="${{ github.event.inputs.preview_url }}"
+          fi
+          # Strip any trailing slash so page paths concatenate cleanly.
+          URL="${URL%/}"
+          if [ -z "$URL" ]; then
+            echo "::error::No preview URL was resolved. On PRs this means the Vercel preview deployment never reported success; for manual runs pass the preview_url input."
+            exit 1
+          fi
+          echo "Auditing base URL: $URL"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          # Three representative, stable anthology story pages.
+          urls: |
+            ${{ steps.base.outputs.url }}/stories/the-ant-and-the-grasshopper
+            ${{ steps.base.outputs.url }}/stories/androcles-and-the-lion
+            ${{ steps.base.outputs.url }}/stories/the-boy-and-the-filberts
+          configPath: ./.lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
