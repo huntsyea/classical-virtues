@@ -2,12 +2,19 @@ name: Lighthouse CI
 
 # Enforce SEO & performance budgets on representative story pages (PRO-99,
 # follow-up from the PRO-94 audit). The static SEO/perf posture is strong; this
-# job produces the first *numeric* Lighthouse run and keeps it from regressing.
+# job produces numeric Lighthouse runs and keeps SEO/perf from regressing.
 #
-# It runs against the per-PR Vercel preview deployment (Vercel's GitHub
-# integration is connected, so every PR gets a "Preview" GitHub Deployment),
-# waits for that preview to finish, then audits three anthology story pages and
-# fails the check if performance or SEO drops below 90.
+# On a PR it audits the per-PR Vercel *preview* deployment (Vercel's GitHub
+# integration is connected, so every PR gets a "Preview" GitHub Deployment).
+# Preview deployments are protected by Vercel Deployment Protection, so an
+# anonymous audit would hit the login wall. To audit the real pages, set the
+# VERCEL_AUTOMATION_BYPASS_SECRET repo secret (Vercel → Project Settings →
+# Deployment Protection → Protection Bypass for Automation); the job then sends
+# it as the `x-vercel-protection-bypass` header. Without it, the job warns and
+# the audit will (expectedly) fail against the login page.
+#
+# It can also be run manually (workflow_dispatch) against any public base URL —
+# e.g. the production site — via the `preview_url` input.
 
 on:
   pull_request:
@@ -15,7 +22,7 @@ on:
   workflow_dispatch:
     inputs:
       preview_url:
-        description: "Base URL to audit (e.g. https://classical-virtues-xxxx.vercel.app). Used only for manual runs."
+        description: "Base URL to audit (e.g. https://classicalvirtues.com). Manual runs only."
         required: false
 
 # One Lighthouse run per PR head; cancel superseded runs.
@@ -27,11 +34,13 @@ jobs:
   lighthouse:
     name: Lighthouse (story pages, >=90 SEO/perf)
     runs-on: ubuntu-latest
+    env:
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Resolve Vercel preview URL
+      - name: Resolve base URL to audit
         id: base
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -40,12 +49,13 @@ jobs:
           # pull_request event is the synthetic merge commit that has no preview.
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           MANUAL_URL: ${{ github.event.inputs.preview_url }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
 
           resolve_url=""
 
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          if [ "$EVENT_NAME" = "pull_request" ]; then
             echo "Waiting for a successful Vercel Preview deployment for $HEAD_SHA ..."
             # Poll the GitHub Deployments API (populated by vercel[bot]) for up to
             # ~10 minutes. gh + GITHUB_TOKEN only; no extra secrets required.
@@ -76,12 +86,28 @@ jobs:
           resolve_url="${resolve_url%/}"
 
           if [ -z "$resolve_url" ]; then
-            echo "::error::No preview URL resolved. On PRs this means no successful Vercel Preview deployment appeared for $HEAD_SHA within the timeout; for manual runs pass the preview_url input."
+            echo "::error::No base URL resolved. On PRs this means no successful Vercel Preview deployment appeared for $HEAD_SHA within the timeout; for manual runs pass the preview_url input."
             exit 1
           fi
 
           echo "Auditing base URL: $resolve_url"
           echo "url=$resolve_url" >> "$GITHUB_OUTPUT"
+
+      - name: Build effective Lighthouse config
+        # Injects the Vercel protection-bypass header when the secret is present,
+        # so protected preview deployments are audited as the real pages instead
+        # of the Vercel login wall. Secret value is never printed.
+        run: |
+          set -euo pipefail
+          if [ -n "${VERCEL_AUTOMATION_BYPASS_SECRET:-}" ]; then
+            echo "Protection-bypass secret detected — auditing with x-vercel-protection-bypass header."
+            jq --arg s "$VERCEL_AUTOMATION_BYPASS_SECRET" \
+              '.ci.collect = (.ci.collect // {}) | .ci.collect.settings = ((.ci.collect.settings // {}) + {extraHeaders: {"x-vercel-protection-bypass": $s}})' \
+              .lighthouserc.json > .lighthouserc.effective.json
+          else
+            echo "::warning::VERCEL_AUTOMATION_BYPASS_SECRET is not set. Protected Vercel preview deployments will redirect to the login wall and the audit will fail. Add it under Settings → Secrets → Actions to enforce >=90 on previews."
+            cp .lighthouserc.json .lighthouserc.effective.json
+          fi
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
@@ -91,6 +117,6 @@ jobs:
             ${{ steps.base.outputs.url }}/stories/the-ant-and-the-grasshopper
             ${{ steps.base.outputs.url }}/stories/androcles-and-the-lion
             ${{ steps.base.outputs.url }}/stories/the-boy-and-the-filberts
-          configPath: ./.lighthouserc.json
+          configPath: ./.lighthouserc.effective.json
           uploadArtifacts: true
           temporaryPublicStorage: true
