@@ -4,9 +4,14 @@ import nextTypescript from 'eslint-config-next/typescript'
 
 export default defineConfig([
   globalIgnores([
-    '.next/**',
-    'node_modules/**',
+    // Build output — ignore at any depth so nested worktrees/agent copies
+    // (e.g. .paperclip/worktrees/*/.next) don't flood `pnpm lint` with tens of
+    // thousands of errors from bundled vendor chunks.
+    '**/.next/**',
+    '**/node_modules/**',
     '.basehub/**',
+    '.paperclip/**',
+    'backups/**',
     'next-env.d.ts',
     'basehub-types.d.ts',
   ]),
