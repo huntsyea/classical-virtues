@@ -1,0 +1,125 @@
+name: Lighthouse CI
+
+# Enforce SEO & performance budgets on representative story pages (PRO-99,
+# follow-up from the PRO-94 audit). The static SEO/perf posture is strong; this
+# job produces numeric Lighthouse runs and keeps SEO/perf from regressing.
+#
+# On a PR it audits the per-PR Vercel *preview* deployment (Vercel's GitHub
+# integration is connected, so every PR gets a "Preview" GitHub Deployment).
+# Preview deployments are protected by Vercel Deployment Protection, so an
+# anonymous audit would hit the login wall. To audit the real pages, set the
+# VERCEL_AUTOMATION_BYPASS_SECRET repo secret (Vercel → Project Settings →
+# Deployment Protection → Protection Bypass for Automation); the job then sends
+# it as the `x-vercel-protection-bypass` header. Without it, the job warns and
+# the audit will (expectedly) fail against the login page.
+#
+# It can also be run manually (workflow_dispatch) against any public base URL —
+# e.g. the production site — via the `preview_url` input.
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      preview_url:
+        description: "Base URL to audit (e.g. https://classicalvirtues.com). Manual runs only."
+        required: false
+
+# One Lighthouse run per PR head; cancel superseded runs.
+concurrency:
+  group: lighthouse-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse (story pages, >=90 SEO/perf)
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Resolve base URL to audit
+        id: base
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          # PR head SHA is what Vercel deploys — NOT github.sha, which on a
+          # pull_request event is the synthetic merge commit that has no preview.
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          MANUAL_URL: ${{ github.event.inputs.preview_url }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+
+          resolve_url=""
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            echo "Waiting for a successful Vercel Preview deployment for $HEAD_SHA ..."
+            # Poll the GitHub Deployments API (populated by vercel[bot]) for up to
+            # ~10 minutes. gh + GITHUB_TOKEN only; no extra secrets required.
+            for i in $(seq 1 60); do
+              dep_id="$(gh api "repos/$REPO/deployments?sha=$HEAD_SHA&environment=Preview" --jq '.[0].id // empty' 2>/dev/null || true)"
+              if [ -n "$dep_id" ]; then
+                state="$(gh api "repos/$REPO/deployments/$dep_id/statuses" --jq '.[0].state // empty' 2>/dev/null || true)"
+                target="$(gh api "repos/$REPO/deployments/$dep_id/statuses" --jq '.[0].environment_url // .[0].target_url // empty' 2>/dev/null || true)"
+                echo "  attempt $i: deployment $dep_id state=${state:-none}"
+                if [ "$state" = "success" ] && [ -n "$target" ]; then
+                  resolve_url="$target"
+                  break
+                fi
+                if [ "$state" = "failure" ] || [ "$state" = "error" ]; then
+                  echo "::error::Vercel Preview deployment $dep_id reported state=$state"
+                  exit 1
+                fi
+              else
+                echo "  attempt $i: no Preview deployment for $HEAD_SHA yet"
+              fi
+              sleep 10
+            done
+          else
+            resolve_url="$MANUAL_URL"
+          fi
+
+          # Strip any trailing slash so page paths concatenate cleanly.
+          resolve_url="${resolve_url%/}"
+
+          if [ -z "$resolve_url" ]; then
+            echo "::error::No base URL resolved. On PRs this means no successful Vercel Preview deployment appeared for $HEAD_SHA within the timeout; for manual runs pass the preview_url input."
+            exit 1
+          fi
+
+          echo "Auditing base URL: $resolve_url"
+          echo "url=$resolve_url" >> "$GITHUB_OUTPUT"
+
+      - name: Build effective Lighthouse config
+        # Injects the Vercel protection-bypass header when the secret is present,
+        # so protected preview deployments are audited as the real pages instead
+        # of the Vercel login wall. Secret value is never printed.
+        run: |
+          set -euo pipefail
+          if [ -n "${VERCEL_AUTOMATION_BYPASS_SECRET:-}" ]; then
+            echo "Protection-bypass secret detected — auditing with x-vercel-protection-bypass header."
+            jq --arg s "$VERCEL_AUTOMATION_BYPASS_SECRET" \
+              '.ci.collect = (.ci.collect // {}) | .ci.collect.settings = ((.ci.collect.settings // {}) + {extraHeaders: {"x-vercel-protection-bypass": $s}})' \
+              .lighthouserc.json > .lighthouserc.effective.json
+          else
+            echo "::warning::VERCEL_AUTOMATION_BYPASS_SECRET is not set. Protected Vercel preview deployments will redirect to the login wall and the audit will fail. Add it under Settings → Secrets → Actions to enforce >=90 on previews."
+            cp .lighthouserc.json .lighthouserc.effective.json
+          fi
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          # Three representative, stable anthology story pages.
+          urls: |
+            ${{ steps.base.outputs.url }}/stories/the-ant-and-the-grasshopper
+            ${{ steps.base.outputs.url }}/stories/androcles-and-the-lion
+            ${{ steps.base.outputs.url }}/stories/the-boy-and-the-filberts
+          configPath: ./.lighthouserc.effective.json
+          # Median of 3 runs per URL for a stable gate (the action's own knob
+          # takes precedence over collect.numberOfRuns in the config).
+          runs: 3
+          uploadArtifacts: true
+          temporaryPublicStorage: true
