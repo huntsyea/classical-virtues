@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=22.9.0"
   },
   "scripts": {
     "dev": "basehub dev & next dev",
@@ -11,7 +11,23 @@
     "start": "next start",
     "lint": "eslint .",
     "basehub": "basehub",
-    "backup:basehub": "node scripts/backup-basehub.mjs"
+    "backup:basehub": "node scripts/backup-basehub.mjs",
+    "story:new": "node --env-file-if-exists=.env.local scripts/story/new.mjs",
+    "story:status": "node --env-file-if-exists=.env.local scripts/story/status.mjs",
+    "story:seo": "node --env-file-if-exists=.env.local scripts/story/seo.mjs",
+    "story:check": "node --env-file-if-exists=.env.local scripts/story/check.mjs",
+    "story:image": "node --env-file-if-exists=.env.local scripts/story/image.mjs",
+    "story:audio": "node --env-file-if-exists=.env.local scripts/story/audio.mjs",
+    "story:approve": "node --env-file-if-exists=.env.local scripts/story/approve.mjs",
+    "story:publish": "node --env-file-if-exists=.env.local scripts/story/publish.mjs",
+    "story:revalidate": "node --env-file-if-exists=.env.local scripts/story/revalidate.mjs",
+    "story:verify": "node --env-file-if-exists=.env.local scripts/story/verify.mjs",
+    "audio:narrate": "node --env-file-if-exists=.env.local scripts/audio/narrate.mjs",
+    "audio:master": "node --env-file-if-exists=.env.local scripts/audio/master.mjs",
+    "audio:analyze": "node --env-file-if-exists=.env.local scripts/audio/analyze.mjs",
+    "audio:upload": "node --env-file-if-exists=.env.local scripts/audio/upload.mjs",
+    "audio:lexicon": "node --env-file-if-exists=.env.local scripts/audio/lexicon.mjs",
+    "story:selftest": "node scripts/story/selftest.mjs"
   },
   "dependencies": {
     "@radix-ui/react-slider": "^1.4.0",
@@ -35,6 +51,7 @@
     "@types/node": "^22.18.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
+    "@vercel/blob": "^2.8.1",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.39.0",
     "eslint-config-next": "^16.2.9",

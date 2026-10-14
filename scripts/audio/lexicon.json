@@ -1,0 +1,91 @@
+{
+  "$comment": "Pronunciation hooks for narration. `entries`: names a voice gets wrong; `alias` is a respelling substituted into the TTS text only (never the published story), `ipa` feeds ElevenLabs rules via `pnpm audio:lexicon --push --yes`. `plain`: names checked to read correctly as written. `pnpm audio:lexicon --check <slug>` fails on any name in a story's script that is in neither list, so every name gets a decision. Move a plain name to entries the moment a render stumbles on it.",
+  "entries": {
+    "Androcles": {
+      "alias": "Andro-cleez",
+      "ipa": "ˈændɹəkliːz"
+    },
+    "Mephibosheth": {
+      "alias": "Meh-fibbo-sheth",
+      "ipa": "mɛˈfɪbəʃɛθ"
+    },
+    "Ziba": {
+      "alias": "Zeeba",
+      "ipa": "ˈziːbə"
+    },
+    "Lo Debar": {
+      "alias": "Lo Deebar",
+      "ipa": "loʊ ˈdiːbɑːɹ"
+    },
+    "Nebuchadnezzar": {
+      "alias": "Nebba-kud-nezzer",
+      "ipa": "ˌnɛbjʊkədˈnɛzəɹ"
+    },
+    "Shadrach": {
+      "alias": "Shad-rack",
+      "ipa": "ˈʃædɹæk"
+    },
+    "Meshach": {
+      "alias": "Mee-shack",
+      "ipa": "ˈmiːʃæk"
+    },
+    "Abednego": {
+      "alias": "Uh-bed-nee-go",
+      "ipa": "əˈbɛdnɪɡoʊ"
+    },
+    "Dura": {
+      "alias": "Doora",
+      "ipa": "ˈdʊəɹə"
+    },
+    "Dietrich": {
+      "alias": "Dee-trick",
+      "ipa": "ˈdiːtɹɪç"
+    },
+    "Bonhoeffer": {
+      "alias": "Bon-hoffer",
+      "ipa": "ˈbɒnhɜːfəɹ"
+    },
+    "Flossenbürg": {
+      "alias": "Flossen-burg",
+      "ipa": "ˈflɔsn̩bʏʁk"
+    }
+  },
+  "plain": [
+    "Adolf",
+    "America",
+    "April",
+    "Ararat",
+    "Atlantic",
+    "Augustine",
+    "Babylon",
+    "Babylonian",
+    "Babylonians",
+    "Christians",
+    "Colosseum",
+    "David",
+    "Europe",
+    "George",
+    "Germany",
+    "Gestapo",
+    "God",
+    "Greek",
+    "Harlem",
+    "Hebrew",
+    "Hebrews",
+    "Hermes",
+    "Hitler",
+    "Israel",
+    "Jerusalem",
+    "Jonathan",
+    "Judah",
+    "Nazi",
+    "Nazis",
+    "Noah",
+    "Protestant",
+    "Roman",
+    "Rome",
+    "Saul",
+    "Washington",
+    "York"
+  ]
+}
