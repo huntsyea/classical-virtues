@@ -16,6 +16,11 @@ affects the public reading experience:
   it lands on the right canon hub and conforms to the field contract. Adding a
   new sub-virtue angle requires one line in `SUB_VIRTUE_TO_CANON_SLUG`
   (`src/lib/virtues.ts`); see also `content/vault/catalog-audit.md`.
+- `content/story-format.md`: the draft file contract (`content/drafts/<slug>.md`)
+  shared by the writing skills, the linter, and the publish and audio scripts.
+- Story skills in `.claude/skills/`: `virtue-story-research` (source and brief),
+  `virtue-story-writer` (drafting craft), `virtue-story-editor` (the vault gate,
+  with the `scripts/lint-story.mjs` linter).
 
 Story prose (title, summary, body, and `virtueDescription`) must contain no em or
 en dashes (`—`, `–`); they read as a machine-writing tell. Recast with standard

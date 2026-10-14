@@ -1,0 +1,290 @@
+{
+  "_comment": "Phrase lists for lint-story.mjs. Matched case-insensitively on word boundaries. 'error' entries come from writing.md bans, production-recipe.md SEO QA, and drift-diagnosis.md; 'warn' entries are diagnosed drift that needs an editor's judgement. Add a phrase with the doc that justifies it. Optional \"fields\" limits an entry to those fields (title, summary, virtueDescription, imageAlt, body); default is title, summary, virtueDescription, body.",
+  "error": [
+    {
+      "phrase": "unlock your potential",
+      "why": "writing.md: modern motivational phrasing"
+    },
+    {
+      "phrase": "choose your best self",
+      "why": "writing.md: modern motivational phrasing"
+    },
+    {
+      "phrase": "embrace the journey",
+      "why": "writing.md: modern motivational phrasing"
+    },
+    {
+      "phrase": "live with purpose",
+      "why": "writing.md: modern motivational phrasing"
+    },
+    {
+      "phrase": "in a world where",
+      "why": "writing.md: civilizational opening"
+    },
+    {
+      "phrase": "today more than ever",
+      "why": "writing.md: civilizational opening"
+    },
+    {
+      "phrase": "modern seekers",
+      "why": "writing.md: civilizational opening"
+    },
+    {
+      "phrase": "timeless lesson",
+      "why": "writing.md: civilizational opening"
+    },
+    {
+      "phrase": "lesson we all need",
+      "why": "writing.md: civilizational opening"
+    },
+    {
+      "phrase": "story for kids",
+      "why": "writing.md SEO boundary: forced phrase"
+    },
+    {
+      "phrase": "stories for kids",
+      "why": "writing.md SEO boundary: forced phrase"
+    },
+    {
+      "phrase": "bedtime story for",
+      "why": "writing.md SEO boundary: forced phrase"
+    },
+    {
+      "phrase": "what is the moral",
+      "why": "writing.md SEO boundary: FAQ heading"
+    },
+    {
+      "phrase": "moral of the story",
+      "why": "writing.md: moral belongs in virtueDescription"
+    },
+    {
+      "phrase": "the moral is",
+      "why": "writing.md: moral belongs in virtueDescription"
+    },
+    {
+      "phrase": "this story teaches",
+      "why": "writing.md: moral belongs in virtueDescription"
+    },
+    {
+      "phrase": "testament to",
+      "why": "drift-diagnosis.md 5: ending explains the symbol"
+    },
+    {
+      "phrase": "symbol of",
+      "why": "drift-diagnosis.md 5: ending explains the symbol"
+    },
+    {
+      "phrase": "symbols of",
+      "why": "drift-diagnosis.md 5: ending explains the symbol"
+    },
+    {
+      "phrase": "related reading",
+      "why": "writing.md: related-reading block in body",
+      "fields": [
+        "body"
+      ]
+    },
+    {
+      "phrase": "read next",
+      "why": "writing.md: related-reading block in body",
+      "fields": [
+        "body"
+      ]
+    },
+    {
+      "phrase": "discover the timeless",
+      "why": "drift-diagnosis.md 8: SEO-forward summary",
+      "fields": [
+        "summary",
+        "dek"
+      ]
+    },
+    {
+      "phrase": "learn how",
+      "why": "drift-diagnosis.md 8: SEO-forward summary",
+      "fields": [
+        "summary",
+        "dek"
+      ]
+    },
+    {
+      "phrase": "inspiring fable",
+      "why": "drift-diagnosis.md 8: SEO-forward summary",
+      "fields": [
+        "summary",
+        "dek"
+      ]
+    }
+  ],
+  "warn": [
+    {
+      "phrase": "little did",
+      "why": "foreshadowing cliché; let the scene carry suspense"
+    },
+    {
+      "phrase": "from that day forward",
+      "why": "drift ending formula; end on the image instead"
+    },
+    {
+      "phrase": "from that day on",
+      "why": "drift ending formula; end on the image instead"
+    },
+    {
+      "phrase": "a reminder that",
+      "why": "explains the symbol"
+    },
+    {
+      "phrase": "the power of",
+      "why": "abstract moral cadence (drift-diagnosis.md 5)"
+    },
+    {
+      "phrase": "heart pounding",
+      "why": "stock fear beat; find the physical detail this scene owns"
+    },
+    {
+      "phrase": "unwavering",
+      "why": "pious intensifier (drift-diagnosis.md 2)"
+    },
+    {
+      "phrase": "unbreakable",
+      "why": "pious intensifier (drift-diagnosis.md 2)"
+    },
+    {
+      "phrase": "unshakable",
+      "why": "pious intensifier (drift-diagnosis.md 3)"
+    },
+    {
+      "phrase": "quiet strength",
+      "why": "drift-diagnosis.md 5"
+    },
+    {
+      "phrase": "quiet courage",
+      "why": "drift-diagnosis.md 3"
+    },
+    {
+      "phrase": "simple heart",
+      "why": "drift-diagnosis.md 3"
+    },
+    {
+      "phrase": "humble",
+      "why": "drift-diagnosis.md 2: pious adjective"
+    },
+    {
+      "phrase": "radiant",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "shimmering",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "glittering",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "dazzling",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "towering",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "fateful",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "relentless",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "sun-baked",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "soft gold",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "gentle glow",
+      "why": "drift-diagnosis.md 2: ornament"
+    },
+    {
+      "phrase": "incredible",
+      "why": "intensifier that tells the reader how to feel"
+    },
+    {
+      "phrase": "extraordinary",
+      "why": "intensifier that tells the reader how to feel"
+    },
+    {
+      "phrase": "something strange happened",
+      "why": "announces the turn instead of showing it"
+    },
+    {
+      "phrase": "something incredible happened",
+      "why": "announces the turn instead of showing it"
+    },
+    {
+      "phrase": "true courage",
+      "why": "poster cadence ('True X is...')"
+    },
+    {
+      "phrase": "true strength",
+      "why": "poster cadence ('True X is...')"
+    },
+    {
+      "phrase": "true riches",
+      "why": "poster cadence ('True X is...')"
+    },
+    {
+      "phrase": "true faith",
+      "why": "poster cadence ('True X is...')"
+    },
+    {
+      "phrase": "not the absence of",
+      "why": "quotation-poster cadence"
+    },
+    {
+      "phrase": "journey",
+      "why": "motivational register unless it is a literal trip"
+    },
+    {
+      "phrase": "empower",
+      "why": "modern motivational register"
+    },
+    {
+      "phrase": "resilience",
+      "why": "modern motivational register"
+    },
+    {
+      "phrase": "mindset",
+      "why": "modern motivational register"
+    },
+    {
+      "phrase": "timeless",
+      "why": "SEO and poster register"
+    },
+    {
+      "phrase": "one last time",
+      "why": "spends the turn before it happens (craft.md 4)",
+      "fields": [
+        "body"
+      ]
+    },
+    {
+      "phrase": "for the last time",
+      "why": "spends the turn before it happens (craft.md 4)",
+      "fields": [
+        "body"
+      ]
+    },
+    {
+      "phrase": "for the final time",
+      "why": "spends the turn before it happens (craft.md 4)",
+      "fields": [
+        "body"
+      ]
+    }
+  ]
+}

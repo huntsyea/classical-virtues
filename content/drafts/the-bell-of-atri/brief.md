@@ -1,0 +1,26 @@
+# Brief: The Bell of Atri
+
+- Working title: The Bell of Atri
+- Slug: the-bell-of-atri (not in `backups/basehub/latest.json` or `content/drafts/`, checked 2026-10-13)
+- Source: Italian legend of the bell of King John (Giovanni) of Atri; oldest form read is *Il Novellino* tale LII (late 13th century). Retold here in James Baldwin's form.
+- Editions read: Baldwin, *Fifty Famous Stories Retold* (1896), "The Bell of Atri," Gutenberg #18442; cross-checked against *Il Novellino: The Hundred Old Tales*, tr. Edward Storer (Routledge, 1925), tale LII, Gutenberg #68831; and Longfellow, "The Sicilian's Tale: The Bell of Atri," *Tales of a Wayside Inn*, Part Second (1872), Gutenberg #1365.
+- Governing text: Baldwin (1896), "The Bell of Atri," with one Gutenberg typo corrected ("was, polished"), saved as `content/drafts/the-bell-of-atri/source.txt`.
+- Why retell it: honestly, only lightly. Baldwin's telling is strong for reading aloud; the retelling replaces his geography-lesson opening with the town longing to hear the bell, sets the bell's chant apart for performance, swaps words a child hears as insults or archaisms ("dumb brute," "tempting morsels," "bade"), and trims his pity words where the scene already shows it. Everything a parent would perform is kept.
+- Bedtime rival: the governing text (Baldwin wrote for children and reads aloud as it stands).
+- Refrains and set pieces: the bell's chant ("Some one has done me wrong!"), the three judges in turn, the final dinner.
+- Public-domain basis: all three editions published before 1929 (US).
+- Source note for the page: "An old Italian legend, as told by James Baldwin (1896)"
+- Departures and uncertainty:
+  - Novellino sets it at "Acre" (Storer notes "Or Atri"); the vine grows onto the rope by itself; the king, not the judges, enforces the sentence; there is no gold split. Longfellow has a single Syndic, a passer-by who mends the rope with briony, a siesta, and a knight who laughs it off. Baldwin has three judges, a grapevine from a neighbour's garden, a miser, and "one half of all your gold." The retelling follows Baldwin; the half-the-gold sentence is his and must not be asserted as the legend's.
+  - Do not name the king (Baldwin does not); "King John" is the Novellino/Longfellow form.
+- Canonical virtue: Justice
+- Sub-virtue angle: none
+- Why this mapping: the judges take a starving horse's tug on the bell rope as a lawful petition and rule against its rich master.
+- Decisive act: the judges, called out in the heat and finding only a horse at the rope, hear it as a case and send for its master. (Note: Baldwin gives them no hesitation and no cost.)
+- Telling details in the source: the rope long enough for "the smallest child"; the king who "did not even take the rope in his hands"; the worn rope only a tall man could reach; "What if a child should be wronged?"; the grapevine with leaves and tendrils still on it; the miser among his money bags; the horse in a bare stall, shivering; the hot empty market place; the leaf hard to break from the vine; the crowd who had all seen the horse wandering.
+- Attested lines: "It is the bell of justice"; "What if a child should be wronged? It could not ring the bell to let us know it"; "Let me fix it for you"; "Yes, it is a very good rope. Let it be as it is"; "If he starves to death, so much the better"; "He pleads his cause as well as any dumb brute can"; "And he shall have justice!"; "Go bring the miser before us"; the judgment.
+- Reader fit: ages 4 to 10. The miser's "so much the better" is harsh but carries the stakes; keep, once. Stones and dogs stay brief. Adult edge: the whole town had seen the horse starving and done nothing until a bell made it a case.
+- Target length: 350-1000 words. Exception: the governing text runs 1,295 words with a chant, three scenes (the bell, the miser, the hearing), and a three-voice judgment. Blind read-aloud judges in rounds 1-3 penalized every cut of performable material (the king's address, the miser's own speech, "Day after day," the judges' "Ha!") more than they rewarded brevity, so this version is a light edit of Baldwin rather than a condensation.
+- Fields: title "The Bell of Atri"; slug as above; summary angle: the worn rope and the vine, hold back who rings it if possible; virtueDescription angle: a hearing owed to those who cannot ask; source as above; imageAlt/imagePrompt scene: the thin horse at the vine in the empty sunlit square; audio planned.
+- SEO guidance: "Bell of Atri," "James Baldwin," "Fifty Famous Stories," "story about justice." Metadata, summary, slug, and alt text only.
+- Internal-link ideas: The Cherry Tree and The Woodcutter's Axe (Justice hub); Androcles and the Lion (an animal repaid).

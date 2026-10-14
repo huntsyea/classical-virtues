@@ -1,0 +1,34 @@
+# Brief: Noah and the Dove
+
+- Working title: Noah and the Dove
+- Slug: noah-and-the-dove (not in `backups/basehub/latest.json` or `content/drafts/`, checked 2026-10-13)
+- Source: Genesis 8:1-13, the dove episode at 8:6-12 and the uncovering of the ark at 8:13.
+- Editions read: King James Version (1611), Genesis 7:16-8:19; Kent and Sherman, The Children's Bible (1922); Lathbury, Child's Story of the Bible (1898).
+- Governing text: KJV Genesis 8:1-13 (saved as `content/drafts/noah-and-the-dove/source.txt`), plus "the LORD shut him in" from 7:16.
+- Why retell it: the KJV is chronicle, with dates and "asswaged," hard for a six-year-old to follow aloud; the retelling stages the three releases as scenes and gives the waiting a cost. Keep what the KJV does best: "no rest for the sole of her foot," the hand put forth, the olive leaf at evening, "returned not again unto him any more," and "behold, the face of the ground was dry."
+- Refrains and set pieces: the three sendings of the dove with seven days between; the final reveal.
+- Public-domain basis: ancient text; the KJV wording is public domain in the US. The body is a new retelling; at most a few words of KJV phrasing are echoed.
+- Source note for the page: "Retold from Genesis 8"
+- Departures and uncertainty:
+  - Popular versions have Noah leave the ark as soon as the dove fails to return. Genesis does not: he removes the covering and sees dry ground (8:13), then waits for God's word to go out (8:15-16). The retelling ends at 8:13 and does not send anyone out of the ark.
+  - Many retellings call the raven a failure. The text says only that it "went forth to and fro" (Hebrew: going out and returning). Tell it as flying out and back with no sign; do not say it was lost or faithless.
+  - The forty days in 8:6 most naturally count from the mountaintops appearing (8:5). Say only that Noah waited forty days more before opening the window.
+  - Genesis gives Noah no words in this passage. Write no dialogue for him.
+  - The flood's destruction is outside this passage. Mention the flood plainly and keep its dead offstage.
+- Canonical virtue: Hope
+- Sub-virtue angle: none. "Patience" is tempting but resolves nowhere in `SUB_VIRTUE_TO_CANON_SLUG` and would split attention from an empty hub; `virtue` is "Hope".
+- Why this mapping: after the dove comes back with nothing, Noah sends her out again, and then lets her go a third time; that is hope as an act, expecting a good he cannot yet see, rather than faith as obedience to a spoken command.
+- Decisive act: seven days after the empty return, Noah sends the same dove out over the same water.
+- Telling details in the source: the window Noah himself made; the dove that "found no rest for the sole of her foot"; Noah putting out his hand, taking her, and pulling her in; the return "in the evening"; the olive leaf "pluckt off" (freshly torn from a living tree) in her mouth; the dove that "returned not again"; the covering removed and "the face of the ground was dry."
+- Attested lines: none spoken. Narrative phrases worth echoing: "no rest for the sole of her foot," "pluckt off," "the face of the ground was dry."
+- Reader fit: ages 4 to 10 at bedtime, and adults who know the story only as a nursery picture. Gentle: no drowning, no fear beyond waiting. The adult edge is that the best news arrives as an absence, and that Noah must open his hands to get it.
+- Target length: 300-650 words. Exception: the governing passage itself runs 360 words; after the editor's round-10 cuts of invented detail the tale is complete at about 345, and padding back to 350 would reintroduce what was cut.
+- Fields:
+  - summary angle: Noah at the window, the dove sent out and returning; hold back the olive leaf and the ending.
+  - virtueDescription angle: hope is something you do while you cannot yet see; opening the window again.
+  - source: "Retold from Genesis 8"
+  - imageAlt scene: an old man at a small wooden window of the ark, releasing a dove from his hands over flat water.
+  - imagePrompt scene: the same, lamplit interior behind him, gray-gold evening light over water and a far mountaintop.
+  - audio: planned
+- SEO guidance (metadata, summary, slug, alt text, internal links only): "Noah and the dove," "olive leaf," "Genesis 8," "story of hope." None of these enter the body; "story of hope" is carried by the eyebrow and hub, not the dek.
+- Internal-link ideas: The Three Men and David and Mephibosheth (scripture retellings); the Hope hub at `/virtues/hope`, which this would be the first story to fill.

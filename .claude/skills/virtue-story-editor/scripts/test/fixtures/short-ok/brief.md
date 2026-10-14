@@ -1,0 +1,1 @@
+- Target length: 100-400 (fixture: a short fable)
