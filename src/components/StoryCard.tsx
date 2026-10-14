@@ -209,7 +209,7 @@ function CardImage({
         fill
         sizes={sizes}
         preload={preload}
-        quality={preload ? 85 : undefined}
+        quality={preload ? 85 : 75}
         loading={preload || eager ? 'eager' : undefined}
         fetchPriority={preload ? 'high' : undefined}
         placeholder={blur ? 'blur' : 'empty'}

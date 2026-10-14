@@ -83,7 +83,7 @@ export default async function VirtuesIndex() {
                               <Link href={`/stories/${story.slug}`} className="group/story flex items-center gap-4 py-2.5">
                                 <span className="image-well aspect-square w-14 shrink-0 sm:aspect-[3/2] sm:w-16" aria-hidden="true">
                                   {story.image && (
-                                    <Image src={story.image} alt="" fill sizes="64px" className="object-cover" />
+                                    <Image src={story.image} alt="" fill sizes="64px" quality={75} className="object-cover" />
                                   )}
                                 </span>
                                 <span className="min-w-0 flex-1 font-heading text-[1.125rem] leading-snug underline-offset-4 group-hover/story:underline">

@@ -630,7 +630,7 @@ export default function AudioPlayer({ audioUrl, title: rawTitle, image, duration
   const artwork = (box: string) =>
     image ? (
       <div className={cn('image-well shrink-0', box)}>
-        <Image src={image} alt="" fill sizes="48px" className="object-cover" />
+        <Image src={image} alt="" fill sizes="48px" quality={75} className="object-cover" />
       </div>
     ) : null;
 
