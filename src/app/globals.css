@@ -2,102 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Classical Virtues design tokens.
+ *
+ * Paper and ink, with one accent: a deep olive drawn from old book cloth.
+ * Every text pairing below is checked against WCAG 2.1 AA (ratios noted).
+ * The `.dark` set is "night reading": warm lamplit paper rather than a cold
+ * inverted UI, for bedtime reading in a dim room.
+ */
 @layer base {
   :root {
-    --background: #eff0e6;
-    --foreground: #35372a;
-    --card: #eff0e6;
-    --card-foreground: #1a1a19;
-    --popover: #ffffff;
-    --popover-foreground: #23241c;
-    --primary: #415417;
-    --primary-foreground: #ffffff;
-    --secondary: #dcded1;
-    --secondary-foreground: #4b4d44;
-    --muted: #e1e2d2;
-    --muted-foreground: #63645c; /* 5.2:1 on --background; keep ≥4.5:1 (WCAG AA) */
-    --accent: #dcded1;
-    --accent-foreground: #23241c;
-    --destructive: #1a1a19;
-    --destructive-foreground: #ffffff;
-    --border: #cecfca;
-    --input: #a8aaa0;
-    --ring: #8a6a38; /* 4.35:1 on --background; focus indicators need ≥3:1 (WCAG 1.4.11) */
-    --chart-1: #957640;
-    --chart-2: #b788e1;
-    --chart-3: #cfd2bb;
-    --chart-4: #d9c8e4;
-    --chart-5: #98773e;
-    --sidebar: #e8eae1;
-    --sidebar-foreground: #393a38;
-    --sidebar-primary: #b0874e;
-    --sidebar-primary-foreground: #fbfbfb;
-    --sidebar-accent: #dcded1;
-    --sidebar-accent-foreground: #343434;
-    --sidebar-border: #ebebeb;
-    --sidebar-ring: #b5b5b5;
-    /* Font tokens point at the faces actually loaded via next/font (src/lib/fonts.ts). */
-    --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-    --font-serif: var(--font-heading), ui-serif, Georgia, serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color-scheme: light;
+    --gutter: clamp(1.25rem, 0.6rem + 2.6vw, 3rem);
+
+    --background: #f9f7f1;        /* paper */
+    --surface: #f1ede3;           /* a shade deeper, for bands and image wells */
+    --foreground: #1f1d18;        /* ink, 15.7:1 on paper */
+    --ink-2: #4a463d;             /* deks and secondary prose, 8.8:1 */
+    --muted-foreground: #6a6558;  /* metadata, 5.4:1 on paper, 5.0:1 on surface */
+    --primary: #4b5e1f;           /* olive accent, 6.7:1 on paper */
+    --primary-foreground: #f9f7f1;
+    --primary-tint: #e9ecda;      /* olive wash; olive text on it is 6.0:1 */
+    --listen: #e3e7cf;            /* Listen pill: ink 13.3:1, ink-2 7.4:1 */
+    --listen-hover: #d8ddc0;
+    --rule: #d8d2c4;              /* hairlines (decorative) */
+    --rule-strong: #1f1d18;       /* section rules */
+    --input: #857f6e;             /* control boundaries, 3.7:1 (WCAG 1.4.11) */
+    --ring: #4b5e1f;              /* focus ring, 6.7:1 */
+
+    /* shadcn/ui aliases, mapped onto the paper-and-ink system */
+    --card: var(--background);
+    --card-foreground: var(--foreground);
+    --popover: var(--background);
+    --popover-foreground: var(--foreground);
+    --secondary: var(--surface);
+    --secondary-foreground: var(--ink-2);
+    --muted: var(--surface);
+    --accent: var(--surface);
+    --accent-foreground: var(--foreground);
+    --destructive: #8a2d1c;       /* 7.4:1 on paper */
+    --destructive-foreground: #f9f7f1;
+    --border: var(--input);       /* shadcn/third-party control borders: keep 3:1 */
+
     --radius: 0rem;
-    --shadow-2xs: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --shadow-xs: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --shadow-sm: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 1px 2px -1px hsl(0 0% 0% / 0.00);
-    --shadow: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 1px 2px -1px hsl(0 0% 0% / 0.00);
-    --shadow-md: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 2px 4px -1px hsl(0 0% 0% / 0.00);
-    --shadow-lg: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 4px 6px -1px hsl(0 0% 0% / 0.00);
-    --shadow-xl: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 8px 10px -1px hsl(0 0% 0% / 0.00);
-    --shadow-2xl: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --tracking-normal: 0em;
-    --spacing: 0.25rem;
+    --header-h: 3.5rem;
+    --player-h: 0px;
   }
 
   .dark {
-    --background: #232422;
-    --foreground: #b7b8ae;
-    --card: #232422;
-    --card-foreground: #eff0e6;
-    --popover: #2d2d2c;
-    --popover-foreground: #d9dad7;
-    --primary: #5c706f;
-    --primary-foreground: #ffffff;
-    --secondary: #eff0e6;
-    --secondary-foreground: #2d2d2c;
-    --muted: #1a1a19;
-    --muted-foreground: #abada2;
-    --accent: #1b1b18;
-    --accent-foreground: #e8eae1;
-    --destructive: #d27c51;
-    --destructive-foreground: #ffffff;
-    --border: #393a36;
-    --input: #4c4d47;
-    --ring: #c19860;
-    --chart-1: #957640;
-    --chart-2: #b788e1;
-    --chart-3: #1b1b18;
-    --chart-4: #362d40;
-    --chart-5: #98773e;
-    --sidebar: #1d1d1c;
-    --sidebar-foreground: #b7b8ae;
-    --sidebar-primary: #343434;
-    --sidebar-primary-foreground: #fbfbfb;
-    --sidebar-accent: #1a1a19;
-    --sidebar-accent-foreground: #b7b8ae;
-    --sidebar-border: #ebebeb;
-    --sidebar-ring: #b5b5b5;
-    --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-    --font-serif: var(--font-heading), ui-serif, Georgia, serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    --radius: 0rem;
-    --shadow-2xs: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --shadow-xs: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
-    --shadow-sm: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 1px 2px -1px hsl(0 0% 0% / 0.00);
-    --shadow: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 1px 2px -1px hsl(0 0% 0% / 0.00);
-    --shadow-md: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 2px 4px -1px hsl(0 0% 0% / 0.00);
-    --shadow-lg: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 4px 6px -1px hsl(0 0% 0% / 0.00);
-    --shadow-xl: 0 1px 0px 0px hsl(0 0% 0% / 0.00), 0 8px 10px -1px hsl(0 0% 0% / 0.00);
-    --shadow-2xl: 0 1px 0px 0px hsl(0 0% 0% / 0.00);
+    color-scheme: dark;
+
+    --background: #191713;
+    --surface: #24211b;
+    --foreground: #ebe5d8;        /* 14.3:1 */
+    --ink-2: #c8c0af;             /* 9.9:1 */
+    --muted-foreground: #a1998a;  /* 6.3:1 on paper, 5.7:1 on surface */
+    --primary: #bccb8c;           /* 10.3:1 */
+    --primary-foreground: #191713;
+    --primary-tint: #2b2e1f;
+    --listen: #2e3322;            /* foreground 10.4:1, ink-2 7.2:1 */
+    --listen-hover: #383e29;
+    --rule: #3a362d;
+    --rule-strong: #ebe5d8;
+    --input: #77705f;             /* 3.6:1 */
+    --ring: #bccb8c;
+    --destructive: #e8a08c;
+    --destructive-foreground: #191713;
   }
 }
 
@@ -106,49 +76,58 @@
     @apply border-border;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: calc(var(--header-h) + 1.5rem);
+    scroll-padding-bottom: calc(var(--player-h) + 1rem);
+  }
+
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-body);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    font-kerning: normal;
+    padding-bottom: var(--player-h);
+    transition: padding-bottom 0.25s ease;
   }
 
   /*
-   * Instrument Serif ships weight 400 only. Headings always render at
-   * their natural weight; hierarchy comes from size, not boldness.
+   * Display serif at its natural weights. Optical sizing lets Newsreader pick
+   * its display cut for large headlines and its text cut for small ones.
    */
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: var(--font-heading), ui-serif, Georgia, serif;
     font-weight: 400;
+    font-optical-sizing: auto;
     text-wrap: balance;
   }
 
-  /*
-   * Faux-bold guard: neutralize legacy bold utilities on display-serif
-   * elements so the browser never synthesizes a smeared bold.
-   */
-  :is(h1, h2, h3, h4, h5, h6, .font-heading):is(.font-medium, .font-semibold, .font-bold, .font-extrabold, .font-black) {
-    font-weight: 400;
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 24%, transparent);
   }
 
   :focus-visible {
     outline: 2px solid var(--ring);
-    outline-offset: 2px;
+    outline-offset: 3px;
+  }
+
+  /* Paintings sit a touch quieter on night paper. */
+  .dark img {
+    filter: brightness(0.9);
   }
 
   .font-heading {
-    font-family: var(--font-heading);
-    font-weight: 400;
+    font-family: var(--font-heading), ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
   }
 
   .font-body {
-    font-family: var(--font-body);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   }
 
-  /*
-   * Text face for long-form prose. Falls back to Georgia (a true book
-   * serif) wherever the next/font variable is not on an ancestor.
-   */
   .font-text {
-    font-family: var(--font-text, Literata), Georgia, 'Times New Roman', serif;
+    font-family: var(--font-text), Georgia, 'Times New Roman', serif;
+    font-optical-sizing: auto;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -163,55 +142,750 @@
   }
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+@layer components {
+  /* ---------- Layout ---------- */
 
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
+  .page-wrap {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  /* Run edge to edge inside .page-wrap (scrollers, full-bleed images). */
+  .bleed {
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+  }
+  .bleed-flush {
+    margin-inline: calc(var(--gutter) * -1);
+  }
 
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
+  .measure {
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  /* ---------- Type scale (fluid, 390px to 1440px) ---------- */
+
+  .kicker {
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+
+  .meta {
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /*
+   * Metadata runs: items separated by a thin slash. Each item carries its own
+   * separator; the inner row is pulled left by one separator width and the
+   * outer box clips it, so a line never begins with a stray slash, however
+   * the run wraps. Separators are silent to screen readers.
+   */
+  .meta-run {
+    overflow-x: clip;
+  }
+  .meta-run-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 0.25rem;
+    margin-left: -1.125rem;
+  }
+  .meta-run-inner > * {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  .meta-run-inner > *::before {
+    content: '/';
+    content: '/' / '';
+    display: inline-block;
+    width: 1.125rem;
+    text-align: center;
+    color: var(--rule);
+  }
+  .meta-run-inner > :first-child::before {
+    visibility: hidden;
+  }
+  .dark .meta-run-inner > *::before {
+    color: #5a5446;
+  }
+
+  .masthead-title {
+    font-family: var(--font-heading), ui-serif, Georgia, serif;
+    font-size: clamp(2.375rem, 1.6rem + 3.4vw, 4.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    /* A fixed one-line box: when the webfont replaces its fallback (whose
+       ascent differs), nothing below the masthead moves. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.12em;
+    white-space: nowrap;
+  }
+  @media (min-width: 640px) {
+    .masthead-title {
+      height: 1.2em;
+    }
+  }
+
+  .headline-1 {
+    font-size: clamp(2.375rem, 2.05rem + 1.25vw, 3.25rem);
+    line-height: 1.04;
+    letter-spacing: -0.014em;
+  }
+
+  .headline-lead {
+    font-size: clamp(2rem, 1.6rem + 1.55vw, 3.125rem);
+    line-height: 1.06;
+    letter-spacing: -0.012em;
+  }
+
+  .headline-2 {
+    font-size: clamp(1.75rem, 1.5rem + 1vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  .headline-3 {
+    font-size: clamp(1.3125rem, 1.2rem + 0.42vw, 1.5625rem);
+    line-height: 1.16;
+    letter-spacing: -0.005em;
+  }
+
+  .headline-4 {
+    font-size: clamp(1.125rem, 1.07rem + 0.2vw, 1.25rem);
+    line-height: 1.22;
+  }
+
+  .dek {
+    font-family: var(--font-heading), ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    font-size: clamp(1.1875rem, 1.1rem + 0.38vw, 1.4375rem);
+    line-height: 1.38;
+    color: var(--ink-2);
+    /* Short deks: balanced lines, no single word left alone at the end. */
+    text-wrap: balance;
+  }
+
+  /* The story page dek: the full summary, set to read well even at 4 lines. */
+  .story-dek {
+    max-width: 40rem;
+    color: var(--foreground);
+    text-wrap: balance;
+    font-size: clamp(1.1875rem, 1.02rem + 0.62vw, 1.4375rem);
+    line-height: 1.36;
+  }
+
+  /* Two stories sharing a row get headlines sized to their wider column. */
+  .pair-tile .headline-3 {
+    font-size: clamp(1.5rem, 1.3rem + 0.7vw, 1.875rem);
+  }
+  .pair-tile .card-dek {
+    max-width: 34rem;
+  }
+
+  .card-dek {
+    font-family: var(--font-heading), ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    font-size: 1.0625rem;
+    line-height: 1.45;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  /* ---------- Section heading: heavy rule, Atlantic-style rail head ---------- */
+
+  .section-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 2px solid var(--rule-strong);
+    padding-top: 0.75rem;
+  }
+
+  .section-title {
+    font-family: var(--font-heading), ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- Links ---------- */
+
+  /* Headline links: underline on hover only, drawn in the rule colour. */
+  .headline-link {
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+    transition: text-decoration-color 0.18s ease;
+  }
+  @media (hover: hover) {
+    .group:hover .headline-link,
+    .headline-link:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  .text-link {
+    color: var(--primary);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: color-mix(in srgb, var(--primary) 45%, transparent);
+    transition: text-decoration-color 0.18s ease;
+  }
+  @media (hover: hover) {
+    .text-link:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  /* Small-caps action link, e.g. "All stories" at the end of a rail head. */
+  .rail-link {
+    display: inline-flex;
+    flex-shrink: 0;
+    white-space: nowrap;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--foreground);
+  }
+  @media (hover: hover) {
+    .rail-link:hover {
+      color: var(--primary);
+    }
+  }
+
+  /* ---------- Rails: one row of teasers divided by hairline column rules ---------- */
+
+  .rail {
+    --rail-gap: 2.5rem;
+    column-gap: var(--rail-gap);
+  }
+  @media (min-width: 1024px) {
+    .rail {
+      --rail-gap: 3.5rem;
+    }
+  }
+  .rail > * {
+    position: relative;
+  }
+  @media (max-width: 639.98px) {
+    .rail > * + * {
+      border-top: 1px solid var(--rule);
+      padding-top: 1.5rem;
+    }
+  }
+  @media (min-width: 640px) {
+    .rail > * + *::before {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      left: calc(var(--rail-gap) / -2);
+      width: 1px;
+      background: var(--rule);
+    }
+  }
+
+  /* ---------- Frosted paper, for sticky chrome ---------- */
+
+  .paper-glass {
+    background: var(--background);
+  }
+  @supports (backdrop-filter: blur(1px)) {
+    .paper-glass {
+      background: color-mix(in srgb, var(--background) 90%, transparent);
+      -webkit-backdrop-filter: saturate(1.2) blur(10px);
+      backdrop-filter: saturate(1.2) blur(10px);
+    }
+  }
+
+  /* ---------- Image wells ---------- */
+
+  .image-well {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .image-well img {
+    /* A failed load shows the calm paper well, not alt text or a glyph. */
+    color: transparent;
+    transition: transform 0.6s cubic-bezier(0.2, 0.6, 0.2, 1), filter 0.3s ease;
+  }
+  @media (hover: hover) {
+    .group:hover .image-well img {
+      transform: scale(1.025);
+    }
+  }
+
+  /* ---------- Story body ---------- */
+
+  .story-body {
+    font-family: var(--font-text), Georgia, 'Times New Roman', serif;
+    font-optical-sizing: auto;
+    font-size: clamp(1.125rem, 1.06rem + 0.3vw, 1.3125rem);
+    line-height: 1.6;
+    color: var(--foreground);
+    font-variant-numeric: oldstyle-nums proportional-nums;
+    font-variant-ligatures: common-ligatures;
+    hanging-punctuation: first allow-end last;
+    hyphens: manual;
+  }
+
+  /* Phones: 17px Literata (a large x-height) gives a 40 to 42 character
+     measure on a 390px screen, a book's column rather than a newspaper's. */
+  @media (max-width: 639.98px) {
+    /* A narrow measure: hyphenate long words to keep the rag even. */
+    .story-body p {
+      hyphens: auto;
+      hyphenate-limit-chars: 7 4 3;
+    }
+    .story-body {
+      font-size: 1.0625rem;
+      letter-spacing: -0.004em;
+      line-height: 1.6;
+    }
+  }
+
+  .story-body > * + * {
+    margin-top: 0.95em;
+  }
+
+  .story-body p {
+    text-wrap: pretty;
+  }
+
+  .story-body a {
+    color: var(--primary);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  .story-body h2,
+  .story-body h3 {
+    margin-top: 2em;
+    font-size: 1.35em;
+    line-height: 1.2;
+  }
+
+  .story-body blockquote {
+    margin-inline: 0;
+    padding-left: 1.25em;
+    border-left: 2px solid var(--rule);
+    font-style: italic;
+    color: var(--ink-2);
+  }
+
+  .story-body ul,
+  .story-body ol {
+    padding-left: 1.4em;
+  }
+  .story-body ul { list-style: disc; }
+  .story-body ol { list-style: decimal; }
+
+  .story-body hr {
+    border: 0;
+    margin-block: 2em;
+    text-align: center;
+  }
+  .story-body hr::after {
+    content: '\2022\2003\2022\2003\2022';
+    color: var(--muted-foreground);
+  }
+
+  /* Opening: a three-line drop cap and a small-caps first line, as in a book. */
+  .story-body:not(.no-dropcap) > p:first-child::first-line {
+    font-variant-caps: small-caps;
+    letter-spacing: 0.035em;
+  }
+
+  .story-body:not(.no-dropcap) > p:first-child::first-letter {
+    float: left;
+    font-family: var(--font-heading), ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    font-variant-caps: normal;
+    font-size: 4.35em;
+    line-height: 0.8;
+    margin: 0.07em 0.09em -0.05em -0.03em;
+    color: var(--foreground);
+    letter-spacing: 0;
+  }
+
+  @supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
+    .story-body:not(.no-dropcap) > p:first-child::first-letter {
+      float: none;
+      -webkit-initial-letter: 3;
+      initial-letter: 3;
+      font-size: 1em;
+      line-height: 1;
+      margin: 0 0.12em 0 0;
+    }
+  }
+
+  /* End mark: a small olive lozenge closes the narrative. */
+  .story-body:not(.no-dropcap) > p:last-child::after {
+    content: '';
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin-left: 0.4em;
+    background: var(--primary);
+    transform: rotate(45deg) translateY(-0.08em);
+  }
+
+  /* ---------- Essay (About): lede, pull quote, end mark ---------- */
+
+  .essay > p:first-child {
+    font-size: 1.06em;
+    line-height: 1.58;
+  }
+
+  /* Essay subheads clearly outrank the lede and the text. */
+  .story-body.essay h2 {
+    margin-top: 2.4em;
+    font-size: clamp(1.75rem, 1.6rem + 0.6vw, 2rem);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+  }
+
+  .essay > p:last-child::after {
+    content: '';
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    margin-left: 0.4em;
+    background: var(--primary);
+    transform: rotate(45deg) translateY(-0.08em);
+  }
+
+  .story-body .pull-quote {
+    margin-block: 2.2em;
+    padding-block: 1.1em 1.2em;
+    border-block: 1px solid var(--rule);
+    text-align: center;
+  }
+  .story-body .pull-quote::before {
+    content: '';
+    display: block;
+    width: 0.45em;
+    height: 0.45em;
+    margin: 0 auto 0.9em;
+    background: var(--primary);
+    transform: rotate(45deg);
+  }
+  .story-body .pull-quote p {
+    font-family: var(--font-heading), ui-serif, Georgia, serif;
+    font-optical-sizing: auto;
+    font-style: italic;
+    font-size: clamp(1.625rem, 1.3rem + 1.2vw, 2.25rem);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--foreground);
+    text-wrap: balance;
+  }
+  @media (min-width: 1024px) {
+    .story-body .pull-quote {
+      margin-inline: -4rem;
+    }
+  }
+
+  /* Regions that receive focus programmatically (after closing the player):
+     no ring for pointer users, a clear one for keyboard users. */
+  .landing-focus:focus {
+    outline: none;
+  }
+  .landing-focus:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 8px;
+  }
+
+  /* ---------- Listen button states ----------
+     React sets data-state from the audio element; before hydration the
+     page's inline script sets <html data-cv-early>, which takes precedence. */
+  [data-listen-button] .listen-glyph-pause,
+  [data-listen-button] .listen-early-pause,
+  [data-listen-button] .listen-early-playing,
+  [data-listen-button] .listen-early-paused,
+  [data-listen-button] .listen-early-loading {
+    display: none;
+  }
+  [data-listen-button][data-state='playing'] .listen-glyph-play {
+    display: none;
+  }
+  [data-listen-button][data-state='playing'] .listen-glyph-pause {
+    display: inline;
+  }
+  /* Before hydration: a saved position reads "Resume". */
+  html[data-cv-resume]:not([data-cv-early]) [data-listen-button] .listen-label {
+    display: none;
+  }
+  html[data-cv-resume]:not([data-cv-early]) [data-listen-button] .listen-early-paused {
+    display: inline;
+  }
+  /* Before hydration, after a tap: Pause while loading or playing (a tap
+     pauses), "Loading" until sound starts, then "Playing". */
+  html[data-cv-early] [data-listen-button] .listen-label,
+  html[data-cv-early='loading'] [data-listen-button] .listen-glyph-play,
+  html[data-cv-early='playing'] [data-listen-button] .listen-glyph-play {
+    display: none;
+  }
+  html[data-cv-early='loading'] [data-listen-button] .listen-glyph-pause,
+  html[data-cv-early='playing'] [data-listen-button] .listen-glyph-pause,
+  html[data-cv-early='loading'] [data-listen-button] .listen-early-pause,
+  html[data-cv-early='playing'] [data-listen-button] .listen-early-pause,
+  html[data-cv-early='loading'] [data-listen-button] .listen-early-loading,
+  html[data-cv-early='playing'] [data-listen-button] .listen-early-playing,
+  html[data-cv-early='paused'] [data-listen-button] .listen-early-paused {
+    display: inline;
+  }
+
+  /* ---------- Controls ---------- */
+
+  .chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding-inline: 1rem;
+    border: 1px solid var(--rule);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--foreground);
+    transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+  }
+  @media (hover: hover) {
+    .chip:hover {
+      border-color: var(--foreground);
+    }
+  }
+  .chip[aria-current='page'],
+  .chip[data-active='true'] {
+    background: var(--foreground);
+    border-color: var(--foreground);
+    color: var(--background);
+  }
+
+  .button-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    border-radius: 9999px;
+    padding-inline: 1.5rem;
+    background: var(--foreground);
+    color: var(--background);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: background-color 0.18s ease;
+  }
+  @media (hover: hover) {
+    .button-primary:hover {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+  }
+
+  .button-quiet {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding-inline: 1.125rem;
+    border: 1px solid var(--input);
+    color: var(--foreground);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: border-color 0.18s ease, background-color 0.18s ease;
+  }
+  @media (hover: hover) {
+    .button-quiet:hover {
+      border-color: var(--foreground);
+      background: var(--surface);
+    }
+  }
+
+  /* Section tabs: typographic navigation, as a magazine section front. */
+  .tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+    transition: color 0.18s ease;
+  }
+  @media (hover: hover) {
+    .tab:hover {
+      color: var(--foreground);
+    }
+  }
+  .tab[aria-current='page'],
+  .tab[data-active='true'] {
+    color: var(--foreground);
+  }
+  .tab[aria-current='page']::after,
+  .tab[data-active='true']::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--foreground);
+  }
+  .tab-count {
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--muted-foreground);
+    transform: translateY(-0.4em);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Horizontal scroller with snap, used for chip rows and rails on mobile. */
+  .scroller {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Edge fades only where content is actually hidden (see ScrollStrip). */
+  @media (max-width: 639.98px) {
+    .scroller-fade[data-at-start='true'][data-at-end='false'] {
+      mask-image: linear-gradient(to right, #000 84%, transparent);
+      -webkit-mask-image: linear-gradient(to right, #000 84%, transparent);
+    }
+    .scroller-fade[data-at-start='false'][data-at-end='false'] {
+      mask-image: linear-gradient(to right, transparent, #000 12%, #000 84%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 84%, transparent);
+    }
+    .scroller-fade[data-at-start='false'][data-at-end='true'] {
+      mask-image: linear-gradient(to right, transparent, #000 16%);
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 16%);
+    }
+  }
+  /* Scrollers clip overflow, so their focus rings sit inside the target. */
+  .scroller :focus-visible {
+    outline-offset: -2px;
+  }
+  .scroller::-webkit-scrollbar {
+    display: none;
+  }
+  .scroller > * {
+    position: relative;
+    scroll-snap-align: start;
+  }
+
+  /* Modal menu sheet (native <dialog>). */
+  .menu-sheet {
+    margin: 0;
+    width: 100%;
+    max-width: 26rem;
+    height: 100dvh;
+    max-height: 100dvh;
+    padding: 0;
+    border: 0;
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: 0 0 0 1px var(--rule);
+  }
+  .menu-sheet::backdrop {
+    background: rgb(20 18 14 / 0.42);
+  }
+  .menu-sheet[open] {
+    animation: sheet-in 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .menu-sheet[open]::backdrop {
+    animation: fade-in 0.28s ease;
+  }
+}
+
+@keyframes sheet-in {
+  from { transform: translateX(-24px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rise-in {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+/* Print: a clean page of the story, as from a book. */
+@media print {
+  :root,
+  .dark {
+    --background: #fff;
+    --foreground: #000;
+    --ink-2: #222;
+    --muted-foreground: #444;
+    --primary: #000;
+    --rule: #bbb;
+  }
+  body > header,
+  body > footer,
+  .print-hide,
+  [aria-label='Narration player'] {
+    display: none !important;
+  }
+  body {
+    padding-bottom: 0;
+  }
+  .story-body {
+    font-size: 12pt;
+    line-height: 1.55;
+  }
+  .story-body p {
+    orphans: 3;
+    widows: 3;
+  }
+  .image-well {
+    break-inside: avoid;
+  }
+  a {
+    text-decoration: none;
+  }
 }

@@ -29,19 +29,19 @@ const Slider = React.forwardRef<
     <SliderPrimitive.Root
       ref={ref}
       className={cn(
-        "relative flex w-full touch-none select-none items-center py-2.5",
+        "group/slider relative flex w-full touch-none select-none items-center py-3 data-[disabled]:opacity-60",
         className
       )}
       {...props}
     >
-      <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden bg-secondary">
-        <SliderPrimitive.Range className="absolute h-full bg-primary" />
+      <SliderPrimitive.Track className="relative h-[3px] w-full grow overflow-hidden bg-[var(--input)]">
+        <SliderPrimitive.Range className="absolute h-full bg-foreground" />
       </SliderPrimitive.Track>
-      {/* 24px visible thumb; the ::before pseudo-element extends the hit area to 44px */}
+      {/* 14px visible thumb; the ::before pseudo-element extends the hit area to 44px */}
       <SliderPrimitive.Thumb
         aria-label={ariaLabel}
         aria-valuetext={ariaValueText}
-        className="relative block h-6 w-6 border border-primary bg-background ring-offset-background transition-colors before:absolute before:-inset-2.5 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+        className="relative block h-3.5 w-3.5 rounded-full bg-foreground transition-transform before:absolute before:-inset-[15px] before:content-[''] hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring data-[disabled]:pointer-events-none"
       />
     </SliderPrimitive.Root>
   )

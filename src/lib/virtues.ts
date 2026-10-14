@@ -1,115 +1,81 @@
-import virtuesData from '@/data/virtues.json'
-import { getAllStories, type StoryData } from './stories'
+import { cache } from 'react'
+import { getVirtuesFromBasehub } from './basehub'
+import { CANON, getCanonBySlug, getVirtueSlugForStoryVirtue, type Virtue } from './canon'
+import { getAllStories, latestUpdate, type StoryData } from './stories'
 
 /**
- * The seven classical virtues: the fixed canon (four cardinal, three
- * theological). The descriptions are warm, family-anthology copy.
+ * The seven classical virtues with their stories.
  *
- * This is the source of truth for the canon and is mirrored into Basehub by
- * `scripts/seed-virtues.mjs`. Because the canon never changes, it lives in the
- * repo so the site renders all seven regardless of CMS availability. The same
- * graceful-degradation principle used for stories in `src/lib/stories.ts`.
+ * `src/data/virtues.json` (via `./canon`) is the source of truth for the canon:
+ * slugs, order, and aliases never come from the CMS, so all seven hubs render
+ * regardless of Basehub availability, the same graceful-degradation principle
+ * used for stories in `src/lib/stories.ts`.
+ *
+ * Copy (tagline, description, alternate name) also comes from the JSON, which
+ * holds the approved text. Basehub's `virtues` mirror contributes only its
+ * instance ids (targets for the `canonicalVirtue` reference) and edit dates.
+ * Do not read copy from the mirror until it is re-synced: as of 2026-10 its
+ * descriptions predate the punctuation pass and still contain em dashes.
  */
-export interface Virtue {
-  slug: string
-  title: string
-  /** A familiar alternate name, e.g. Courage for Fortitude, Love for Charity. */
-  alternateName?: string
-  order: number
-  tagline: string
-  description: string
-}
+export type { Virtue }
 
 export interface VirtueData extends Virtue {
-  /** Stories from Basehub whose `virtue` matches this virtue's name. */
+  /** Stories whose canonical virtue resolves to this virtue. */
   stories: StoryData[]
+  /** Basehub instance id, when the CMS mirror is reachable. */
+  basehubId: string | null
+  /** Latest edit across the virtue copy and its stories (ISO), if known. */
+  updatedAt: string | null
 }
 
-const VIRTUES: Virtue[] = (virtuesData as Virtue[])
-  .slice()
-  .sort((a, b) => a.order - b.order)
+/** Canon joined with its Basehub instance id and last edit date. */
+const getCanonWithCmsIds = cache(async () => {
+  const cms = new Map((await getVirtuesFromBasehub()).map((v) => [v._slug, v]))
+  return CANON.map((virtue) => {
+    const row = cms.get(virtue.slug)
+    return {
+      virtue: { ...virtue } satisfies Virtue,
+      basehubId: row?._id ?? null,
+      cmsUpdatedAt: row?._sys.lastModifiedAt ?? null,
+    }
+  })
+})
 
-/**
- * Sub-virtue angle → canon virtue slug.
- *
- * `PRODUCT.md` and `writing.md` allow sub-virtues (kindness, mercy, honesty, …)
- * as story *angles*, but every published story must still map back to one of the
- * seven canon virtues so no story is orphaned and no virtue hub renders empty.
- * The CMS `virtue` field stays free-text. It carries the angle shown in the
- * story eyebrow, and this table is the authoritative bridge from that angle to
- * canon. It is the engineering counterpart to a `canonicalVirtue` field: the
- * canon never changes, so (like the seven virtues themselves) it lives in-repo
- * rather than in the CMS.
- *
- * Mappings are sourced from the Writing Vault canon reference (PRO-57):
- *   - kindness → charity   (compassion freely given)
- *   - mercy    → charity   (covenant love shown where judgment is expected)
- *   - honesty  → justice   (giving others the truth they are owed)
- *
- * When a new sub-virtue angle is introduced, add it here (see
- * `content/vault/new-virtue-checklist.md`) rather than leaving an orphan label.
- */
-const SUB_VIRTUE_TO_CANON_SLUG: Record<string, string> = {
-  kindness: 'charity',
-  mercy: 'charity',
-  honesty: 'justice',
-}
-
-/**
- * Resolve a story's free-text `virtue` to its canon virtue, or `undefined` when
- * it maps to no canon entry. Matches a canon title or familiar alternate name
- * first (e.g. Courage→Fortitude, Love→Charity), then falls back to the
- * sub-virtue bridge above.
- */
-function resolveCanonVirtue(storyVirtue: string): Virtue | undefined {
-  const needle = storyVirtue.trim().toLowerCase()
-  const direct = VIRTUES.find(
-    (v) =>
-      needle === v.title.toLowerCase() ||
-      needle === v.alternateName?.toLowerCase(),
-  )
-  if (direct) return direct
-
-  const canonSlug = SUB_VIRTUE_TO_CANON_SLUG[needle]
-  return canonSlug ? VIRTUES.find((v) => v.slug === canonSlug) : undefined
-}
-
-/** True when a story's free-text virtue resolves to this canon virtue. */
-function storyMatchesVirtue(virtue: Virtue, storyVirtue: string): boolean {
-  return resolveCanonVirtue(storyVirtue)?.slug === virtue.slug
+function withStories(
+  entry: Awaited<ReturnType<typeof getCanonWithCmsIds>>[number],
+  stories: StoryData[],
+): VirtueData {
+  const own = stories.filter((s) => s.canonicalVirtue?.slug === entry.virtue.slug)
+  const dates = [latestUpdate(own), entry.cmsUpdatedAt ?? undefined].filter(Boolean) as string[]
+  return {
+    ...entry.virtue,
+    stories: own,
+    basehubId: entry.basehubId,
+    updatedAt: dates.sort().at(-1) ?? null,
+  }
 }
 
 /** All seven virtues, in canonical order, each with its attached stories. */
 export async function getAllVirtues(): Promise<VirtueData[]> {
-  const stories = await getAllStories()
-  return VIRTUES.map((virtue) => ({
-    ...virtue,
-    stories: stories.filter((s) => storyMatchesVirtue(virtue, s.virtue)),
-  }))
+  const [entries, stories] = await Promise.all([getCanonWithCmsIds(), getAllStories()])
+  return entries.map((entry) => withStories(entry, stories))
 }
 
 /** A single virtue by slug, with its attached stories, or null if unknown. */
 export async function getVirtueBySlug(slug: string): Promise<VirtueData | null> {
-  const virtue = VIRTUES.find((v) => v.slug === slug)
-  if (!virtue) return null
-
-  const stories = await getAllStories()
-  return {
-    ...virtue,
-    stories: stories.filter((s) => storyMatchesVirtue(virtue, s.virtue)),
-  }
+  if (!getCanonBySlug(slug)) return null
+  const [entries, stories] = await Promise.all([getCanonWithCmsIds(), getAllStories()])
+  const entry = entries.find((e) => e.virtue.slug === slug)
+  return entry ? withStories(entry, stories) : null
 }
 
 /** Slugs for static generation, no CMS round-trip needed. */
 export function getVirtueSlugs(): string[] {
-  return VIRTUES.map((v) => v.slug)
+  return CANON.map((v) => v.slug)
 }
 
 /**
- * Resolve a story's free-text virtue to its canonical virtue-hub slug, or null
- * when it maps to no canon entry. Lets a story link back up to its virtue page
- * using the same resolution the virtue pages use to gather stories.
+ * Re-exported for existing server callers. Client components must import it
+ * from `@/lib/canon`: this module pulls in the Basehub SDK.
  */
-export function getVirtueSlugForStoryVirtue(storyVirtue: string): string | null {
-  return resolveCanonVirtue(storyVirtue)?.slug ?? null
-}
+export { getVirtueSlugForStoryVirtue }

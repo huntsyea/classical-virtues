@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import Ornament from '@/components/Ornament';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -41,20 +41,26 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
       }
 
       return (
-        <Card className="my-8 p-6 border-destructive">
-          <CardContent className="text-center space-y-4">
-            <h2 className="text-2xl font-bold text-destructive">Something went wrong</h2>
-            <p className="text-muted-foreground">
-              We encountered an unexpected error. Please try refreshing the page.
-            </p>
-            <Button 
+        <div role="alert" className="page-wrap py-24 text-center sm:py-32">
+          <Ornament className="mx-auto text-primary" />
+          <h1 className="headline-2 mt-6">This page could not be fetched just now</h1>
+          <p className="dek mx-auto mt-4 max-w-md">
+            Something interrupted it on the way. Please try again, or return to
+            the stories.
+          </p>
+          <div className="mt-8 flex flex-col items-center gap-2">
+            <button
+              type="button"
               onClick={() => this.setState({ hasError: false, error: undefined })}
-              variant="outline"
+              className="button-primary"
             >
-              Try Again
-            </Button>
-          </CardContent>
-        </Card>
+              Try again
+            </button>
+            <Link href="/stories" className="text-link inline-flex min-h-11 items-center text-[0.9375rem]">
+              Back to the stories
+            </Link>
+          </div>
+        </div>
       );
     }
 
