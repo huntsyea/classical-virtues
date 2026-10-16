@@ -27,8 +27,12 @@ import '../../basehub.config' // Import the config to ensure it's loaded
  *     attached to the rendered route entry as well. So a committed change makes
  *     Basehub's servers call the Toolbar's Server Action, which runs
  *     `revalidateTag('basehub-<hash>')` for exactly those tags, and the cached
- *     pages are marked stale. `POST /api/revalidate` does the equivalent with
- *     `revalidatePath('/', 'layout')`; see `src/lib/revalidate.ts`.
+ *     pages are marked stale.
+ *   - `POST /api/revalidate` cannot use those tags: they are opaque
+ *     per-query hashes. So reading content also declares `basehub:content`
+ *     (`declareContentTag` below), and the webhook expires that tag with the
+ *     `'max'` (stale-while-revalidate) profile, which keeps a purge during an
+ *     outage from hard-expiring pages into 500s; see `src/lib/revalidate.ts`.
  *   - The SDK resolves a ref before every call with `resolveRef`, a
  *     `cache: 'no-store'` POST to `basehub.com/api/git/resolve-ref`. A
  *     `no-store` fetch marks its route dynamic, so the Toolbar (which renders

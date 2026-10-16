@@ -139,10 +139,15 @@ The project includes automated content revalidation when BaseHub content changes
 
 3. **Revalidation Behavior:**
    ```ts
-   // src/app/revalidate-sitemap/route.ts
-   revalidatePath('/sitemap.xml')  # Updates sitemap with new stories
-   revalidatePath('/stories')      # Clears story list cache
+   // src/lib/revalidate.ts
+   revalidateTag('basehub:content', 'max')  // stale-while-revalidate: every
+                                           // route that reads Basehub content
+   revalidateTag('basehub:schema', 'max')  // plus the schema, search-key and
+                                           // audio-probe caches
    ```
+   The `'max'` profile is deliberate: a purge while Basehub is unreachable keeps
+   serving the last good render instead of hard-expiring pages into 500s.
+   Basehub's own Toolbar revalidates its per-query tags on commit independently.
 
 ### Environment Variables
 
