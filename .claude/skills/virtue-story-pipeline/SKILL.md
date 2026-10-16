@@ -32,14 +32,13 @@ notes name the agent that ran a step, and sign-offs belong to people.
    `content/drafts/<slug>.gate.md`, naming itself in the round heading and
    recording `Draft sha256:` from `sha256sum content/drafts/<slug>.md`.
    Revisions return to step 2, then here. On a publish verdict, ask the editor
-   of record (Margaret) to read the round and add her own
+   of record to read the round and add their own
    `- Sign-off: <name>, <YYYY-MM-DD>` line. Sign-off lines are always written
-   by the person who signs; when one person holds several recipe roles they
-   sign as themselves for the role (`Hunter Yeagley for Margaret`).
+   by the person who signs, never by an agent on that person's behalf.
    Done when `story:status` shows the editor gate done.
 4. **SEO QA.** `pnpm story:seo <slug>` to read the report, then
    `pnpm story:seo <slug> --record`. The note records you as the one who ran
-   it and leaves `- Owner sign-off:` blank. Ask the SEO owner (Quinn) to read
+   it and leaves `- Owner sign-off:` blank. Ask the SEO owner to read
    it and fill that line in.
    Done when `story:status` shows SEO QA done.
 5. **Check.** `pnpm story:check <slug>`.

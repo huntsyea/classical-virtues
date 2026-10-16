@@ -6,8 +6,8 @@ loop from these steps.
 
 ## 1. Brief
 
-Owner: Margaret, with SEO input from Quinn when search demand is part of the
-assignment.
+Owner: the editor of record, with SEO input from the SEO owner when search
+demand is part of the assignment.
 
 The brief must include:
 
@@ -42,15 +42,15 @@ The draft must follow `writing.md`:
   for `virtueDescription`.
 
 Quill should return the draft with all required structured fields and any source
-or canon questions called out for Margaret.
+or canon questions called out for the editor of record.
 
 ## 3. Editorial Gate Against Vault Exemplars
 
-Owner: Margaret.
+Owner: the editor of record.
 
-Before a draft can move toward publish, Margaret compares it against at least
-two locked exemplars in `content/vault/exemplars/` and records the comparison in
-the task thread or publish notes.
+Before a draft can move toward publish, the editor of record compares it
+against at least two locked exemplars in `content/vault/exemplars/` and records
+the comparison in the task thread or publish notes.
 
 The comparison must name the two exemplars and check:
 
@@ -72,9 +72,9 @@ Verdict options:
 
 ## 4. SEO QA
 
-Owner: Quinn.
+Owner: the SEO owner.
 
-Quinn checks discoverability surfaces only:
+The SEO owner checks discoverability surfaces only:
 
 - slug;
 - metadata title and description;
@@ -89,12 +89,12 @@ paragraphs embedded in the narrative.
 
 ## 5. Basehub Publish
 
-Owner: Margaret.
+Owner: the editor of record.
 
 Publish only after:
 
-- Margaret's editorial verdict is `publish`;
-- Quinn's SEO QA is clear;
+- the editorial verdict is `publish`;
+- the SEO QA is clear;
 - source/provenance uncertainty is resolved or cut;
 - required fields are present;
 - no body-level SEO scaffolding remains.
@@ -114,8 +114,8 @@ SEO QA result, vault exemplars used, and any follow-up owner.
 
 ## 6. Engineering Escalation
 
-If approved content cannot render or publish safely, Margaret stops the publish
-and routes a task to Engineering with:
+If approved content cannot render or publish safely, the editor of record stops
+the publish and routes a task to Engineering with:
 
 - the story or field affected;
 - the reader-facing impact;

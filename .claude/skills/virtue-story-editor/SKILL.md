@@ -86,8 +86,8 @@ catalog stories or exemplars.
    rounds as one line each, and `Draft sha256:` of the exact bytes you reviewed
    (`sha256sum content/drafts/<slug>.md`). A verdict covers only those bytes; any
    later edit, however small, needs a new round. Never write the `Sign-off:`
-   line: Margaret adds it after reading the round, and until she does an agent's
-   `publish` is a recommendation.
+   line: the editor of record adds it after reading the round, and until they
+   do an agent's `publish` is a recommendation.
 
 ## Blind comparison of any two texts
 

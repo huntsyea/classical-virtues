@@ -51,8 +51,8 @@ Yes or no with evidence; every answer must be yes for `publish`.
   read-aloud, scene, and ending; the step 3b style read, when run, cites
   fewer than two quotable shared tics (blind-judge.md; a bare "one hand" verdict
   does not block); every dimension 4 or 5; mean 4.4 or
-  higher; every Atlantic-bar answer yes. A `publish` is final only when Margaret
-  adds her `Sign-off`.
+  higher; every Atlantic-bar answer yes. A `publish` is final only when the editor
+  of record adds their `Sign-off`.
 - `kill`: the source cannot be verified or is a modern copyrighted retelling; the
   story has no decisive act a child can see; or three or more dimensions score 2
   or lower after one full revision.

@@ -146,10 +146,13 @@ export function isEntry(importMetaUrl) {
   return process.argv[1] && fileURLToPath(importMetaUrl) === process.argv[1]
 }
 
-/** The recipe's human owners (production-recipe.md), plus any listed in STORY_OWNERS. */
+/**
+ * Names that count as an owner's, so an agent's record can never carry one.
+ * There is no built-in list: set STORY_OWNERS to the comma-separated names of
+ * the people who own editorial sign-offs in this repo.
+ */
 export function ownerNames() {
-  const extra = (process.env.STORY_OWNERS ?? '').split(',').map((n) => n.trim()).filter(Boolean)
-  return ['Margaret', 'Quinn', ...extra]
+  return (process.env.STORY_OWNERS ?? '').split(',').map((n) => n.trim()).filter(Boolean)
 }
 
 /** The agent session this process runs in, if any (bb thread, Claude Code, Codex). */
@@ -166,8 +169,9 @@ export const isAgentSession = () => Boolean(agentSession())
 /**
  * Who is running this command, for notes and records. Inside an agent session
  * the record always names the agent; STORY_ACTOR can only add who it is
- * working for ("agent (bb thread …) for Hunter"), and may never be an owner's
- * name, because an owner's name on a record means that person did the work.
+ * working for ("agent (bb thread …) for Hunter"), and may never be one of the
+ * names in STORY_OWNERS, because an owner's name on a record means that person
+ * did the work.
  * Outside an agent session it is the OS account, or STORY_ACTOR when a person
  * wants a fuller name on the record.
  */

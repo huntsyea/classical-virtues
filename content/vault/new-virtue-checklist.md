@@ -6,10 +6,10 @@ links correctly, and conforms to the field contract — no structural changes
 required.
 
 Read `writing.md` (field contract, voice, SEO boundary) and `PRODUCT.md` (the
-seven-virtue canon) before drafting. Margaret owns editorial approval and Basehub
-publishing; engineering owns schema/render/scripts.
+seven-virtue canon) before drafting. The editor of record owns editorial
+approval and Basehub publishing; engineering owns schema/render/scripts.
 
-## 1. Pick the canon virtue (editorial — Margaret)
+## 1. Pick the canon virtue (editorial)
 
 - Every story maps to exactly one of the seven canon virtues: **Prudence,
   Justice, Fortitude, Temperance, Faith, Hope, Charity**.
@@ -40,8 +40,8 @@ const SUB_VIRTUE_TO_CANON_SLUG: Record<string, string> = {
 }
 ```
 
-Use the canon **slug** (lowercase) on the right. Confirm the mapping with
-Margaret (it is a canon decision). No new label = no code change needed.
+Use the canon **slug** (lowercase) on the right. Confirm the mapping with the
+editor of record (it is a canon decision). No new label = no code change needed.
 
 ## 3. Fill the field contract (editorial)
 
@@ -61,7 +61,7 @@ Every publish-ready story must provide:
 - `source` — provenance note *(pending the additive Basehub `source` field; until
   then record it in the brief/publish notes)*
 
-## 4. Publish (editorial — Margaret)
+## 4. Publish (editorial)
 
 - Publish to Basehub. `getAllStories()` / `getStoryBySlug()` pick it up; the story
   route and virtue hub are statically generated from the catalog.

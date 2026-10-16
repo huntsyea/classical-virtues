@@ -31,7 +31,7 @@ Engineering work must preserve approved editorial content unless the task
 explicitly asks for editorial changes. Do not rewrite story prose, titles,
 summaries, or moral reflections while fixing code, scripts, schema adapters, or
 rendering bugs. If approved content cannot render or publish safely, report the
-technical blocker and route editorial decisions back to Margaret.
+technical blocker and route editorial decisions back to the editor of record.
 
 ## Development Commands
 

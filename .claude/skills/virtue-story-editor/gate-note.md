@@ -40,9 +40,9 @@ The pipeline (`pnpm story:check`) parses this note: the header's `- Draft:` line
 must name this slug's draft, the last `## Round N:` heading carries the current
 verdict, that round's `Draft sha256:` must match the draft's current bytes, an
 `Exemplars:` line must name two locked exemplars by title, and a `publish` round
-needs `- Sign-off: <name>, <YYYY-MM-DD>`, which Margaret adds herself after
+needs `- Sign-off: <name>, <YYYY-MM-DD>`, which the editor of record adds after
 reading the round. An agent never writes that line; its `publish` is a
-recommendation until she does. Keep History lines as
+recommendation until they do. Keep History lines as
 plain bullets; a `## Round` heading there would become the "latest" round. Any
 edit to the draft after a round, even one word, reopens the gate: the editor
 reviews the new bytes in a new round.

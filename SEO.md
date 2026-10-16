@@ -2,15 +2,16 @@
 
 Standing rule for Classical Virtues. Derived from the **SEO Boundary** in
 `@writing.md`; read this with `@writing.md` and `@PRODUCT.md`. This contract is
-binding on Quinn (SEO), Margaret (Managing Editor), and Quill (writer), and on
-any engineering work that touches story rendering, metadata, or structured data.
+binding on the editor of record and on any engineering work that touches story
+rendering, metadata, or structured data.
 
 ## Principle
 
 SEO serves discoverability. It does not control the reading experience. The
 public reading experience is anthology-first: a story must never read like an
 SEO article. When ranking advice conflicts with story quality, the metadata /
-structured-data path wins and Margaret decides the final editorial treatment.
+structured-data path wins and the editor of record decides the final editorial
+treatment.
 
 ## Allowed SEO surfaces
 
@@ -49,13 +50,13 @@ inside a story body:
 
 ## Roles
 
-- **Quinn** recommends target terms, search intent, slugs, metadata copy, and
-  internal-link maps; runs pre-publish SEO QA against this contract.
-- **Margaret** decides how that guidance enters published content and owns the
-  final editorial treatment.
+- **The SEO owner** recommends target terms, search intent, slugs, metadata copy,
+  and internal-link maps, and runs the pre-publish SEO QA against this contract.
+- **The editor of record** decides how that guidance enters published content
+  and owns the final editorial treatment.
 - **Quill** keeps the story voice intact and the body free of SEO scaffolding.
-- **Engineering** owns how metadata and structured data are implemented; Quinn
-  specifies the SEO outcome, not the code.
+- **Engineering** owns how metadata and structured data are implemented; the SEO
+  owner specifies the SEO outcome, not the code.
 
 ## Pre-publish check (SEO half)
 

@@ -55,12 +55,12 @@ async function stagesFor(slug) {
   row(2, 'draft', lint.ok && contract.length === 0, `${lint.stats?.words ?? '?'} words, ${lint.errors.length + contract.length} errors`, 'revise with the virtue-story-writer skill until the linter is clean')
   const gate = readGateNote(draft)
   const gateNext = gate.next === 'sign-off'
-    ? `ask the editor of record (Margaret) to read round ${gate.round} and add her own \`- Sign-off: <name>, <YYYY-MM-DD>\` line to it`
+    ? `ask the editor of record to read round ${gate.round} and add their own \`- Sign-off: <name>, <YYYY-MM-DD>\` line to it`
     : 'review with the virtue-story-editor skill in a separate thread'
   row(3, 'editor gate', gate.exists && gate.problems.length === 0, gate.exists ? `round ${gate.round ?? '?'}: ${gate.verdict ?? '?'}${gate.problems.length ? ` (${gate.problems[0]})` : ''}` : 'no gate note', gateNext)
   const seo = readSeoNote(draft)
   const seoNext = seo.next === 'sign-off'
-    ? `ask the SEO owner (${seo.owner ?? 'Quinn'}) to read content/drafts/${slug}.seo.md and fill in \`- Owner sign-off: <name>, <YYYY-MM-DD>\``
+    ? `ask the SEO owner (${seo.owner ?? 'the user'}) to read content/drafts/${slug}.seo.md and fill in \`- Owner sign-off: <name>, <YYYY-MM-DD>\``
     : `pnpm story:seo ${slug} --record`
   row(4, 'SEO QA', seo.exists && seo.problems.length === 0, seo.exists ? `${seo.verdict}${seo.signOff ? `, signed off by ${seo.signOff.name}` : ''}${seo.problems.length ? ` (${seo.problems[0]})` : ''}` : 'no SEO note', seoNext)
   const checkOk = rows.every((r) => r.ok)

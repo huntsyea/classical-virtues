@@ -49,13 +49,13 @@ the tokens can do that, and no local check changes it. Concretely:
   does not read as an agent, and that the date is not in the future or before
   the review; it cannot prove who typed it. When one person plays several
   recipe roles, they sign with their own name and the role, e.g.
-  `- Sign-off: Hunter Yeagley for Margaret, 2026-10-13`.
+  `- Sign-off: Hunter Yeagley, 2026-10-13`.
 - **Agents are named as agents.** Inside an agent session (detected by
   `BB_THREAD_ID`, `CLAUDECODE`/`CLAUDE_CODE_ENTRYPOINT`, or any `CODEX_*`
   variable) every record the pipeline writes names the agent, e.g.
   `Run by: agent (bb thread thr_…)`. `STORY_ACTOR` can add who the agent works
-  for, never replace it, and is refused if it names an owner (Margaret, Quinn,
-  or anyone in `STORY_OWNERS`). `story:approve` refuses to run in an agent
+  for, never replace it, and is refused if it names an owner (anyone listed in
+  `STORY_OWNERS`). `story:approve` refuses to run in an agent
   session at all.
 - **Hashes bind reviews to bytes.** Any edit to the draft reopens the editor
   gate and SEO QA; any change to the image or MP3 reopens approval. That stops
@@ -72,11 +72,11 @@ the tokens can do that, and no local check changes it. Concretely:
 - **Editor gate.** The round heading names the reviewer, e.g. `## Round 3:
   publish (2026-10-13, independent critic thread thr_..., virtue-story-editor
   skill)`. The round holds `- Draft sha256: <sha256sum of the draft>` and,
-  once the editor of record has read it, her `- Sign-off:` line.
+  once the editor of record has read it, their `- Sign-off:` line.
 - **SEO QA.** `story:seo --record` writes `- Run by:` (an agent thread, or a
-  person's account), `- Owner:` (default Quinn), and a blank `- Owner sign-off:`
-  for the owner. Re-recording against the same draft bytes keeps a sign-off; any
-  draft edit clears it.
+  person's account), `- Owner:` (default `the user`), and a blank `- Owner
+  sign-off:` for the owner. Re-recording against the same draft bytes keeps a
+  sign-off; any draft edit clears it.
 - **Approval.** `story:approve --by "<name>"` records that name and the OS
   account that ran it.
 - The approval screen and publish plan print the reviewer, both sign-offs, who
@@ -176,11 +176,12 @@ To add:
 | `STORY_PREVIEW_HOSTS` | optional | exact preview hostnames revalidate/verify may target |
 | `ELEVENLABS_PRONUNCIATION_DICTIONARY_ID` / `_VERSION` | optional | printed by `pnpm audio:lexicon --push --yes` |
 | `NARRATION_PROVIDER`, `TRANSCRIBE_PROVIDER` | optional | `elevenlabs` or `openai` |
+| `STORY_OWNERS` | optional | comma-separated names that count as owners, so an agent's record can never carry one (see "Threat model") |
 | `STORY_SITE_URL` | optional | host written into MP3 tags; default `https://www.classicalvirtues.com` |
 
 ## SEO QA (`story:seo`)
 
-Quinn's step from the recipe, limited to discoverability surfaces: slug
+The SEO owner's step from the recipe, limited to discoverability surfaces: slug
 (short, carries the title's words, not already a story in Basehub), title tag
 (`<title> | Classical Virtues` within 60 characters), summary as meta
 description (120-160 characters, no stock SEO phrasing, does not open by

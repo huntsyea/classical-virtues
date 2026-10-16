@@ -1,8 +1,8 @@
-// story:seo: ladder step 4, SEO QA (production-recipe step 4, owner Quinn).
+// story:seo: ladder step 4, SEO QA (production-recipe step 4, owner the user).
 //
 //   pnpm story:seo <slug>                    report only, writes nothing
 //   pnpm story:seo <slug> --record           report and record content/drafts/<slug>.seo.md
-//   --owner <name>                           the SEO owner who must sign off (default Quinn)
+//   --owner <name>                           the SEO owner who must sign off (default "the user")
 //
 // The note says who actually ran the checks ("Run by": an agent thread or a
 // person's account, never the owner's name on an agent's behalf) and leaves
@@ -165,7 +165,7 @@ async function cli({ _, flags }) {
     if (failed.length) throw new GateError(`${failed.length} SEO check(s) failed.`)
     return
   }
-  const owner = flags.owner || 'Quinn'
+  const owner = flags.owner || 'the user'
   // Keep a human sign-off only if it was given for these exact draft bytes.
   let keepSignOff = null
   if (existsSync(draft.paths.seo)) {

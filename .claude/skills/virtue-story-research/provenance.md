@@ -75,4 +75,4 @@ brief).
 
 If you cannot fill a pattern truthfully, leave `source` as the most general true
 statement (`A traditional tale`) and record the open question in the brief for
-Margaret.
+the editor of record.

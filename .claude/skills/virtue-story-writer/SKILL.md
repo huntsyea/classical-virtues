@@ -71,7 +71,7 @@ virtue from the seven.
 8. **Hand off** to `virtue-story-editor` as a separate pass, ideally a fresh critic
    thread; a writer does not approve their own draft. Return the file path, the
    list of every change since the last round (all of them, requested or not), and
-   any source or canon questions for Margaret.
+   any source or canon questions for the editor of record.
 
 ## Revising after editor notes
 
