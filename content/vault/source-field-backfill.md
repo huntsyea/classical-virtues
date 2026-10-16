@@ -32,12 +32,12 @@ pnpm run basehub   # regenerates basehub-types.d.ts to include `source`
 No code change is required after that — the query already selects `source`
 first and falls back to the base selection only while the field is absent.
 
-## 2. Backfill source notes (Margaret — editorial)
+## 2. Backfill source notes (editorial)
 
 `writing.md` rule: **provenance is accurate or uncertainty is cut.** Where the
 source is uncertain, leave the field blank (nothing renders). The notes below
 are engineering *suggestions* drawn from the locked exemplars and the catalog;
-Margaret owns the final wording.
+the editor of record owns the final wording.
 
 | Story (slug) | Suggested `source` | Confidence |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ Margaret owns the final wording.
 | `the-woodcutters-axe` | From Aesop's Fables ("Mercury and the Woodman") | high |
 | `david-and-mephibosheth` | Retold from 2 Samuel 9 | high (Hebrew Bible, public domain) |
 | `the-cherry-tree` | A traditional tale popularized by Mason Locke Weems, *The Life of Washington* (1806) | medium — famously apocryphal; phrase so it does not assert historical fact |
-| `the-three-men` | — | **unknown — leave blank** pending Margaret's source check |
+| `the-three-men` | — | **unknown — leave blank** pending the editor's source check |
 
 Style: keep it short and plain (an attribution, not a citation). Prefer
 "From Aesop's Fables" over a full bibliographic reference. The rendered line is
@@ -58,6 +58,6 @@ Style: keep it short and plain (an attribution, not a citation). Prefer
 - [x] `source` wired end-to-end in code (query → `StoryData` → render +
       structured data), type-checked and linted.
 - [ ] `source` field added in Basehub (Text, optional).
-- [ ] Source notes backfilled per the table above (Margaret-approved).
+- [ ] Source notes backfilled per the table above (editor-approved).
 - [ ] Verified on a deploy: provenance line renders under at least one story and
       is absent where `source` is blank.

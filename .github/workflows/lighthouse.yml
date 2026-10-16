@@ -97,16 +97,27 @@ jobs:
         # Injects the Vercel protection-bypass header when the secret is present,
         # so protected preview deployments are audited as the real pages instead
         # of the Vercel login wall. Secret value is never printed.
+        # Preview deployments are deliberately noindex (robots.txt disallows
+        # them), so on PRs the two crawlability audits are skipped; manual runs
+        # against production keep them.
+        env:
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           set -euo pipefail
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            jq '.ci.collect = (.ci.collect // {}) | .ci.collect.settings = ((.ci.collect.settings // {}) + {skipAudits: ["is-crawlable", "robots-txt"]})' \
+              .lighthouserc.json > .lighthouserc.base.json
+          else
+            cp .lighthouserc.json .lighthouserc.base.json
+          fi
           if [ -n "${VERCEL_AUTOMATION_BYPASS_SECRET:-}" ]; then
             echo "Protection-bypass secret detected — auditing with x-vercel-protection-bypass header."
             jq --arg s "$VERCEL_AUTOMATION_BYPASS_SECRET" \
               '.ci.collect = (.ci.collect // {}) | .ci.collect.settings = ((.ci.collect.settings // {}) + {extraHeaders: {"x-vercel-protection-bypass": $s}})' \
-              .lighthouserc.json > .lighthouserc.effective.json
+              .lighthouserc.base.json > .lighthouserc.effective.json
           else
             echo "::warning::VERCEL_AUTOMATION_BYPASS_SECRET is not set. Protected Vercel preview deployments will redirect to the login wall and the audit will fail. Add it under Settings → Secrets → Actions to enforce >=90 on previews."
-            cp .lighthouserc.json .lighthouserc.effective.json
+            cp .lighthouserc.base.json .lighthouserc.effective.json
           fi
 
       - name: Run Lighthouse CI

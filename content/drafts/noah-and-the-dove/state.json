@@ -1,0 +1,34 @@
+{
+  "slug": "noah-and-the-dove",
+  "stages": {
+    "check": {
+      "status": "fail",
+      "draftHash": "096c0760f03d56f223e10a33757e62dacb951d8ce3b690e2b8f32f976fed4015",
+      "gateHash": "dd5de3fc1f30474024fd0269e6edfc5d5481bfc2a5ae192ab91e99b3004e4fc2",
+      "seoHash": "b5ec55f76ef380f4ac02e84bd895f10988c1190048a3f31eb09055853efa8215",
+      "lint": {
+        "tool": "lint-story.mjs",
+        "errors": 0,
+        "warnings": 1,
+        "words": 342
+      },
+      "gate": {
+        "round": 13,
+        "verdict": "publish",
+        "exemplars": [
+          "Androcles and the Lion",
+          "David and Mephibosheth"
+        ]
+      },
+      "seo": {
+        "verdict": "clear",
+        "by": null
+      },
+      "problems": [
+        "Round 13 has no editorial sign-off. After reading the round, the editor of record adds `- Sign-off: <name>, <YYYY-MM-DD>` to it; an agent never writes that line.",
+        "SEO QA needs its owner's sign-off. Quinn reads the note and adds `- Owner sign-off: <name>, <YYYY-MM-DD>`; an agent never writes that line."
+      ],
+      "at": "2026-10-14T02:26:29.941Z"
+    }
+  }
+}

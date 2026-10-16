@@ -1,0 +1,195 @@
+{
+  "_comment": "Expected lint outcomes per fixture. 'errors' lists rules that must fire (others may also fire); ok:true means zero errors. Fixtures under exemplars/ are the locked vault stories wrapped in the draft format exactly as exported; they fail on their documented watchouts. The rest are built from the Androcles exemplar: one repaired pass case and one-fault mutations. Optional 'args' replaces the default ['--no-habits'] (paths starting with fixtures/ resolve here); 'warnings' lists rules that must fire as warnings. 'absent' lists rules that must not fire (false-positive guards).",
+  "fixtures/androcles-repaired.md": {
+    "ok": true
+  },
+  "fixtures/fail-dashes.md": {
+    "ok": false,
+    "errors": [
+      "dash-glyph",
+      "dash-substitute"
+    ]
+  },
+  "fixtures/fail-body-scaffolding.md": {
+    "ok": false,
+    "errors": [
+      "body-heading",
+      "body-separator",
+      "body-link",
+      "body-moral",
+      "banned-phrase"
+    ]
+  },
+  "fixtures/fail-fields.md": {
+    "ok": false,
+    "errors": [
+      "field-missing",
+      "title-subtitle",
+      "slug-format",
+      "slug-filename",
+      "canon-virtue",
+      "summary-length",
+      "audio-value",
+      "banned-phrase"
+    ]
+  },
+  "fixtures/fail-orphan-subvirtue.md": {
+    "ok": false,
+    "errors": [
+      "subvirtue-orphan"
+    ]
+  },
+  "fixtures/fail-word-count.md": {
+    "ok": false,
+    "errors": [
+      "word-count"
+    ]
+  },
+  "fixtures/fail-moral-ending.md": {
+    "ok": false,
+    "errors": [
+      "moral-ending",
+      "banned-phrase"
+    ]
+  },
+  "fixtures/fail-virtue-early.md": {
+    "ok": false,
+    "errors": [
+      "virtue-named-early",
+      "virtue-label-repeat"
+    ]
+  },
+  "fixtures/exemplars/androcles-and-the-lion.md": {
+    "ok": false,
+    "errors": [
+      "field-empty",
+      "summary-length",
+      "banned-phrase",
+      "virtue-label-repeat"
+    ]
+  },
+  "fixtures/exemplars/david-and-mephibosheth.md": {
+    "ok": false,
+    "errors": [
+      "virtue-named-early",
+      "moral-ending",
+      "summary-length",
+      "banned-phrase"
+    ]
+  },
+  "fixtures/exemplars/the-cherry-tree.md": {
+    "ok": false,
+    "errors": [
+      "word-count",
+      "moral-ending",
+      "summary-length"
+    ]
+  },
+  "fixtures/attested-speech.md": {
+    "ok": true,
+    "warnings": [
+      "virtue-attested"
+    ],
+    "args": [
+      "--no-habits",
+      "--source",
+      "fixtures/source-bell.txt"
+    ]
+  },
+  "fixtures/habits-staccato.md": {
+    "ok": true,
+    "warnings": [
+      "opening-no-actor",
+      "staccato-run",
+      "doubled-negative"
+    ]
+  },
+  "fixtures/habits/two.md": {
+    "ok": true,
+    "warnings": [
+      "house-tic"
+    ],
+    "args": [
+      "--drafts",
+      "fixtures/habits",
+      "--no-catalog"
+    ]
+  },
+  "fixtures/short-ok.md": {
+    "ok": true,
+    "warnings": [
+      "length-exception"
+    ]
+  },
+  "fixtures/fail-attested-p1.md": {
+    "ok": false,
+    "errors": [
+      "virtue-named-early"
+    ],
+    "args": [
+      "--no-habits",
+      "--source",
+      "fixtures/source-daniel.txt"
+    ]
+  },
+  "fixtures/fail-hope-label.md": {
+    "ok": false,
+    "errors": [
+      "virtue-label-repeat"
+    ]
+  },
+  "fixtures/fail-chronicle-opening.md": {
+    "ok": true,
+    "warnings": [
+      "opening-no-actor",
+      "opening-no-pressure"
+    ]
+  },
+  "fixtures/habits2/three.md": {
+    "ok": true,
+    "warnings": [
+      "house-tic",
+      "invented-echo"
+    ],
+    "args": [
+      "--drafts",
+      "fixtures/habits2",
+      "--no-catalog"
+    ]
+  },
+  "fixtures/habits2/plain-the.md": {
+    "ok": true,
+    "absent": [
+      "house-tic"
+    ],
+    "args": [
+      "--drafts",
+      "fixtures/habits2",
+      "--no-catalog",
+      "--min-words",
+      "200"
+    ]
+  },
+  "fixtures/dialogue-heavy.md": {
+    "ok": true,
+    "warnings": [
+      "dialogue-share"
+    ]
+  },
+  "fixtures/dek-ok.md": {
+    "ok": true,
+    "absent": [
+      "dek-length",
+      "field-missing",
+      "field-order"
+    ]
+  },
+  "fixtures/fail-dek.md": {
+    "ok": false,
+    "errors": [
+      "dek-length",
+      "dash-glyph",
+      "banned-phrase"
+    ]
+  }
+}

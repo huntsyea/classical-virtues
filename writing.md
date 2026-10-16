@@ -73,7 +73,8 @@ Every publish-ready story must provide:
 - `summary`: short reader-facing summary suitable for cards and metadata;
 - `content`: the story narrative only;
 - `virtueDescription`: the final moral/reflection;
-- `virtue`: the canonical virtue or a mapped display value approved by Margaret;
+- `virtue`: the canonical virtue or a mapped display value approved by the
+  editor of record;
 - `canonicalVirtue`: one of the seven Classical Virtues canon entries when the
   storage model supports it;
 - `source`: public-domain or classical source note where applicable;
@@ -159,9 +160,9 @@ Not allowed in story bodies:
 - FAQ/snippet copy that interrupts the tale;
 - title subtitles added only for search.
 
-Quinn may recommend terms, metadata, and search intent. Margaret decides how
-that guidance enters the published content, and Quill must keep the story voice
-intact.
+The SEO owner may recommend terms, metadata, and search intent. The editor of
+record decides how that guidance enters the published content, and Quill must
+keep the story voice intact.
 
 Search guidance belongs in structured surfaces, not in the tale. If a keyword
 cannot enter the title, slug, summary, metadata, source note, image alt text, or
@@ -188,7 +189,7 @@ publish.
 
 ## Approval Checklist
 
-Before a story is published, Margaret should confirm:
+Before a story is published, the editor of record should confirm:
 
 - the story opens on a scene or character action, not an explanation;
 - the virtue is demonstrated before it is explained;
@@ -201,5 +202,5 @@ Before a story is published, Margaret should confirm:
 - image alt text is meaningful;
 - the draft has passed the two-exemplar vault comparison gate.
 
-The two comparison examples should come from the locked vault unless Margaret
-explicitly approves a newer live story as an added reference.
+The two comparison examples should come from the locked vault unless the editor
+of record explicitly approves a newer live story as an added reference.

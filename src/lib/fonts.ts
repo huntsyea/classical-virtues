@@ -1,28 +1,35 @@
-import { Instrument_Serif, Inter, Literata } from 'next/font/google'
+import { Newsreader, Inter, Literata } from 'next/font/google'
 
-// Display face: Instrument Serif ships weight 400 only.
-// Hierarchy comes from size, never from synthesized bold.
-export const fontHeading = Instrument_Serif({
+// Display face: Newsreader, a variable serif with an optical-size axis. At
+// headline sizes the browser selects its high-contrast display cut; at dek and
+// card sizes it settles into a sturdier text cut. Hierarchy comes from size and
+// optical size, not synthesized weight.
+export const fontHeading = Newsreader({
   variable: '--font-heading',
   subsets: ['latin'],
-  weight: '400',
   style: ['normal', 'italic'],
-  display: 'swap'
+  axes: ['opsz'],
+  display: 'swap',
 })
 
-// UI face: Inter for labels, navigation, and controls.
+// UI face: Inter for kickers, metadata, navigation, and controls.
 export const fontBody = Inter({
   variable: '--font-body',
   subsets: ['latin'],
-  display: 'swap'
+  display: 'swap',
 })
 
-// Text face: Literata for long-form story prose. A true book serif
-// with real italics and weights, designed for sustained reading.
+// Text face: Literata for long-form story prose. A true book serif with a
+// generous x-height, real italics, small caps, and old-style figures, designed
+// for sustained reading on screens (and for reading aloud from a phone).
 export const fontText = Literata({
   variable: '--font-text',
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
   style: ['normal', 'italic'],
-  display: 'swap'
+  axes: ['opsz'],
+  display: 'swap',
+  // Not preloaded: the story hero image is the LCP element, and preloading two
+  // more large variable files starves it on slow phones. The metric-matched
+  // fallback keeps the swap free of layout shift.
+  preload: false,
 })

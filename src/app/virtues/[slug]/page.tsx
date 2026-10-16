@@ -1,9 +1,14 @@
 import Link from 'next/link'
+import { cn } from '@/lib/utils'
 import { notFound } from 'next/navigation'
-import SummaryCard from '@/components/summaryCard'
+import Ornament from '@/components/Ornament'
+import { roman } from '@/components/roman'
+import { byPublished } from '@/components/story-utils'
+import StoryCollection from '@/components/StoryCollection'
 import JsonLd from '@/components/JsonLd'
-import { getVirtueBySlug, getVirtueSlugs } from '@/lib/virtues'
+import { getAllVirtues, getVirtueBySlug, getVirtueSlugs } from '@/lib/virtues'
 import type { Metadata } from 'next'
+import { brandedOgImage, firstSentence, pageMetadata, virtueHubJsonLd } from '@/lib/seo'
 
 type Params = Promise<{ slug: string }>
 
@@ -19,36 +24,26 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     return {
       title: 'Virtue Not Found',
       description: 'The requested virtue could not be found.',
+      robots: { index: false, follow: true },
     }
   }
 
-  const ogImage = `/api/og?title=${encodeURIComponent(virtue.title)}&virtue=${encodeURIComponent(virtue.tagline)}`
-
+  const title = virtue.alternateName ? `${virtue.title} (${virtue.alternateName})` : virtue.title
   return {
-    title: virtue.title,
-    description: virtue.tagline,
-    alternates: {
-      canonical: `/virtues/${slug}`,
-    },
-    keywords: [virtue.title, virtue.alternateName, 'virtue', 'classical virtues'].filter(
-      (k): k is string => Boolean(k),
-    ),
-    openGraph: {
-      type: 'website',
-      url: `https://classicalvirtues.com/virtues/${slug}`,
-      title: virtue.title,
-      description: virtue.tagline,
-      images: [{ url: ogImage, width: 1200, height: 630, alt: virtue.title }],
-      siteName: 'Classical Virtues',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: virtue.title,
-      description: virtue.tagline,
-      images: [ogImage],
-    },
+    ...pageMetadata({
+      path: `/virtues/${slug}`,
+      title,
+      description: `${virtue.tagline} ${firstSentence(virtue.description)}`,
+      images: [brandedOgImage(`virtue-${virtue.slug}`)],
+      // An empty hub is thin content; keep it out of the index until it has stories.
+      noindex: virtue.stories.length === 0,
+    }),
+    keywords: [virtue.title, virtue.alternateName, 'classical virtues'].filter((k): k is string => Boolean(k)),
   }
 }
+
+// ISR: the hub's story list follows new publishes (PRO-86).
+export const revalidate = 300
 
 export default async function VirtuePage({ params }: { params: Params }) {
   const { slug } = await params
@@ -58,79 +53,100 @@ export default async function VirtuePage({ params }: { params: Params }) {
     notFound()
   }
 
-  const breadcrumbSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://classicalvirtues.com' },
-      { '@type': 'ListItem', position: 2, name: 'Virtues', item: 'https://classicalvirtues.com/virtues' },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: virtue.title,
-        item: `https://classicalvirtues.com/virtues/${slug}`,
-      },
-    ],
-  }
+  const breadcrumbSchema = virtueHubJsonLd(virtue)
+
+  const all = await getAllVirtues()
+  const index = all.findIndex((v) => v.slug === virtue.slug)
+  // Chapter navigation in canon order: No. I has no previous, No. VII no next.
+  const prev = index > 0 ? all[index - 1] : null
+  const next = index >= 0 && index < all.length - 1 ? all[index + 1] : null
+  const count = virtue.stories.length
+  const family = index >= 0 && index < 4 ? 'Cardinal virtue' : 'Theological virtue'
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
-      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-muted-foreground">
-        <Link href="/">Home</Link>
-        <span className="mx-2" aria-hidden="true">/</span>
-        <Link href="/virtues">Virtues</Link>
-        <span className="mx-2" aria-hidden="true">/</span>
-        <span aria-current="page">{virtue.title}</span>
-      </nav>
-
-      <header className="mb-8 space-y-3">
-        <div className="flex flex-wrap items-baseline gap-x-3">
-          <h1 className="font-heading text-4xl tracking-wide sm:text-5xl">{virtue.title}</h1>
+    <div className="page-wrap pt-10 sm:pt-16 lg:pt-20">
+      <header className="lg:grid lg:grid-cols-[minmax(0,40rem)_minmax(10rem,1fr)] lg:gap-x-20">
+        <div>
+          <p className="kicker flex items-baseline">
+            <Link href="/virtues" className="-my-3 inline-flex min-h-11 items-center underline-offset-4 hover:underline">
+              {family}
+            </Link>
+          </p>
+          <h1 className="headline-1 mt-3 sm:mt-4">{virtue.title}</h1>
+          <p className="dek mt-3 italic sm:mt-4">{virtue.tagline}</p>
           {virtue.alternateName && (
-            <span className="font-heading text-2xl italic text-muted-foreground">
-              {virtue.alternateName}
-            </span>
+            <p className="meta mt-2">Also called {virtue.alternateName.toLowerCase()}</p>
           )}
+          <p className="mt-6 border-t border-rule pt-6 font-text text-[1.125rem] leading-[1.6] text-ink-2 sm:text-[1.25rem]">
+            {virtue.description}
+          </p>
         </div>
-        <p className="font-heading text-xl italic text-primary">{virtue.tagline}</p>
+        {/* Chapter mark: the virtue's place in the canon, set large, as a
+            book opens a part. Decorative; the kicker carries it in text. */}
+        {index >= 0 && (
+          <div aria-hidden="true" className="hidden lg:mt-10 lg:flex lg:flex-col lg:items-center lg:self-start lg:justify-self-center lg:text-center">
+            <span className="font-heading text-[9rem] leading-[0.8] tracking-[-0.02em] text-[color-mix(in_srgb,var(--primary)_32%,var(--background))]">
+              {roman(index + 1)}
+            </span>
+            <span className="kicker mt-5 text-muted-foreground">
+              {index + 1} of {all.length}
+            </span>
+          </div>
+        )}
       </header>
 
-      <div className="prose prose-lg max-w-none">
-        <p className="leading-relaxed">{virtue.description}</p>
-      </div>
-
-      <section aria-labelledby="virtue-stories" className="mt-12 border-t border-border pt-8">
-        <h2 id="virtue-stories" className="font-heading text-2xl">
-          Stories of {virtue.title.toLowerCase()}
-        </h2>
-        {virtue.stories.length === 0 ? (
-          <p className="mt-4 text-muted-foreground">
-            No stories have been gathered here yet. They are being prepared.{' '}
-            <Link href="/stories" className="underline underline-offset-4 hover:text-foreground">
-              Browse the whole collection
-            </Link>
-            .
+      <section aria-labelledby="virtue-stories" className="mt-16 sm:mt-24">
+        <div className="section-head">
+          <h2 id="virtue-stories" className="section-title">
+            Stories of {virtue.title.toLowerCase()}
+          </h2>
+          <p className="meta">
+            {count === 0 ? 'None yet' : `${count} ${count === 1 ? 'story' : 'stories'}`}
           </p>
+        </div>
+        {count === 0 ? (
+          <div className="border-b border-rule py-16 text-center sm:py-20">
+            <Ornament className="mx-auto text-primary" />
+            <p className="dek mx-auto mt-6 max-w-md">
+              No stories have been gathered here yet. They are being prepared.
+            </p>
+            <p className="mt-7">
+              <Link href="/stories" className="button-quiet">
+                Browse the whole collection
+              </Link>
+            </p>
+          </div>
         ) : (
-          <ol role="list" className="mt-2 list-none border-t border-border p-0">
-            {virtue.stories.map((story, index) => (
-              <li key={story.id}>
-                <SummaryCard
-                  variant="index"
-                  position={index + 1}
-                  slug={story.slug}
-                  image={story.image}
-                  title={story.title}
-                  summary={story.summary}
-                  virtue={story.virtue}
-                  audioUrl={story.audioUrl}
-                  wordCount={story.wordCount}
-                />
-              </li>
-            ))}
-          </ol>
+          <StoryCollection stories={[...virtue.stories].sort(byPublished)} hideCanon />
         )}
       </section>
+
+      {(prev || next) && (
+        <nav aria-label="More virtues" className={cn('mt-20 grid border-y border-rule sm:mt-28', prev && next && 'sm:grid-cols-2')}>
+          {prev && (
+            <Link href={`/virtues/${prev.slug}`} className="group flex flex-col gap-1 py-6 sm:pr-8">
+              <span className="kicker text-muted-foreground"><span aria-hidden="true">&larr; </span>Previous virtue</span>
+              <span className="headline-link font-heading text-[1.75rem] leading-tight">{prev.title}</span>
+              <span className="card-dek italic">{prev.tagline}</span>
+              {prev.stories.length === 0 && <span className="meta">Forthcoming</span>}
+            </Link>
+          )}
+          {next && (
+            <Link
+              href={`/virtues/${next.slug}`}
+              className={cn(
+                'group flex flex-col gap-1 py-6 sm:items-end sm:text-right',
+                prev && 'border-t border-rule sm:border-l sm:border-t-0 sm:pl-8',
+              )}
+            >
+              <span className="kicker text-muted-foreground">Next virtue<span aria-hidden="true"> &rarr;</span></span>
+              <span className="headline-link font-heading text-[1.75rem] leading-tight">{next.title}</span>
+              <span className="card-dek italic">{next.tagline}</span>
+              {next.stories.length === 0 && <span className="meta">Forthcoming</span>}
+            </Link>
+          )}
+        </nav>
+      )}
 
       <JsonLd data={breadcrumbSchema} />
     </div>

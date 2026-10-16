@@ -71,14 +71,14 @@ End-to-end wiring confirmed in `basehub.ts` → `stories.ts` → render/metadata
 1. **`imageAlt` content gap** — the field is wired end-to-end, but 5 of 7
    stories have empty `image.alt` in Basehub, so the page falls back to the
    generic `Illustration for <title>`. This is a content backfill, not a code
-   bug. Owner: Margaret / illustration. → child issue.
+   bug. Owner: the editor of record / illustration. → child issue.
 2. **`source` schema gap** — the contract lists a `source` provenance note, but
    Basehub's `StoriesItem` has no `source` field. PRO-62 has wired it through
    the code (`basehub.ts` → `stories.ts` → story page + Article JSON-LD), with a
    query fallback so the catalog is safe whether or not the field exists.
    Remaining: add the `source` Text field in Basehub and backfill notes —
    turnkey steps and proposed notes in `content/vault/source-field-backfill.md`.
-   Owner: Margaret (CMS field + editorial backfill).
+   Owner: the editor of record (CMS field + editorial backfill).
 
 ## Acceptance
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 type ShareState = 'idle' | 'copied';
 
@@ -10,7 +11,15 @@ type ShareState = 'idle' | 'copied';
  * link and quietly confirms. No counts, no logos, no "share to X": just a
  * way to pass a story along.
  */
-export default function ShareStory({ title, slug }: { title: string; slug: string }) {
+export default function ShareStory({
+  title,
+  slug,
+  className,
+}: {
+  title: string;
+  slug: string;
+  className?: string;
+}) {
   const [state, setState] = useState<ShareState>('idle');
 
   const url = `https://classicalvirtues.com/stories/${slug}`;
@@ -27,8 +36,9 @@ export default function ShareStory({ title, slug }: { title: string; slug: strin
       try {
         await navigator.share({ title, text: `“${title}”: a story from Classical Virtues`, url });
         return;
-      } catch {
-        // The reader dismissed the sheet, or it failed. Fall through to copy.
+      } catch (error) {
+        // Dismissing the sheet is a choice, not a failure: do nothing.
+        if ((error as DOMException)?.name === 'AbortError') return;
       }
     }
 
@@ -40,18 +50,41 @@ export default function ShareStory({ title, slug }: { title: string; slug: strin
     }
   }
 
-  const label = state === 'copied' ? 'Link copied' : 'Share this story';
-
   return (
-    <div className="mt-12 flex justify-center">
-      <button
-        type="button"
-        onClick={handleShare}
-        aria-live="polite"
-        className="text-sm text-muted-foreground underline underline-offset-4 decoration-muted-foreground/40 hover:text-foreground hover:decoration-foreground transition-colors py-2"
-      >
-        {label}
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={handleShare}
+      className={cn(
+        'inline-flex min-h-11 items-center gap-2 font-body text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary',
+        className,
+      )}
+    >
+      <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10 12.5V3M6.5 6.5L10 3l3.5 3.5" />
+        <path d="M6 9.5H4.5v7.5h11V9.5H14" />
+      </svg>
+      <span aria-live="polite">{state === 'copied' ? 'Link copied' : 'Share'}</span>
+    </button>
+  );
+}
+
+/** Print the story: the print stylesheet sets it as a clean page. */
+export function PrintStory({ className }: { className?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={() => window.print()}
+      className={cn(
+        'inline-flex min-h-11 items-center gap-2 font-body text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-foreground transition-colors hover:text-primary',
+        className,
+      )}
+    >
+      <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
+        <path d="M5.5 7.5V3h9v4.5" />
+        <rect x="2.5" y="7.5" width="15" height="7" rx="1" />
+        <path d="M5.5 12h9v5h-9z" fill="var(--background)" />
+      </svg>
+      Print
+    </button>
   );
 }

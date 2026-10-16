@@ -1,0 +1,39 @@
+# Brief: Daniel in the Lions' Den
+
+- Working title: Daniel in the Lions' Den
+- Slug: daniel-in-the-lions-den (not in `backups/basehub/latest.json` or `content/drafts/`, checked 2026-10-13)
+- Source: Daniel 6:1-23 (Hebrew Bible, Aramaic portion; the court tales of Daniel, 2nd century BC or earlier in their present form).
+- Editions read: King James Version (1611), Daniel 6:1-28, Project Gutenberg #10; Kent and Sherman, The Children's Bible (1922), "Daniel in the Lions' Den," Gutenberg #23580; Lathbury, Child's Story of the Bible (1898), the Darius chapter.
+- Governing text: KJV Daniel 6:1-23, saved as `content/drafts/daniel-in-the-lions-den/source.txt`. Verses 24-28 are read but not retold (see Departures).
+- Why retell it: the KJV opens on administration (a hundred and twenty princes, three presidents, accounts and damage) and moves in legal formulas ("occasion," "preferred," "regardeth," "aforetime") that lose a six-year-old before the decree is signed. The retelling can open on the plotters' problem, stage the king's night in the palace and the dawn at the den as scenes, and let the den be heard before it is seen. Keep what the KJV does best: "the law of the Medes and Persians, which altereth not"; the windows open toward Jerusalem; "as he did aforetime"; the king who "laboured till the going down of the sun"; "his sleep went from him"; "O Daniel, servant of the living God"; "O king, live for ever"; "shut the lions' mouths"; "no manner of hurt was found upon him."
+- Bedtime rival: Kent and Sherman, The Children's Bible (1922), "Daniel in the Lions' Den," same span, saved as `content/drafts/daniel-in-the-lions-den/rival.txt`.
+- Passage: Daniel 6:1-23, ending where the tale's payoff ends ("because he believed in his God"); 6:24 (the accusers' families thrown to the lions) and the 6:25-28 decree are left out and listed under Departures.
+- Point of view (revision 4): the telling stays outside Daniel, with the plotters and the king, so his act is seen, never narrated from inside, and he is first heard as the voice from under the stone. This keeps the story from sounding like Noah and the Dove, which stays inside Noah's hands.
+- Refrains and set pieces: "King Darius, live for ever" (the plotters' greeting, returned by Daniel from the den); "the law of the Medes and Persians, which altereth not" (three times: the request, the king's answer, the plotters' reminder); "three times a day"; "whom thou servest continually" (twice, in the king's mouth); the sealed stone; the night without food, music, or sleep.
+- Public-domain basis: ancient text; the KJV wording is public domain in the US (Crown patent in the UK; retelling and short quotation are fine). Kent and Sherman (1922) and Lathbury (1898) are pre-1929.
+- Source note for the page: "Retold from Daniel 6"
+- Departures and uncertainty:
+  - Daniel's windows were already open toward Jerusalem; the text says he prayed "as he did aforetime." Popular versions have him throw the shutters open in defiance. Do not: the act is that he changed nothing.
+  - The text does not say what Daniel did in the den, that he prayed there, slept against a lion, or saw the angel. He reports the angel afterward in one sentence. Tell nothing from inside the den.
+  - 6:24 has the accusers, "their children, and their wives" thrown to the lions, whose bones are broken before they reach the bottom. 6:25-27 is the king's decree to all nations; 6:28 says Daniel prospered. The retelling ends at 6:23, where the governing passage ends; source note says "Retold from Daniel 6" without claiming the whole chapter is told. Uncertain: whether ending before 6:24 counts as telling scripture "at the scale it says it" (craft.md §10). Flagged for Margaret.
+  - "Darius the Mede" is not attested outside Daniel. Treat as scripture's own story; the summary and reflection assert nothing historical.
+  - The deuterocanonical Bel and the Dragon has a second lions' den (seven days, Habakkuk brings food). Do not mix it in.
+  - Kent and Sherman: "for he had trusted in his God"; KJV: "because he believed in his God." Governing text wins.
+- Canonical virtue: Faith
+- Sub-virtue angle: none. "Devotion" or "steadfastness" resolve nowhere in `SUB_VIRTUE_TO_CANON_SLUG` and the Faith hub is empty; `virtue` is "Faith".
+- Why this mapping: knowing the decree is signed and cannot be changed, Daniel goes home and prays at his open window exactly as he always has; his trust in God is the act itself, and the source names it ("because he believed in his God").
+- Decisive act: Daniel's, at 6:10. Told the writing is signed, he goes home and kneels at the window toward Jerusalem three times a day, as before. A second act belongs to the king, who cannot undo his own law and sits up all night.
+- Telling details in the source: the windows open "toward Jerusalem"; kneeling "three times a day"; the king who "laboured till the going down of the sun"; the stone on the den's mouth sealed with the king's own signet and his lords'; the night of fasting with no instruments of music and no sleep; "very early in the morning... in haste"; the "lamentable voice"; the lions' mouths shut; "no manner of hurt."
+- Attested lines: "We shall not find any occasion against this Daniel, except we find it against him concerning the law of his God."; "King Darius, live for ever."; the decree (6:7-8); "The thing is true, according to the law of the Medes and Persians, which altereth not."; "That Daniel... regardeth not thee, O king, nor the decree that thou hast signed, but maketh his petition three times a day."; "Know, O king, that the law of the Medes and Persians is, That no decree nor statute which the king establisheth may be changed."; "Thy God whom thou servest continually, he will deliver thee."; "O Daniel, servant of the living God, is thy God, whom thou servest continually, able to deliver thee from the lions?"; "O king, live for ever. My God hath sent his angel, and hath shut the lions' mouths, that they have not hurt me: forasmuch as before him innocency was found in me; and also before thee, O king, have I done no hurt."
+- Reader fit: ages 4 to 10 at bedtime. The lions stay unseen until morning and hurt no one in the told passage; 6:24 is not told. The adult edge: a king trapped by his own unchangeable law, who does everything a king can and still has to seal the stone himself; and the plotters' only weapon against Daniel was his own known habit.
+- Target length: 350-650 words. The governing passage runs about 740 words of KJV, much of it lists of officials and the decree repeated three times; one telling of the decree and one of the law's refrain carry it.
+- Fields:
+  - title: "Daniel in the Lions' Den"
+  - summary angle: the men who could find no fault in Daniel, the decree they get the king to sign; hold back the night and the morning.
+  - virtueDescription angle: faith as the habit that does not change when changing it would be safe; Daniel did not do anything new.
+  - source: "Retold from Daniel 6"
+  - imageAlt scene: Daniel kneeling at an open window toward the west, with the city of Babylon outside and men watching from the street or doorway.
+  - imagePrompt scene: the same, at evening light; paint the decisive act, not the den.
+  - audio: planned
+- SEO guidance (metadata, summary, slug, alt text, internal links only): "Daniel in the lions' den," "Daniel 6," "Bible story about faith," "Darius." Never in the body.
+- Internal-link ideas: The Three Men (Daniel 3, the fiery furnace, same court and same pressure); Noah and the Dove (scripture, waiting); the Faith hub at `/virtues/faith`, which this would be the first story to fill.

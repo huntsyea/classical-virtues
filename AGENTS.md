@@ -16,6 +16,11 @@ affects the public reading experience:
   it lands on the right canon hub and conforms to the field contract. Adding a
   new sub-virtue angle requires one line in `SUB_VIRTUE_TO_CANON_SLUG`
   (`src/lib/virtues.ts`); see also `content/vault/catalog-audit.md`.
+- `content/story-format.md`: the draft file contract (`content/drafts/<slug>.md`)
+  shared by the writing skills, the linter, and the publish and audio scripts.
+- Story skills in `.claude/skills/`: `virtue-story-research` (source and brief),
+  `virtue-story-writer` (drafting craft), `virtue-story-editor` (the vault gate,
+  with the `scripts/lint-story.mjs` linter).
 
 Story prose (title, summary, body, and `virtueDescription`) must contain no em or
 en dashes (`—`, `–`); they read as a machine-writing tell. Recast with standard
@@ -26,7 +31,7 @@ Engineering work must preserve approved editorial content unless the task
 explicitly asks for editorial changes. Do not rewrite story prose, titles,
 summaries, or moral reflections while fixing code, scripts, schema adapters, or
 rendering bugs. If approved content cannot render or publish safely, report the
-technical blocker and route editorial decisions back to Margaret.
+technical blocker and route editorial decisions back to the editor of record.
 
 ## Development Commands
 
@@ -56,12 +61,16 @@ than reader-facing SEO scaffolding in story bodies.
 - Handles missing-token and error recovery
 
 **Font System** (`src/lib/fonts.ts`):
-- Uses Instrument Serif (serif/heading) and Inter (sans/body) fonts via `next/font`
+- Newsreader (headline/wordmark, `--font-heading`), Literata (story prose,
+  `--font-text`, not preloaded so the hero stays the LCP element) and Inter
+  (UI and metadata, `--font-body`), all via `next/font/google`
 - Font variables are set in root layout and available globally
 
 **Component Structure**:
-- `src/components/` - Reusable UI components using shadcn/ui
-- `src/components/ui/` - Base UI components from shadcn/ui
+- `src/components/` - The site's own components; the design system lives in
+  `src/app/globals.css` and `tailwind.config.ts`, not in a component library
+- `src/components/ui/` - shadcn/ui sources, of which only `slider.tsx` (used by
+  `AudioPlayer`) is still imported; everything else there was deleted
 - Dynamic imports used for heavy components (AudioPlayer)
 
 **Content Rendering**:
@@ -74,8 +83,10 @@ than reader-facing SEO scaffolding in story bodies.
 When `BASEHUB_TOKEN` is set:
 - `basehub.config.ts` configures the global Basehub client
 - `src/lib/basehub.ts` defines Story interface and API functions
-- Draft mode enabled in development environment
-- Webhook endpoint at `/revalidate-sitemap` for content updates
+- Draft mode enabled in development environment, and in preview through Basehub's
+  own `<Toolbar />` (mounted in `src/app/layout.tsx`); see `src/lib/basehub.ts`
+- Webhook endpoint at `/api/revalidate` for content updates (`/revalidate-sitemap`
+  is kept as a legacy alias)
 
 ### SEO & Performance
 - Comprehensive metadata and OpenGraph tags
@@ -119,4 +130,9 @@ image alt text distinct when the CMS model allows it.
 - Use the unified story interface from `src/lib/stories.ts` rather than calling Basehub directly
 - Always handle the case where content sources might be unavailable
 - Audio components should be dynamically imported with SSR disabled via a client wrapper (`src/components/LazyAudioPlayer.tsx`) — `ssr: false` is not allowed in Server Components in Next 15+
-- Font classes use CSS variables: `font-heading` and `font-body`
+- Font classes use CSS variables: `font-heading`, `font-text` and `font-body`
+- Prefer the documented best practice and built-in features of our libraries and
+  frameworks (Basehub, Next.js, Vercel, and so on) over custom replacements.
+  Check the current docs before building a custom version of something the
+  library already ships, and say why in the code comment when a deviation is
+  unavoidable.

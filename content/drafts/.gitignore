@@ -1,0 +1,9 @@
+# Pipeline binaries are regenerable (story:image, story:audio) and their published
+# copies live on Basehub assets and Vercel Blob. Keep state.json, the JSON sidecars,
+# script.txt and prompt.txt tracked: they are the provenance record.
+*/audio/chunks/
+*/audio/*.wav
+*/audio/*.mp3
+*/audio/recording.*
+*/image/source.*
+*/image/*.jpg

@@ -1,0 +1,31 @@
+{
+  "slug": "the-bell-of-atri",
+  "stages": {
+    "check": {
+      "status": "fail",
+      "draftHash": "43889ee67f31eef84641cb758a1b7739b5c953cbd512cad83acb5c3ce883b83e",
+      "gateHash": "be3f807b9f5c0bc0b3e36660c438a0d87a6e13dc270bec42b6a3ba261b8cdf5c",
+      "seoHash": null,
+      "lint": {
+        "tool": "lint-story.mjs",
+        "errors": 0,
+        "warnings": 2,
+        "words": 995
+      },
+      "gate": {
+        "round": 8,
+        "verdict": "publish",
+        "exemplars": [
+          "Androcles and the Lion",
+          "David and Mephibosheth"
+        ]
+      },
+      "seo": null,
+      "problems": [
+        "Round 8 has no editorial sign-off. After reading the round, the editor of record adds `- Sign-off: <name>, <YYYY-MM-DD>` to it; an agent never writes that line.",
+        "No SEO QA note at content/drafts/the-bell-of-atri.seo.md. Run `pnpm story:seo the-bell-of-atri --record`."
+      ],
+      "at": "2026-10-14T02:26:30.079Z"
+    }
+  }
+}

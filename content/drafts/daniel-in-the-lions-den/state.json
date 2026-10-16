@@ -1,0 +1,31 @@
+{
+  "slug": "daniel-in-the-lions-den",
+  "stages": {
+    "check": {
+      "status": "fail",
+      "draftHash": "fa12ca0e3fa7bcb388e9c26498f882688193f3f02ef290a5c8757a5389a34545",
+      "gateHash": "34aa5340ea1c99e375b77e88280a1737fdf24793e7a8b4c33e973ef17de1d56f",
+      "seoHash": null,
+      "lint": {
+        "tool": "lint-story.mjs",
+        "errors": 0,
+        "warnings": 0,
+        "words": 560
+      },
+      "gate": {
+        "round": 8,
+        "verdict": "publish",
+        "exemplars": [
+          "Androcles and the Lion",
+          "David and Mephibosheth"
+        ]
+      },
+      "seo": null,
+      "problems": [
+        "Round 8 has no editorial sign-off. After reading the round, the editor of record adds `- Sign-off: <name>, <YYYY-MM-DD>` to it; an agent never writes that line.",
+        "No SEO QA note at content/drafts/daniel-in-the-lions-den.seo.md. Run `pnpm story:seo daniel-in-the-lions-den --record`."
+      ],
+      "at": "2026-10-14T02:26:30.224Z"
+    }
+  }
+}
