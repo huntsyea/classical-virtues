@@ -21,13 +21,22 @@ import '../../basehub.config' // Import the config to ensure it's loaded
  *   - Freshness: `POST /api/revalidate` (signed Basehub webhook or pipeline
  *     token) expires the `basehub` tag and every path immediately; otherwise
  *     content refreshes within the 5 minute window.
- *   - Basehub's Toolbar on-demand revalidation targets the SDK's per-query hash
- *     tags, which no longer guard anything here, so the webhook is the
- *     instant-publish path. The Toolbar itself is no longer mounted (see
- *     `src/components/BasehubToolbar.tsx`).
+ *   - Basehub's `<Toolbar />` is mounted in the root layout, as its docs
+ *     prescribe, and it makes its own `no-store` ref lookup while the layout
+ *     renders. A `no-store` fetch outside a cache scope is what marks a route
+ *     dynamic, so mounting the Toolbar puts every route back on `ƒ`
+ *     (server-rendered on demand). That is the price of the documented setup:
+ *     the queries below stay cached under the `basehub` tag, but the pages
+ *     themselves are no longer prerendered. Do not "fix" this by gating or
+ *     lazy-loading the Toolbar: it is Basehub's supported preview affordance.
+ *   - The Toolbar's own on-demand revalidation targets the SDK's per-query hash
+ *     tags, which nothing here is cached under, so it cannot purge the entries
+ *     below. `POST /api/revalidate` (the tag we do use) stays the instant-publish
+ *     path.
  *   - Draft Mode (preview) bypasses `unstable_cache`, and the SDK then queries
- *     drafts with `no-store`. In `next dev` the SDK always reads drafts and the
- *     cache is skipped entirely, so dev shows unpublished edits: verify
+ *     drafts with `no-store`. The Toolbar toggles that Draft Mode itself, so no
+ *     route of ours is involved. In `next dev` the SDK always reads drafts and
+ *     the cache is skipped entirely, so dev shows unpublished edits: verify
  *     published behaviour on a production build.
  */
 

@@ -125,3 +125,8 @@ image alt text distinct when the CMS model allows it.
 - Always handle the case where content sources might be unavailable
 - Audio components should be dynamically imported with SSR disabled via a client wrapper (`src/components/LazyAudioPlayer.tsx`) — `ssr: false` is not allowed in Server Components in Next 15+
 - Font classes use CSS variables: `font-heading` and `font-body`
+- Prefer the documented best practice and built-in features of our libraries and
+  frameworks (Basehub, Next.js, Vercel, and so on) over custom replacements.
+  Check the current docs before building a custom version of something the
+  library already ships, and say why in the code comment when a deviation is
+  unavoidable.

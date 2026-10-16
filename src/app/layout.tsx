@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { cn } from '@/lib/utils'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import JsonLd from '@/components/JsonLd'
-import BasehubToolbar from '@/components/BasehubToolbar'
+import { Toolbar } from 'basehub/next-toolbar'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import './globals.css'
@@ -114,7 +114,11 @@ export default function RootLayout({
           />
         )}
         <JsonLd data={siteJsonLd()} />
-        <BasehubToolbar />
+        {/* Basehub's own Toolbar, mounted exactly as its docs describe. It owns
+            draft-mode entry and exit, branch switching and on-demand
+            revalidation. It renders nothing for visitors without a preview
+            token, and carries its cost on every route (see src/lib/basehub.ts). */}
+        <Toolbar />
       </body>
     </html>
   );
