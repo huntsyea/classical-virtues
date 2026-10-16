@@ -23,12 +23,15 @@ import '../../basehub.config' // Import the config to ensure it's loaded
  *     content refreshes within the 5 minute window.
  *   - Basehub's `<Toolbar />` is mounted in the root layout, as its docs
  *     prescribe, and it makes its own `no-store` ref lookup while the layout
- *     renders. A `no-store` fetch outside a cache scope is what marks a route
- *     dynamic, so mounting the Toolbar puts every route back on `ƒ`
- *     (server-rendered on demand). That is the price of the documented setup:
- *     the queries below stay cached under the `basehub` tag, but the pages
- *     themselves are no longer prerendered. Do not "fix" this by gating or
- *     lazy-loading the Toolbar: it is Basehub's supported preview affordance.
+ *     renders. A `no-store` fetch outside a cache scope marks a route
+ *     dynamic, but the SDK memoizes the lookup per build worker, so only the
+ *     routes that happen to run it first flip to `ƒ` (server-rendered on
+ *     demand). Which ones varies from build to build: in different builds
+ *     `/`, `/about`, `/stories`, `/stories/[slug]`, `/stories/narrated` and
+ *     the 404 have each been `ƒ`. That is the price of the documented setup:
+ *     the queries below stay cached under the `basehub` tag either way. Do not
+ *     "fix" this by gating or lazy-loading the Toolbar; the supported route is
+ *     Cache Components (`cacheComponents`) with the Toolbar in `<Suspense>`.
  *   - The Toolbar's own on-demand revalidation targets the SDK's per-query hash
  *     tags, which nothing here is cached under, so it cannot purge the entries
  *     below. `POST /api/revalidate` (the tag we do use) stays the instant-publish
