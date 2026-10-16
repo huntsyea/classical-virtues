@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import JsonLd from '@/components/JsonLd'
 import { Toolbar } from 'basehub/next-toolbar'
+import { hasBasehubToken } from '@/lib/basehub'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import './globals.css'
@@ -114,12 +115,25 @@ export default function RootLayout({
           />
         )}
         <JsonLd data={siteJsonLd()} />
-        {/* Basehub's own Toolbar, mounted exactly as its docs describe. It owns
+        {/* Basehub's own Toolbar, mounted as its docs describe. It owns
             draft-mode entry and exit, branch switching and on-demand
             revalidation. It renders nothing for visitors without a preview
             token, and carries its cost on every route (see src/lib/basehub.ts). */}
-        <Toolbar />
+        <BasehubToolbar />
       </body>
     </html>
   );
+}
+
+/**
+ * The Toolbar, guarded so it can never fail a public page: it throws without
+ * `BASEHUB_TOKEN`, and its uncached ref lookup rejects when Basehub is down.
+ */
+async function BasehubToolbar() {
+  if (!hasBasehubToken()) return null
+  try {
+    return await Toolbar({})
+  } catch {
+    return null
+  }
 }
