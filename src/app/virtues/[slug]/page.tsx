@@ -45,6 +45,9 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 // ISR: the hub's story list follows new publishes (PRO-86).
 export const revalidate = 300
 
+// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
+export const dynamic = 'force-static'
+
 export default async function VirtuePage({ params }: { params: Params }) {
   const { slug } = await params
   const virtue = await getVirtueBySlug(slug)

@@ -83,10 +83,35 @@ than reader-facing SEO scaffolding in story bodies.
 When `BASEHUB_TOKEN` is set:
 - `basehub.config.ts` configures the global Basehub client
 - `src/lib/basehub.ts` defines Story interface and API functions
-- Draft mode enabled in development environment, and in preview through Basehub's
-  own `<Toolbar />` (mounted in `src/app/layout.tsx`); see `src/lib/basehub.ts`
 - Webhook endpoint at `/api/revalidate` for content updates (`/revalidate-sitemap`
   is kept as a legacy alias)
+
+**Caching.** Use Basehub's documented caching as-is. Call
+`basehub().query(...)` with no `cache` or `next` options: the SDK tags each query
+with its own `basehub-<hash>` string, Next caches those fetches during
+prerendering, and Basehub's own `<Toolbar />` (mounted in `src/app/layout.tsx`)
+provides the Server Action Basehub's servers call on commit to `revalidateTag`
+those exact tags. Passing `next`/`cache` to `basehub()` replaces the tag and opts
+the query out of that automatic revalidation, so do not add cache wrappers
+(`unstable_cache`, `'use cache'`, custom tags) around SDK queries. See the header
+of `src/lib/basehub.ts` for the full mechanism.
+
+**`export const dynamic = 'force-static'`** is required on every route that reads
+Basehub and is not itself request-dependent (`page.tsx` and route-handler files;
+not `/search`, `/api/og`, `/api/revalidate`). The SDK resolves a ref with a
+`cache: 'no-store'` fetch before each call, and the Toolbar does the same while
+the root layout renders, so without this directive Next marks whichever routes
+happen to run that fetch first in each build worker as dynamic (`ƒ`), varying
+from build to build and dropping them out of the CDN cache. The directive is
+Next's documented way to declare a route prerendered; it does not affect the
+SDK's tags or Draft Mode. Verify with `pnpm build` twice: the route table must be
+identical both times, with `ƒ` only on the request-dependent routes above.
+
+- Draft mode (preview) is inferred by the SDK: in `next dev`, and whenever Next's
+  Draft Mode is on (toggled by the Toolbar), queries read drafts with `no-store`
+  and routes render per request; see `src/lib/basehub.ts`
+- `POST /api/revalidate` invalidates with `revalidatePath('/', 'layout')`,
+  because the SDK's per-query tags cannot be enumerated; see `src/lib/revalidate.ts`
 
 ### SEO & Performance
 - Comprehensive metadata and OpenGraph tags

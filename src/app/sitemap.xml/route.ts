@@ -15,6 +15,9 @@ import { absoluteUrl } from '@/lib/site'
  */
 export const revalidate = 300
 
+// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
+export const dynamic = 'force-static'
+
 interface Entry {
   path: string
   lastModified?: string | null

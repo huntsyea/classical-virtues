@@ -27,6 +27,9 @@ type Params = Promise<{ slug: string }>
 // static analysis; a time-based safety net behind Basehub's on-demand revalidation.
 export const revalidate = 300
 
+// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
+export const dynamic = 'force-static'
+
 export async function generateStaticParams() {
   const stories = await getAllStories();
   return stories.map((story) => ({

@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   twitter: null,
 }
 
+// The 404 renders in the root layout too, so it needs the same treatment
+// (see the Basehub caching note in src/lib/basehub.ts).
+export const dynamic = 'force-static'
+
 export default async function NotFound() {
   const stories = await getAllStories()
   // Offer a few stories to step into, narrated ones first.

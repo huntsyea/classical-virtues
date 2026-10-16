@@ -10,6 +10,9 @@ export const metadata: Metadata = pageMetadata({
   images: [brandedOgImage('about')],
 });
 
+// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
+export const dynamic = 'force-static'
+
 export default function AboutPage() {
   return (
     <article className="page-wrap pt-10 sm:pt-16 lg:pt-20">

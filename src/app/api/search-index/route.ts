@@ -10,6 +10,9 @@ import { getAllStories, toSearchDoc } from '@/lib/stories'
  */
 export const revalidate = 300
 
+// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
+export const dynamic = 'force-static'
+
 export async function GET() {
   const [searchKey, stories] = await Promise.all([getLiveStoriesSearchKey(), getAllStories()])
   // Cache-Control comes from `revalidate` (ISR), so a webhook purge is honoured.

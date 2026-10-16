@@ -6,6 +6,9 @@ import { SITE, absoluteUrl } from '@/lib/site'
 // (https://llmstxt.org). Same content as the sitemap, with summaries.
 export const revalidate = 300
 
+// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
+export const dynamic = 'force-static'
+
 export async function GET() {
   const [stories, virtues] = await Promise.all([getAllStories(), getAllVirtues()])
 

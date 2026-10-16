@@ -4,9 +4,9 @@ import { handleRevalidationRequest } from '@/lib/revalidate'
 // Basehub webhooks, and the publish pipeline's bearer token; see
 // `src/lib/revalidate.ts` for the verification rules. Content also refreshes
 // through Basehub's Toolbar-driven revalidation and the 5-minute ISR window,
-// so this endpoint is the instant path, not the only one. Note that the
-// Toolbar revalidates the SDK's own per-query tags, not the `basehub` tag this
-// route expires, so the two do not overlap.
+// so this endpoint is the instant path, not the only one. It invalidates with
+// `revalidatePath('/', 'layout')`, which covers every route and every tag,
+// including the SDK's opaque per-query tags that the Toolbar revalidates.
 export const dynamic = 'force-dynamic'
 
 export function POST(req: Request) {

@@ -10,6 +10,9 @@ type Params = Promise<{ virtue: string }>
 // ISR, like /stories: each filtered view is a static page that refreshes.
 export const revalidate = 300
 
+// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
+export const dynamic = 'force-static'
+
 export function generateStaticParams() {
   return getVirtueSlugs().map((virtue) => ({ virtue }))
 }

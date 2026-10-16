@@ -115,10 +115,17 @@ export default function RootLayout({
           />
         )}
         <JsonLd data={siteJsonLd()} />
-        {/* Basehub's own Toolbar, mounted as its docs describe. It owns
-            draft-mode entry and exit, branch switching and on-demand
-            revalidation. It renders nothing for visitors without a preview
-            token, and carries its cost on every route (see src/lib/basehub.ts). */}
+        {/* Basehub's own Toolbar, mounted in the root layout exactly as the
+            caching docs prescribe. It owns draft-mode entry and exit, branch
+            switching and the Server Action Basehub's servers call to revalidate
+            the SDK's per-query tags on commit. It renders nothing for visitors
+            without a preview token.
+
+            The `hasBasehubToken` and try/catch guards keep a missing token or a
+            Basehub outage from failing every page in the site: the Toolbar's own
+            ref lookup rejects when Basehub is unreachable, and it throws without
+            a token. They do not change what is cached; see src/lib/basehub.ts
+            for why the content routes declare `dynamic = 'force-static'`. */}
         <BasehubToolbar />
       </body>
     </html>
@@ -128,6 +135,8 @@ export default function RootLayout({
 /**
  * The Toolbar, guarded so it can never fail a public page: it throws without
  * `BASEHUB_TOKEN`, and its uncached ref lookup rejects when Basehub is down.
+ * A failed lookup must not take the whole page down with it; without the
+ * Toolbar an editor can still publish, they just lose the in-context controls.
  */
 async function BasehubToolbar() {
   if (!hasBasehubToken()) return null
