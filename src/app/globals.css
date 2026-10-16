@@ -225,7 +225,7 @@
 
   .masthead-title {
     font-family: var(--font-heading), ui-serif, Georgia, serif;
-    font-size: clamp(2.375rem, 1.6rem + 3.4vw, 4.5rem);
+    font-size: clamp(2.375rem, 1.6rem + 3.4vw, 3.75rem);
     line-height: 0.95;
     letter-spacing: -0.02em;
     font-weight: 400;
@@ -234,12 +234,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 1.12em;
+    height: 1.06em;
     white-space: nowrap;
   }
   @media (min-width: 640px) {
     .masthead-title {
-      height: 1.2em;
+      height: 1.1em;
     }
   }
 

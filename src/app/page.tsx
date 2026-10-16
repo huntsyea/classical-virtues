@@ -43,10 +43,12 @@ export default async function Home() {
 
   return (
     <>
-      {/* Masthead: the publication's name, and its seven sections. */}
-      <section id="masthead" aria-labelledby="home-title" className="page-wrap pt-3 sm:pt-5">
+      {/* Masthead: the publication's name, and its seven sections. Kept 
+          compact so the lead package starts near the fold, as a magazine's
+          front page does. */}
+      <section id="masthead" aria-labelledby="home-title" className="page-wrap pt-2 sm:pt-3">
         <div className="text-center">
-          <Seal size={32} className="mx-auto mb-1 flex max-sm:hidden" />
+          <Seal size={26} className="mx-auto mb-0.5 flex max-sm:hidden" />
           <h1 id="home-title" className="masthead-title">
             <Wordmark />
           </h1>
@@ -56,7 +58,7 @@ export default async function Home() {
         </div>
         <nav
           aria-label="Virtues"
-          className="mt-3 border-y border-rule sm:mt-3"
+          className="mt-3 border-y border-rule sm:mt-2"
         >
           <ScrollStrip className="bleed max-sm:[&>li:first-child>a]:pl-0 sm:mx-0 sm:justify-center sm:px-0">
             {virtues.map((virtue) => (
@@ -64,7 +66,7 @@ export default async function Home() {
                 <Link
                   href={`/virtues/${virtue.slug}`}
                   className={cn(
-                    'inline-flex min-h-10 items-center px-3 font-body sm:min-h-11 text-[0.75rem] uppercase tracking-[0.13em] transition-colors hover:text-primary sm:px-4',
+                    'inline-flex min-h-10 items-center px-3 font-body sm:min-h-9 text-[0.75rem] uppercase tracking-[0.13em] transition-colors hover:text-primary sm:px-4',
                     // Virtues still awaiting stories are present but quiet.
                     virtue.stories.length > 0 ? 'font-semibold' : 'font-medium text-muted-foreground',
                   )}
@@ -88,7 +90,7 @@ export default async function Home() {
       ) : (
         <>
           {/* Front page: lead story flanked by teasers, as a magazine opens. */}
-          <section aria-label="Featured stories" className="page-wrap mt-3 sm:mt-5">
+          <section aria-label="Featured stories" className="page-wrap mt-3 sm:mt-4">
             <div className="grid gap-y-8 sm:gap-y-10 md:grid-cols-2 md:gap-x-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.15fr)_minmax(0,1.15fr)] lg:gap-x-0">
               <div className="md:col-span-2 lg:order-2 lg:col-span-1 lg:border-x lg:border-rule lg:px-9">
                 <StoryCard story={lead} variant="lead" as="h2" preload />
