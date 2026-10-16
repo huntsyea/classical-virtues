@@ -1,8 +1,8 @@
 import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidateTag } from 'next/cache'
 import { basehub } from 'basehub'
 import { authenticateWebhook } from 'basehub/workflows'
-import { SEARCH_KEY_CACHE_TAG, hasBasehubToken } from './basehub'
+import { BASEHUB_CONTENT_TAG, SEARCH_KEY_CACHE_TAG, hasBasehubToken } from './basehub'
 import '../../basehub.config'
 
 /**
@@ -149,29 +149,29 @@ function isReplay(via: Via, req: Request, body: string): boolean {
 /**
  * Invalidate every Basehub-backed route and cached query.
  *
- * The SDK tags each query with an opaque `basehub-<hash of query + build id>`
- * string and nothing lets us enumerate them, so this cannot revalidate them by
- * tag. `revalidatePath('/', 'layout')` is the documented Next.js "everything"
- * invalidation: it expires the `_N_T_/layout` soft tag, which Next attaches to
- * every route entry and to every fetch made inside those routes (verified with
- * a production build and a fetch spy; see the PR notes).
+ * The SDK tags each query with an opaque `basehub-<hash>` that nothing lets us
+ * enumerate, so this cannot expire those tags. Instead every route that reads
+ * content declares {@link BASEHUB_CONTENT_TAG} (`declareContentTag`), and this
+ * expires it with the `'max'` profile: stale-while-revalidate. The next visit
+ * serves the previous render while Next regenerates in the background, and the
+ * visit after that sees the publish.
  *
- * That is the same set of entries Basehub's own Toolbar purges when a commit
- * changes a query response, so the two paths agree.
+ * That profile is the point. An immediate expiry (the old `revalidatePath('/',
+ * 'layout')`, or `{ expire: 0 }`) hard-expires the page, so a purge while
+ * Basehub is unreachable regenerates it in the foreground, the query throws
+ * (see the outage policy in `src/lib/basehub.ts`), and the reader gets a 500.
+ * Verified on a production build with Basehub unreachable: with `'max'` the
+ * pages keep serving the last good render at 200.
  *
- * Two caches are outside the SDK's tags and keep their own: the schema
- * introspection fetch and the search-key probe (`src/lib/basehub.ts`) plus the
- * audio probe in `src/lib/audio.ts`. They are expired with `'max'`
- * (stale-while-revalidate) so a Basehub outage during a purge keeps serving the
- * last good render instead of hard-expiring pages into 500s; only the path
- * invalidation above is immediate.
+ * The schema, search-key and audio probes live outside the SDK's tags and keep
+ * their own.
  */
 export function revalidateAllContent(): string[] {
-  revalidatePath('/', 'layout')
+  revalidateTag(BASEHUB_CONTENT_TAG, 'max')
   revalidateTag('basehub:schema', 'max')
   revalidateTag(SEARCH_KEY_CACHE_TAG, 'max')
   revalidateTag('audio-probe', 'max')
-  return ['_N_T_/layout', 'basehub:schema', SEARCH_KEY_CACHE_TAG, 'audio-probe']
+  return [BASEHUB_CONTENT_TAG, 'basehub:schema', SEARCH_KEY_CACHE_TAG, 'audio-probe']
 }
 
 export async function handleRevalidationRequest(req: Request): Promise<Response> {

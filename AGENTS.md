@@ -103,15 +103,34 @@ not `/search`, `/api/og`, `/api/revalidate`). The SDK resolves a ref with a
 the root layout renders, so without this directive Next marks whichever routes
 happen to run that fetch first in each build worker as dynamic (`ƒ`), varying
 from build to build and dropping them out of the CDN cache. The directive is
-Next's documented way to declare a route prerendered; it does not affect the
-SDK's tags or Draft Mode. Verify with `pnpm build` twice: the route table must be
-identical both times, with `ƒ` only on the request-dependent routes above.
+Next's documented way to declare a route prerendered: it does not affect the
+SDK's tags or Draft Mode. Pinning the ref (`ref`, `BASEHUB_REF`,
+`setGlobalConfig({ ref })`) does not skip that fetch, so it is not an
+alternative.
 
+Known trade-off: `force-static` makes `cookies()` empty on those routes, so the
+Toolbar's branch preview reads the resolved ref (main) rather than the selected
+branch; the SDK reads the `bshb-preview-ref-<repoHash>` cookie for branch
+overrides. Draft Mode itself, and draft preview of main, work normally. No
+supported setup has both fully static pages and cookie-based branch preview:
+dropping the directive puts the routes back to `ƒ`. Verify with `pnpm build`
+twice: the route table must be identical both times, with `ƒ` only on the
+request-dependent routes above.
+
+- `declareContentTag()` (`src/lib/basehub.ts`) runs on every content read and
+declares `basehub:content` on the route that is rendering. Next collects the tags
+of every fetch made during a render onto that route's cache entry, which is how
+our own webhook gets a tag it can expire: a caller-supplied `next.tags`
+*replaces* the SDK's tag (verified against `basehub@9.6.0` and by build output),
+so it cannot ride on the content queries without opting them out of Basehub's
+automatic revalidation. Do not add cache wrappers around SDK queries.
+- `POST /api/revalidate` expires `basehub:content` with the `'max'`
+  (stale-while-revalidate) profile, so a purge while Basehub is unreachable keeps
+serving the last good render instead of hard-expiring pages into 500s. Do not
+switch it to `revalidatePath` or `{ expire: 0 }`; see `src/lib/revalidate.ts`.
 - Draft mode (preview) is inferred by the SDK: in `next dev`, and whenever Next's
   Draft Mode is on (toggled by the Toolbar), queries read drafts with `no-store`
   and routes render per request; see `src/lib/basehub.ts`
-- `POST /api/revalidate` invalidates with `revalidatePath('/', 'layout')`,
-  because the SDK's per-query tags cannot be enumerated; see `src/lib/revalidate.ts`
 
 ### SEO & Performance
 - Comprehensive metadata and OpenGraph tags

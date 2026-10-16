@@ -38,7 +38,11 @@ import '../../basehub.config' // Import the config to ensure it's loaded
  *     `export const dynamic = 'force-static'` in their page files, which is the
  *     documented Next.js way to say "prerender this route": Next then ignores
  *     that dynamic signal. Do not replace this with a cache wrapper; the
- *     queries below are only cached by the SDK's own tags.
+ *     queries below are only cached by the SDK's own tags. The price is that
+ *     `cookies()` is empty on those routes, so the Toolbar's branch preview
+ *     (which the SDK reads from the `bshb-preview-ref-<repoHash>` cookie) reads
+ *     the resolved ref, i.e. main, instead of the selected branch. Draft Mode
+ *     itself, and draft preview of main, still work. See AGENTS.md.
  *   - Draft Mode (preview) bypasses all of it: the SDK then queries drafts with
  *     `no-store`, the route is rendered per request, and nothing is cached. The
  *     Toolbar toggles Draft Mode itself, so no route of ours is involved. In
@@ -126,6 +130,42 @@ export type BasehubStory = Pick<
   content: Pick<NonNullable<StoriesItem['content']>, 'markdown' | 'plainText' | 'readingTime'> | null
 } & StoryMigratedFields
 
+/**
+ * Stable cache tag for every route that renders Basehub content.
+ *
+ * The SDK tags each query with an opaque `basehub-<hash of query + build id>`,
+ * and a caller-supplied `next` *replaces* that tag (and the sent
+ * `x-basehub-cache-tag` header) rather than merging with it, which is exactly
+ * the opt-out the caching docs warn about. So a stable tag cannot ride on the
+ * content queries without giving up Basehub's automatic on-demand
+ * revalidation. Instead, reading content declares this tag with the one cheap,
+ * cached probe below: Next collects the tags of every fetch made while a route
+ * renders (or a route handler runs) onto that route's cache entry.
+ *
+ * `POST /api/revalidate` expires it with the `'max'` profile
+ * (stale-while-revalidate), so a purge while Basehub is unreachable keeps
+ * serving the last good render instead of hard-expiring pages into 500s.
+ */
+export const BASEHUB_CONTENT_TAG = 'basehub:content'
+
+/**
+ * Declare {@link BASEHUB_CONTENT_TAG} for whatever route is rendering.
+ *
+ * Not a content read: the tag is the entire point, and the answer is cached for
+ * an hour, so this costs one request per cache window rather than one per
+ * render. The `next` option here opts *this* query out of Basehub's automatic
+ * revalidation, which does not matter: it is not a content query, and the
+ * queries that do read content still carry the SDK's own tags.
+ */
+const declareContentTag = cache(async (): Promise<void> => {
+  if (!hasBasehubToken()) return
+  try {
+    await basehub({ next: { revalidate: 3600, tags: [BASEHUB_CONTENT_TAG] } }).query({ __typename: true })
+  } catch (error) {
+    return handleBasehubError('content tag probe', error)
+  }
+})
+
 /* -------------------------------------------------------------------------------------------------
  * Schema introspection (tolerance before/after the story-schema migration)
  * -----------------------------------------------------------------------------------------------*/
@@ -206,12 +246,16 @@ async function storySelection() {
 // cache layer (no cross-request storage, no tags) and does not touch the
 // fetch options, so the SDK's own tags stay intact. Development therefore
 // behaves exactly like production here, and draft edits always show.
+//
+// Every reader declares the content tag first, so that a purge can expire the
+// route that rendered it; see `declareContentTag`.
 
 const PAGE_SIZE = 100
 
 /** Every story, in dashboard order, paginating past Basehub's page size. */
 export const getAllStories = cache(async (): Promise<BasehubStory[]> => {
   if (!hasBasehubToken()) return []
+  await declareContentTag()
   try {
     const items = await storySelection()
     const stories: BasehubStory[] = []
@@ -238,6 +282,7 @@ export const SEARCH_KEY_CACHE_TAG = 'basehub:search-key'
 /** One story, filtered by slug on the Basehub side. */
 export const getStoryBySlug = cache(async (slug: string): Promise<BasehubStory | null> => {
   if (!hasBasehubToken()) return null
+  await declareContentTag()
   try {
     const data = await basehub().query({
       stories: {
@@ -283,6 +328,7 @@ export interface BasehubVirtue {
 /** The CMS mirror of the seven-virtue canon (ids for references, edit dates). */
 export const getVirtuesFromBasehub = cache(async (): Promise<BasehubVirtue[]> => {
   if (!hasBasehubToken()) return []
+  await declareContentTag()
   try {
     const data = await basehub().query({
       virtues: {
