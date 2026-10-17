@@ -31,8 +31,10 @@ import '../../basehub.config' // Import the config to ensure it's loaded
  *     keeps serving the last good entry instead of hard-expiring pages into
  *     500s.
  *   - `cacheLife('content')` (next.config.mjs) is the safety net behind those
- *     tags: serve up to 5 minutes, revalidate in the background, keep a year,
- *     which is the window these routes had before Cache Components.
+ *     tags: serve up to 5 minutes, revalidate in the background, expire the
+ *     cache entry after a year. Per-route shell lifetimes are the shortest
+ *     profile in the render, so a page that also reads the footer year (weeks)
+ *     expires its shell in 30 days.
  *   - Draft Mode (preview) bypasses all of it: inside a `'use cache'` scope the
  *     work re-executes on every request and stores nothing, and the SDK queries
  *     drafts with `no-store`. Branch preview is the one casualty: the SDK reads
@@ -219,11 +221,10 @@ async function storySelection() {
  * Stories
  * -----------------------------------------------------------------------------------------------*/
 
-// Each query is wrapped in `React.cache` only: per-request memoization so a
-// page and its `generateMetadata` do not repeat the same query. It is not a
-// cache layer (no cross-request storage, no tags) and does not touch the
-// fetch options, so the SDK's own tags stay intact. Development therefore
-// behaves exactly like production here, and draft edits always show.
+// Every reader below is a `'use cache'` scope with an explicit `cacheLife` and
+// `cacheTag` (see the header). Next's `React.cache` is not used: a cache entry
+// already memoizes for the request, and wrapping it would only add a second,
+// request-scoped copy.
 //
 // Every reader is a `'use cache'` scope (`cacheLife('content')`,
 // `cacheTag(BASEHUB_CONTENT_TAG)`), which is Next 16's caching model: the
@@ -283,19 +284,9 @@ export async function getStoryBySlug(slug: string): Promise<BasehubStory | null>
 
 /**
 /**
- * Public search key for the stories collection. Basehub designs `_searchKey`
- * to be shipped to the browser; it only grants search over this collection.
- * Cached with the rest of the content, so a publish that changes the key (or
- * turns indexing on) lands with the next revalidation.
+ * The search key query, uncached. The only caller is the probe below: nothing
+ * needs the raw key, so there is no cached wrapper for it.
  */
-export async function getStoriesSearchKey(): Promise<string | null> {
-  'use cache'
-  cacheLife('content')
-  cacheTag(BASEHUB_CONTENT_TAG)
-  return queryStoriesSearchKey()
-}
-
-/** The query behind both search-key readers, uncached. */
 async function queryStoriesSearchKey(): Promise<string | null> {
   if (!hasBasehubToken()) return null
   try {

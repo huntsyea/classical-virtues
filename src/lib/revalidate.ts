@@ -151,7 +151,7 @@ function isReplay(via: Via, req: Request, body: string): boolean {
  *
  * The SDK tags each query with an opaque `basehub-<hash>` that nothing lets us
  * enumerate, so this cannot expire those tags. Instead every route that reads
- * content declares {@link BASEHUB_CONTENT_TAG} (`declareContentTag`), and this
+ * content declares {@link BASEHUB_CONTENT_TAG} with `cacheTag`, and this
  * expires it with the `'max'` profile: stale-while-revalidate. The next visit
  * serves the previous render while Next regenerates in the background, and the
  * visit after that sees the publish.

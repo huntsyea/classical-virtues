@@ -103,8 +103,11 @@ an explicit `cacheLife` and `cacheTag` for every reader in `src/lib/basehub.ts`.
   entry instead of hard-expiring pages into 500s. Never use `revalidatePath` or
   `{ expire: 0 }` there.
 - `cacheLife('content')` (next.config.mjs) is the time-based safety net: 5-minute
-  revalidate, one-year expire, matching the routes' pre-Cache-Components window.
-  Set an explicit `cacheLife` in every `'use cache'` scope.
+  revalidate, one-year expire on the cache entries, matching the window the
+  readers had before Cache Components. A route's shell lifetime is the shortest
+  profile in its render, so pages that also read the footer year (`weeks`)
+  expire their shell after 30 days. Set an explicit `cacheLife` in every
+  `'use cache'` scope.
 - Route segment configs (`revalidate`, `dynamic`, `fetchCache`, `dynamicParams`)
   are gone: they fail the build with Cache Components. Uncached or request-time
   data goes inside `<Suspense>` instead (the Toolbar, `/search`'s `searchParams`),
@@ -119,6 +122,12 @@ an explicit `cacheLife` and `cacheTag` for every reader in `src/lib/basehub.ts`.
   it makes the page content a request-time streaming hole, which measured 88
   Lighthouse performance on `/stories` against the 90 budget, so it is not in
   the code.
+- Known limitation, upstream: Basehub's native Toolbar revalidation calls
+  `revalidateTag(tag)` with no profile (`basehub@9.6.0`), which hard-expires the
+  page instead of serving stale-while-revalidate. During a Basehub outage that
+  path can turn pages into 500s; our `POST /api/revalidate` does not. No newer
+  Basehub release exists, so this is documented rather than worked around (an
+  issue draft lives in thread storage).
 
 ### SEO & Performance
 - Comprehensive metadata and OpenGraph tags

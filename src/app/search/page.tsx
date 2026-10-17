@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import { Suspense } from 'react'
 import Link from 'next/link'
 import StoryCard from '@/components/StoryCard'
 import StorySearch from '@/components/search/StorySearch'
@@ -11,6 +10,21 @@ type SearchParams = Promise<{ q?: string | string[] }>
 function readQuery(q: string | string[] | undefined): string {
   return (Array.isArray(q) ? q[0] : q)?.trim().slice(0, 120) ?? ''
 }
+
+/**
+ * `/search` reads `searchParams`, so its results are per-request data. Cache
+ * Components wants that streamed behind `<Suspense>`, but a streamed segment
+ * only becomes visible through React's client runtime, and the search box
+ * promises a plain GET form that renders results on the server without
+ * JavaScript (`src/components/search/StorySearch.tsx`).
+ *
+ * `unstable_instant = false` is Next's documented "this segment is allowed to
+ * block" opt-in (migration guide: "set the `instant` config to `false` on the
+ * segment that raised it"), which renders the page for the request instead of
+ * leaving the results in a hidden streamed hole. That makes this route dynamic;
+ * it is noindex and request-dependent anyway.
+ */
+export const unstable_instant = false
 
 // Internal search results are crawlable (links are followed) but never indexed.
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
@@ -24,31 +38,12 @@ export async function generateMetadata({ searchParams }: { searchParams: SearchP
   })
 }
 
-// `searchParams` is request data, so it streams in behind <Suspense> as Cache
-// Components requires; the shell is the page frame below.
-export default function SearchPage({ searchParams }: { searchParams: SearchParams }) {
-  return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-      <Suspense
-        fallback={
-          <header className="mb-8 space-y-4">
-            <h1 className="font-heading text-4xl sm:text-5xl">Search</h1>
-            <StorySearch initialQuery="" showLabel />
-          </header>
-        }
-      >
-        <SearchResults searchParams={searchParams} />
-      </Suspense>
-    </div>
-  )
-}
-
-async function SearchResults({ searchParams }: { searchParams: SearchParams }) {
+export default async function SearchPage({ searchParams }: { searchParams: SearchParams }) {
   const q = readQuery((await searchParams).q)
   const results = q ? await searchStories(q) : []
 
   return (
-    <>
+    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
       <header className="mb-8 space-y-4">
         <h1 className="font-heading text-4xl sm:text-5xl">Search</h1>
         <StorySearch initialQuery={q} showLabel />
@@ -83,6 +78,6 @@ async function SearchResults({ searchParams }: { searchParams: SearchParams }) {
           .
         </p>
       )}
-    </>
+    </div>
   )
 }
