@@ -5,7 +5,7 @@
 - Run by: agent (bb thread thr_7v6bzjw96s) via story:seo
 - Date: 2026-10-14
 - Verdict: clear
-- Owner: Quinn
+- Owner: Hunter
 - Owner sign-off: 
 
 ## Checks
