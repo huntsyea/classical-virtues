@@ -2,7 +2,7 @@ import { createHash, createHmac, timingSafeEqual } from 'node:crypto'
 import { revalidateTag } from 'next/cache'
 import { basehub } from 'basehub'
 import { authenticateWebhook } from 'basehub/workflows'
-import { BASEHUB_CACHE_TAG, hasBasehubToken } from './basehub'
+import { BASEHUB_CONTENT_TAG, SEARCH_KEY_CACHE_TAG, hasBasehubToken } from './basehub'
 import '../../basehub.config'
 
 /**
@@ -28,7 +28,8 @@ import '../../basehub.config'
  * again (Workflow signatures carry no timestamp, so a captured request could
  * otherwise force purges on demand).
  *
- * On success the `basehub` cache tag is revalidated (see `revalidateAllContent`).
+ * On success every Basehub-backed route and cached query is invalidated (see
+ * `revalidateAllContent`).
  */
 
 const SVIX_TOLERANCE_SECONDS = 5 * 60
@@ -148,19 +149,29 @@ function isReplay(via: Via, req: Request, body: string): boolean {
 /**
  * Invalidate every Basehub-backed route and cached query.
  *
- * Every page and route handler that reads Basehub carries the `basehub` tag
- * (via `unstable_cache`), so one tag covers them all. The `'max'` profile is
- * stale-while-revalidate: the next visit gets the previous render while Next
- * regenerates in the background, and the visit after that sees the publish.
- * Verified on a production build: with `{ expire: 0 }` (or `revalidatePath`)
- * a Basehub outage during a purge turned every page into a 500, because the
- * old render was hard-expired; with `'max'` the last good page keeps serving.
+ * The SDK tags each query with an opaque `basehub-<hash>` that nothing lets us
+ * enumerate, so this cannot expire those tags. Instead every route that reads
+ * content declares {@link BASEHUB_CONTENT_TAG} with `cacheTag`, and this
+ * expires it with the `'max'` profile: stale-while-revalidate. The next visit
+ * serves the previous render while Next regenerates in the background, and the
+ * visit after that sees the publish.
+ *
+ * That profile is the point. An immediate expiry (the old `revalidatePath('/',
+ * 'layout')`, or `{ expire: 0 }`) hard-expires the page, so a purge while
+ * Basehub is unreachable regenerates it in the foreground, the query throws
+ * (see the outage policy in `src/lib/basehub.ts`), and the reader gets a 500.
+ * Verified on a production build with Basehub unreachable: with `'max'` the
+ * pages keep serving the last good render at 200.
+ *
+ * The schema, search-key and audio probes live outside the SDK's tags and keep
+ * their own.
  */
 export function revalidateAllContent(): string[] {
-  revalidateTag(BASEHUB_CACHE_TAG, 'max')
+  revalidateTag(BASEHUB_CONTENT_TAG, 'max')
   revalidateTag('basehub:schema', 'max')
+  revalidateTag(SEARCH_KEY_CACHE_TAG, 'max')
   revalidateTag('audio-probe', 'max')
-  return [BASEHUB_CACHE_TAG, 'basehub:schema', 'audio-probe']
+  return [BASEHUB_CONTENT_TAG, 'basehub:schema', SEARCH_KEY_CACHE_TAG, 'audio-probe']
 }
 
 export async function handleRevalidationRequest(req: Request): Promise<Response> {

@@ -83,10 +83,51 @@ than reader-facing SEO scaffolding in story bodies.
 When `BASEHUB_TOKEN` is set:
 - `basehub.config.ts` configures the global Basehub client
 - `src/lib/basehub.ts` defines Story interface and API functions
-- Draft mode enabled in development environment, and in preview through Basehub's
-  own `<Toolbar />` (mounted in `src/app/layout.tsx`); see `src/lib/basehub.ts`
 - Webhook endpoint at `/api/revalidate` for content updates (`/revalidate-sitemap`
   is kept as a legacy alias)
+
+**Caching.** Basehub's documented setup plus Next 16's Cache Components model,
+which is what Basehub's own Next 16 playground uses: `cacheComponents: true`
+(`next.config.mjs`), the SDK's `<Toolbar />` in the root layout inside the
+`<Suspense>` boundary Cache Components requires, and a `'use cache'` scope with
+an explicit `cacheLife` and `cacheTag` for every reader in `src/lib/basehub.ts`.
+
+- Call `basehub().query(...)` with no `cache`/`next` options. The SDK tags each
+  query with `basehub-<hash>` and those fetch tags propagate into the enclosing
+  `'use cache'` entry, which is what Basehub's Toolbar revalidates on commit.
+  Passing `next`/`cache` replaces that tag and drops the `x-basehub-cache-tag`
+  header, so do not add cache wrappers or tags around SDK queries.
+- `cacheTag(BASEHUB_CONTENT_TAG)` is ours, declared by each reader, and
+  `POST /api/revalidate` expires it with the `'max'` profile: stale-while-
+  revalidate, so a purge during a Basehub outage keeps serving the last good
+  entry instead of hard-expiring pages into 500s. Never use `revalidatePath` or
+  `{ expire: 0 }` there.
+- `cacheLife('content')` (next.config.mjs) is the time-based safety net: 5-minute
+  revalidate, one-year expire on the cache entries, matching the window the
+  readers had before Cache Components. A route's shell lifetime is the shortest
+  profile in its render, so pages that also read the footer year (`weeks`)
+  expire their shell after 30 days. Set an explicit `cacheLife` in every
+  `'use cache'` scope.
+- Route segment configs (`revalidate`, `dynamic`, `fetchCache`, `dynamicParams`)
+  are gone: they fail the build with Cache Components. Uncached or request-time
+  data goes inside `<Suspense>` instead (the Toolbar, `/search`'s `searchParams`),
+  and the clock is read inside a cache scope (`src/lib/copyright.ts`), never
+  during prerender.
+- Draft mode (preview) works: `'use cache'` scopes re-execute per request under
+  Draft Mode and store nothing, and the SDK queries drafts with `no-store`.
+  **Branch preview does not**: the SDK reads the `bshb-preview-ref-<repoHash>`
+  cookie with `cookies()`, which Cache Components forbids inside a `'use cache'`
+  scope, so a preview session shows the resolved ref (main). The documented
+  workaround (read the cookie outside the scope, pass it in as `ref`) works, but
+  it makes the page content a request-time streaming hole, which measured 88
+  Lighthouse performance on `/stories` against the 90 budget, so it is not in
+  the code.
+- Known limitation, upstream: Basehub's native Toolbar revalidation calls
+  `revalidateTag(tag)` with no profile (`basehub@9.6.0`), which hard-expires the
+  page instead of serving stale-while-revalidate. During a Basehub outage that
+  path can turn pages into 500s; our `POST /api/revalidate` does not. No newer
+  Basehub release exists, so this is documented rather than worked around (an
+  issue draft lives in thread storage).
 
 ### SEO & Performance
 - Comprehensive metadata and OpenGraph tags

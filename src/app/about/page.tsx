@@ -10,6 +10,8 @@ export const metadata: Metadata = pageMetadata({
   images: [brandedOgImage('about')],
 });
 
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
+
 export default function AboutPage() {
   return (
     <article className="page-wrap pt-10 sm:pt-16 lg:pt-20">

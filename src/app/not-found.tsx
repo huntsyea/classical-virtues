@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   twitter: null,
 }
 
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
+
 export default async function NotFound() {
   const stories = await getAllStories()
   // Offer a few stories to step into, narrated ones first.

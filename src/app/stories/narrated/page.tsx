@@ -4,9 +4,7 @@ import { getAllVirtues } from '@/lib/virtues'
 import { brandedOgImage, pageMetadata } from '@/lib/seo'
 import type { Metadata } from 'next'
 
-// Static, like /stories. This folder takes precedence over /stories/[slug],
-// so no story may use the slug "narrated" (or "virtue").
-export const revalidate = 300
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
 
 export const metadata: Metadata = pageMetadata({
   path: '/stories/narrated',

@@ -1,3 +1,6 @@
+import 'server-only'
+import { cacheLife } from 'next/cache'
+
 /**
  * Shared pieces for generated images (`/api/og`, `/podcast-artwork.png`).
  *
@@ -25,18 +28,26 @@ export async function loadGoogleFont(
   const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(family)}:${axis}&text=${encodeURIComponent(text)}`
   try {
     // No browser UA, so Google serves TrueType, which Satori can parse.
-    const css = await (await fetch(url, { cache: 'force-cache' })).text()
+    // The fetch is cached by the `'use cache'` scope in `ogFonts` below.
+    const css = await (await fetch(url)).text()
     const src = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1]
     if (!src) return null
-    const res = await fetch(src, { cache: 'force-cache' })
+    const res = await fetch(src)
     return res.ok ? await res.arrayBuffer() : null
   } catch {
     return null
   }
 }
 
-/** Font entries for `ImageResponse`, skipping any face that failed to load. */
+/**
+ * Font entries for `ImageResponse`, skipping any face that failed to load.
+ * Cached: the faces are the same for a given card text, so the routes that
+ * render icons and artwork stay prerenderable instead of hitting Google Fonts
+ * on every request.
+ */
 export async function ogFonts(text: string) {
+  'use cache'
+  cacheLife('days')
   const [regular, italic] = await Promise.all([
     loadGoogleFont('Newsreader', text, { weight: 500 }),
     loadGoogleFont('Newsreader', text, { weight: 400, style: 'italic' }),

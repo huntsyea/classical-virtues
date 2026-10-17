@@ -17,8 +17,7 @@ export const metadata: Metadata = pageMetadata({
   images: [brandedOgImage('virtues')],
 })
 
-// ISR: story counts per virtue follow new publishes (PRO-86).
-export const revalidate = 300
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
 
 export default async function VirtuesIndex() {
   const virtues = await getAllVirtues()

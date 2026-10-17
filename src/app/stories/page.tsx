@@ -12,9 +12,6 @@ export const metadata: Metadata = pageMetadata({
   images: [brandedOgImage('stories')],
 })
 
-// ISR: pick up newly published stories within minutes, no rebuild (PRO-86).
-export const revalidate = 300
-
 export default async function StoriesIndex() {
   const [stories, virtues] = await Promise.all([getAllStories(), getAllVirtues()])
 

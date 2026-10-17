@@ -42,8 +42,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   }
 }
 
-// ISR: the hub's story list follows new publishes (PRO-86).
-export const revalidate = 300
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
 
 export default async function VirtuePage({ params }: { params: Params }) {
   const { slug } = await params

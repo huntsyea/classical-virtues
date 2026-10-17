@@ -1,9 +1,6 @@
 import { ImageResponse } from 'next/og'
 import { OG_COLORS, ogFonts } from '@/lib/og'
 
-// RSS 2.0 channel <image>: at most 144 px wide, so the 512 px logo is too big.
-export const dynamic = 'force-static'
-
 export async function GET() {
   const fonts = await ogFonts('CV')
   return new ImageResponse(

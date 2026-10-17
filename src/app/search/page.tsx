@@ -11,6 +11,21 @@ function readQuery(q: string | string[] | undefined): string {
   return (Array.isArray(q) ? q[0] : q)?.trim().slice(0, 120) ?? ''
 }
 
+/**
+ * `/search` reads `searchParams`, so its results are per-request data. Cache
+ * Components wants that streamed behind `<Suspense>`, but a streamed segment
+ * only becomes visible through React's client runtime, and the search box
+ * promises a plain GET form that renders results on the server without
+ * JavaScript (`src/components/search/StorySearch.tsx`).
+ *
+ * `unstable_instant = false` is Next's documented "this segment is allowed to
+ * block" opt-in (migration guide: "set the `instant` config to `false` on the
+ * segment that raised it"), which renders the page for the request instead of
+ * leaving the results in a hidden streamed hole. That makes this route dynamic;
+ * it is noindex and request-dependent anyway.
+ */
+export const unstable_instant = false
+
 // Internal search results are crawlable (links are followed) but never indexed.
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
   const q = readQuery((await searchParams).q)

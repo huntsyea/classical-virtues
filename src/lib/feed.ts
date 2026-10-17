@@ -10,8 +10,8 @@ import { latestUpdate, type StoryData } from './stories'
  *                 whose file size is unknown are left out rather than
  *                 published with `length="0"`.
  *
- * Caching is left to the route's `revalidate` (ISR) so a webhook purge
- * reaches feed readers within the normal window; no custom Cache-Control.
+ * Caching is left to the `'use cache'` readers in `src/lib/basehub.ts`, which
+ * `POST /api/revalidate` (and Basehub's own on-demand revalidation) expires.
  */
 
 function escapeXml(value: string): string {
@@ -28,9 +28,15 @@ function tag(name: string, value: string | number | null | undefined, attrs = ''
   return `<${name}${attrs}>${escapeXml(String(value))}</${name}>`
 }
 
+/**
+ * RFC 822 date for a feed tag. Returns '' (the tag is omitted) when there is no
+ * date or it cannot be parsed, rather than falling back to "now": reading the
+ * clock is not allowed while prerendering.
+ */
 function rfc822(iso: string | undefined): string {
-  const date = iso ? new Date(iso) : new Date()
-  return (Number.isNaN(date.getTime()) ? new Date() : date).toUTCString()
+  if (!iso) return ''
+  const date = new Date(iso)
+  return Number.isNaN(date.getTime()) ? '' : date.toUTCString()
 }
 
 function itemXml(story: StoryData, podcast: boolean): string {
