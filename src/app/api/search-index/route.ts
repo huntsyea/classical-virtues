@@ -8,10 +8,8 @@ import { getAllStories, toSearchDoc } from '@/lib/stories'
  *   - `docs`: a compact local index, used when Basehub Search is unavailable
  *     (no key, collection not indexed yet, or the search host is down).
  */
-export const revalidate = 300
 
-// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
-export const dynamic = 'force-static'
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
 
 export async function GET() {
   const [searchKey, stories] = await Promise.all([getLiveStoriesSearchKey(), getAllStories()])

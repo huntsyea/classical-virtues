@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Wordmark from '@/components/Wordmark'
 import Seal from '@/components/Seal'
 import { roman } from '@/components/roman'
+import { copyrightYear } from '@/lib/copyright'
 
 export interface FooterVirtue {
   slug: string
@@ -15,7 +16,9 @@ const readLinks = [
   { href: '/about', label: 'About the collection' },
 ]
 
-export default function Footer({ virtues = [] }: { virtues?: FooterVirtue[] }) {
+export default async function Footer({ virtues = [] }: { virtues?: FooterVirtue[] }) {
+  const year = await copyrightYear()
+
   return (
     <footer className="mt-24 bg-surface sm:mt-32">
       <div className="page-wrap">
@@ -74,7 +77,7 @@ export default function Footer({ virtues = [] }: { virtues?: FooterVirtue[] }) {
           </div>
 
           <div className="meta mt-12 flex flex-col gap-2 border-t border-rule pt-6 sm:flex-row sm:items-center sm:justify-between">
-            <p>&copy; {new Date().getFullYear()} Classical Virtues</p>
+            <p>&copy; {year} Classical Virtues</p>
           </div>
         </div>
       </div>

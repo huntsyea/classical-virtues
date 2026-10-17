@@ -22,13 +22,7 @@ import type { ReactNode } from 'react'
 
 type Params = Promise<{ slug: string }>
 
-// ISR: refresh story pages at most every 5 minutes so Basehub publishes land in
-// production without an engineer rebuild (PRO-86). Must be a literal for Next's
-// static analysis; a time-based safety net behind Basehub's on-demand revalidation.
-export const revalidate = 300
-
-// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
-export const dynamic = 'force-static'
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
 
 export async function generateStaticParams() {
   const stories = await getAllStories();

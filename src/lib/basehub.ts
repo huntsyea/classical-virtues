@@ -1,6 +1,5 @@
 import 'server-only'
-import { cache } from 'react'
-import { unstable_cache } from 'next/cache'
+import { cacheLife, cacheTag } from 'next/cache'
 import { basehub } from 'basehub'
 import type { StoriesItem } from '../../basehub-types'
 import '../../basehub.config' // Import the config to ensure it's loaded
@@ -10,47 +9,40 @@ import '../../basehub.config' // Import the config to ensure it's loaded
  * adapts the results into the site's `StoryData` shape.
  *
  * Caching follows Basehub's documented setup (docs.basehub.com →
- * `nextjs-integration/environments-and-caching`): plain `basehub().query()`
- * with no `cache`/`next` overrides, plus the SDK's own `<Toolbar />` in the
- * root layout. Nothing here wraps the queries in a cache of ours.
- *
- * How the documented caching actually works (verified against the installed
- * SDK, `node_modules/basehub/dist/chunk-4VKF2UXK.js`, and against this repo's
- * `next build` route tables):
+ * `nextjs-integration/environments-and-caching`) on top of Next 16's Cache
+ * Components model, which is what Basehub's own Next 16 playground uses: every
+ * reader below is a `'use cache'` scope with an explicit `cacheLife` and
+ * `cacheTag`, and the SDK's `<Toolbar />` is mounted in the root layout inside
+ * the `<Suspense>` boundary Cache Components requires for its per-request ref
+ * lookup.
  *
  *   - The SDK tags every query fetch with `basehub-<hash of query + sdkBuildId>`
  *     (`cacheTagFromQuery`) and sends the same string as `x-basehub-cache-tag`.
- *     Passing `next`/`cache` to `basehub()` replaces that tag, which is why the
- *     docs say not to: it opts the query out of automatic revalidation.
- *   - Next stores those fetches in the Data Cache during build-time
- *     prerendering ("implicit build-time cache"), and the collected tags are
- *     attached to the rendered route entry as well. So a committed change makes
- *     Basehub's servers call the Toolbar's Server Action, which runs
- *     `revalidateTag('basehub-<hash>')` for exactly those tags, and the cached
- *     pages are marked stale.
- *   - `POST /api/revalidate` cannot use those tags: they are opaque
- *     per-query hashes. So reading content also declares `basehub:content`
- *     (`declareContentTag` below), and the webhook expires that tag with the
- *     `'max'` (stale-while-revalidate) profile, which keeps a purge during an
- *     outage from hard-expiring pages into 500s; see `src/lib/revalidate.ts`.
- *   - The SDK resolves a ref before every call with `resolveRef`, a
- *     `cache: 'no-store'` POST to `basehub.com/api/git/resolve-ref`. A
- *     `no-store` fetch marks its route dynamic, so the Toolbar (which renders
- *     in the root layout, and therefore in every route) would otherwise leave
- *     whichever routes happen to run it first in each build worker as `ƒ`,
- *     varying from build to build. The Basehub-backed routes therefore declare
- *     `export const dynamic = 'force-static'` in their page files, which is the
- *     documented Next.js way to say "prerender this route": Next then ignores
- *     that dynamic signal. Do not replace this with a cache wrapper; the
- *     queries below are only cached by the SDK's own tags. The price is that
- *     `cookies()` is empty on those routes, so the Toolbar's branch preview
- *     (which the SDK reads from the `bshb-preview-ref-<repoHash>` cookie) reads
- *     the resolved ref, i.e. main, instead of the selected branch. Draft Mode
- *     itself, and draft preview of main, still work. See AGENTS.md.
- *   - Draft Mode (preview) bypasses all of it: the SDK then queries drafts with
- *     `no-store`, the route is rendered per request, and nothing is cached. The
- *     Toolbar toggles Draft Mode itself, so no route of ours is involved. In
- *     `next dev` the SDK always reads drafts, so dev shows unpublished edits:
+ *     Passing `next`/`cache` to `basehub()` replaces that tag, so we never do:
+ *     the docs are explicit that it opts the query out of automatic
+ *     revalidation. Those fetch tags propagate into the enclosing `'use cache'`
+ *     entry, so on commit Basehub's servers can still call the Toolbar's Server
+ *     Action to revalidate exactly the queries that changed.
+ *   - `cacheTag(BASEHUB_CONTENT_TAG)` is ours. It cannot ride on the SDK queries
+ *     (a caller-supplied `next.tags` replaces the hash tag and drops the
+ *     `x-basehub-cache-tag` header, verified against basehub 9.6.0), so each
+ *     reader declares it and `POST /api/revalidate` expires it with the `'max'`
+ *     profile: stale-while-revalidate, so a purge while Basehub is unreachable
+ *     keeps serving the last good entry instead of hard-expiring pages into
+ *     500s.
+ *   - `cacheLife('content')` (next.config.mjs) is the safety net behind those
+ *     tags: serve up to 5 minutes, revalidate in the background, keep a year,
+ *     which is the window these routes had before Cache Components.
+ *   - Draft Mode (preview) bypasses all of it: inside a `'use cache'` scope the
+ *     work re-executes on every request and stores nothing, and the SDK queries
+ *     drafts with `no-store`. Branch preview is the one casualty: the SDK reads
+ *     the `bshb-preview-ref-<repoHash>` cookie with `cookies()`, which Cache
+ *     Components forbids inside a `'use cache'` scope, so it falls back to the
+ *     resolved ref (main). Reading that cookie outside the scope and passing it
+ *     in as `ref` does work, but it turns every content page into a request-time
+ *     streaming hole: measured 88 Lighthouse performance on /stories, under the
+ *     90 budget, so it is not shipped. See AGENTS.md.
+ *   - In `next dev` the SDK always reads drafts, so dev shows unpublished edits:
  *     verify published behaviour on a production build.
  */
 
@@ -135,40 +127,18 @@ export type BasehubStory = Pick<
 } & StoryMigratedFields
 
 /**
- * Stable cache tag for every route that renders Basehub content.
+ * Stable cache tag for everything that renders Basehub content.
  *
  * The SDK tags each query with an opaque `basehub-<hash of query + build id>`,
- * and a caller-supplied `next` *replaces* that tag (and the sent
- * `x-basehub-cache-tag` header) rather than merging with it, which is exactly
- * the opt-out the caching docs warn about. So a stable tag cannot ride on the
- * content queries without giving up Basehub's automatic on-demand
- * revalidation. Instead, reading content declares this tag with the one cheap,
- * cached probe below: Next collects the tags of every fetch made while a route
- * renders (or a route handler runs) onto that route's cache entry.
- *
- * `POST /api/revalidate` expires it with the `'max'` profile
- * (stale-while-revalidate), so a purge while Basehub is unreachable keeps
- * serving the last good render instead of hard-expiring pages into 500s.
+ * and fetch tags propagate into the enclosing `'use cache'` entry, so Basehub's
+ * automatic on-demand revalidation keeps working on its own. This tag is ours:
+ * every cached reader below applies it with `cacheTag`, which is how
+ * `POST /api/revalidate` can expire all of them at once (the SDK's hashes
+ * cannot be enumerated) with the `'max'` profile, i.e. stale-while-revalidate.
+ * A purge while Basehub is unreachable therefore keeps serving the last good
+ * cache entry instead of hard-expiring pages into 500s.
  */
 export const BASEHUB_CONTENT_TAG = 'basehub:content'
-
-/**
- * Declare {@link BASEHUB_CONTENT_TAG} for whatever route is rendering.
- *
- * Not a content read: the tag is the entire point, and the answer is cached for
- * an hour, so this costs one request per cache window rather than one per
- * render. The `next` option here opts *this* query out of Basehub's automatic
- * revalidation, which does not matter: it is not a content query, and the
- * queries that do read content still carry the SDK's own tags.
- */
-const declareContentTag = cache(async (): Promise<void> => {
-  if (!hasBasehubToken()) return
-  try {
-    await basehub({ next: { revalidate: 3600, tags: [BASEHUB_CONTENT_TAG] } }).query({ __typename: true })
-  } catch (error) {
-    return handleBasehubError('content tag probe', error)
-  }
-})
 
 /* -------------------------------------------------------------------------------------------------
  * Schema introspection (tolerance before/after the story-schema migration)
@@ -182,10 +152,13 @@ const INTROSPECTION_QUERY = `query StoryFields {
 
 /**
  * Field name → GraphQL kind for `StoriesItem`, from the committed schema.
- * Cached for an hour (and busted by the revalidation webhook) so a committed
+ * Cached for an hour (and expired by the revalidation webhook) so a committed
  * migration lights up the new fields without a deploy.
  */
-const getStoryFieldKinds = cache(async (): Promise<Map<string, FieldKind>> => {
+async function getStoryFieldKinds(): Promise<Map<string, FieldKind>> {
+  'use cache'
+  cacheLife('hours')
+  cacheTag('basehub:schema')
   if (!hasBasehubToken()) return new Map()
   try {
     const res = await fetch('https://api.basehub.com/graphql', {
@@ -195,8 +168,9 @@ const getStoryFieldKinds = cache(async (): Promise<Map<string, FieldKind>> => {
         'x-basehub-token': process.env.BASEHUB_TOKEN as string,
         'x-basehub-api-version': '4',
       },
+      // Cached by this `'use cache'` scope; a fetch-level `next: { revalidate }`
+      // would be ignored with Cache Components, so the lifetime lives above.
       body: JSON.stringify({ query: INTROSPECTION_QUERY }),
-      next: { revalidate: 3600, tags: ['basehub:schema'] },
     })
     const json = (await res.json()) as {
       errors?: { message: string }[]
@@ -212,7 +186,7 @@ const getStoryFieldKinds = cache(async (): Promise<Map<string, FieldKind>> => {
     // whole cache window; fail like any other Basehub query instead.
     return handleBasehubError('schema introspection', error)
   }
-})
+}
 
 /** Selection for the migrated fields that actually exist in the schema. */
 async function migratedFieldSelection(): Promise<Record<string, unknown>> {
@@ -251,15 +225,20 @@ async function storySelection() {
 // fetch options, so the SDK's own tags stay intact. Development therefore
 // behaves exactly like production here, and draft edits always show.
 //
-// Every reader declares the content tag first, so that a purge can expire the
-// route that rendered it; see `declareContentTag`.
+// Every reader is a `'use cache'` scope (`cacheLife('content')`,
+// `cacheTag(BASEHUB_CONTENT_TAG)`), which is Next 16's caching model: the
+// prerender fills the entry and the content lands in the route's static shell,
+// while Basehub's per-query fetch tags propagate into the entry for Basehub's
+// own on-demand revalidation.
 
 const PAGE_SIZE = 100
 
 /** Every story, in dashboard order, paginating past Basehub's page size. */
-export const getAllStories = cache(async (): Promise<BasehubStory[]> => {
+export async function getAllStories(): Promise<BasehubStory[]> {
+  'use cache'
+  cacheLife('content')
+  cacheTag(BASEHUB_CONTENT_TAG)
   if (!hasBasehubToken()) return []
-  await declareContentTag()
   try {
     const items = await storySelection()
     const stories: BasehubStory[] = []
@@ -278,15 +257,17 @@ export const getAllStories = cache(async (): Promise<BasehubStory[]> => {
   } catch (error) {
     return handleBasehubError('getAllStories', error)
   }
-})
+}
 
 /** Cache tag for the search-key probe below; expired by `POST /api/revalidate`. */
 export const SEARCH_KEY_CACHE_TAG = 'basehub:search-key'
 
 /** One story, filtered by slug on the Basehub side. */
-export const getStoryBySlug = cache(async (slug: string): Promise<BasehubStory | null> => {
+export async function getStoryBySlug(slug: string): Promise<BasehubStory | null> {
+  'use cache'
+  cacheLife('content')
+  cacheTag(BASEHUB_CONTENT_TAG)
   if (!hasBasehubToken()) return null
-  await declareContentTag()
   try {
     const data = await basehub().query({
       stories: {
@@ -298,13 +279,24 @@ export const getStoryBySlug = cache(async (slug: string): Promise<BasehubStory |
   } catch (error) {
     return handleBasehubError(`getStoryBySlug(${slug})`, error)
   }
-})
+}
 
+/**
 /**
  * Public search key for the stories collection. Basehub designs `_searchKey`
  * to be shipped to the browser; it only grants search over this collection.
+ * Cached with the rest of the content, so a publish that changes the key (or
+ * turns indexing on) lands with the next revalidation.
  */
-export const getStoriesSearchKey = cache(async (): Promise<string | null> => {
+export async function getStoriesSearchKey(): Promise<string | null> {
+  'use cache'
+  cacheLife('content')
+  cacheTag(BASEHUB_CONTENT_TAG)
+  return queryStoriesSearchKey()
+}
+
+/** The query behind both search-key readers, uncached. */
+async function queryStoriesSearchKey(): Promise<string | null> {
   if (!hasBasehubToken()) return null
   try {
     const data = await basehub().query({ stories: { _searchKey: true } })
@@ -312,7 +304,7 @@ export const getStoriesSearchKey = cache(async (): Promise<string | null> => {
   } catch (error) {
     return handleBasehubError('getStoriesSearchKey', error)
   }
-})
+}
 
 /* -------------------------------------------------------------------------------------------------
  * Virtues
@@ -330,9 +322,11 @@ export interface BasehubVirtue {
 }
 
 /** The CMS mirror of the seven-virtue canon (ids for references, edit dates). */
-export const getVirtuesFromBasehub = cache(async (): Promise<BasehubVirtue[]> => {
+export async function getVirtuesFromBasehub(): Promise<BasehubVirtue[]> {
+  'use cache'
+  cacheLife('content')
+  cacheTag(BASEHUB_CONTENT_TAG)
   if (!hasBasehubToken()) return []
-  await declareContentTag()
   try {
     const data = await basehub().query({
       virtues: {
@@ -353,7 +347,7 @@ export const getVirtuesFromBasehub = cache(async (): Promise<BasehubVirtue[]> =>
   } catch (error) {
     return handleBasehubError('getVirtuesFromBasehub', error)
   }
-})
+}
 
 /**
  * The search key, but only when Basehub Search actually answers for it. Until
@@ -366,26 +360,30 @@ export const getVirtuesFromBasehub = cache(async (): Promise<BasehubVirtue[]> =>
  *
  * This is not one of the SDK's tagged queries (the probe lives on Basehub's
  * search host, not the GraphQL API), so it keeps an explicit tag of its own and
- * `POST /api/revalidate` expires it. `src/lib/audio.ts` caches its blob probe
- * the same way.
+ * `POST /api/revalidate` expires it.
  */
-const probeLiveSearchKey = unstable_cache(
-  async (): Promise<string | null> => {
-    const key = await getStoriesSearchKey()
-    if (!key) return null
-    try {
-      const { search } = await import('basehub/search')
-      await search(key, 'virtue', { queryBy: ['_title'], perPage: 1 })
-      return key
-    } catch {
-      return null // search not live yet: use the local index, not an outage
-    }
-  },
-  ['basehub', 'liveStoriesSearchKey'],
-  { revalidate: 3600, tags: [SEARCH_KEY_CACHE_TAG] },
-)
+/** Uncached probe behind {@link getLiveStoriesSearchKey}. */
+async function probeLiveSearchKey(): Promise<string | null> {
+  const key = await queryStoriesSearchKey()
+  if (!key) return null
+  try {
+    const { search } = await import('basehub/search')
+    await search(key, 'virtue', { queryBy: ['_title'], perPage: 1 })
+    return key
+  } catch {
+    return null // search not live yet: use the local index, not an outage
+  }
+}
 
-export const getLiveStoriesSearchKey = cache(async (): Promise<string | null> => {
+/**
+ * The search key, but only when Basehub Search actually answers for it, so a
+ * browser never makes a request that is known to fail. Cached for an hour and
+ * expired by the revalidation webhook like the rest of this module.
+ */
+export async function getLiveStoriesSearchKey(): Promise<string | null> {
+  'use cache'
+  cacheLife('hours')
+  cacheTag(SEARCH_KEY_CACHE_TAG)
   if (!hasBasehubToken() || process.env.BASEHUB_SEARCH_ENABLED === 'false') return null
   return probeLiveSearchKey()
-})
+}

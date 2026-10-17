@@ -19,11 +19,7 @@ export const metadata: Metadata = pageMetadata({
   description: SITE.description,
 })
 
-// ISR: pick up newly published stories within minutes, no rebuild (PRO-86).
-export const revalidate = 300
-
-// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
-export const dynamic = 'force-static'
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
 
 export default async function Home() {
   const [allStories, virtues] = await Promise.all([getAllStories(), getAllVirtues()]);

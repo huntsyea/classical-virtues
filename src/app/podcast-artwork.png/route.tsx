@@ -2,11 +2,6 @@ import { ImageResponse } from 'next/og'
 import { OG_COLORS, ogFonts } from '@/lib/og'
 import { flattenPngToRgb, hexToRgb } from '@/lib/png'
 
-// Square show artwork for the narrated-stories feed. Apple Podcasts asks for
-// 1400 to 3000 px square RGB art; 1400 keeps the render cheap. `next/og`
-// emits RGBA, so the PNG is flattened onto the paper colour as RGB.
-export const dynamic = 'force-static'
-
 export async function GET() {
   const title = 'Classical Virtues'
   const tagline = 'Stories to read aloud'

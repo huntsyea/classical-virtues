@@ -1,9 +1,18 @@
 import { ImageResponse } from 'next/og'
+import { cacheLife } from 'next/cache'
 
-// Static publisher logo used by structured data and the web manifest
-export const dynamic = 'force-static'
+/**
+ * The publisher logo.
+ *
+ * `next/og` reads the clock while rendering, which Cache Components does not
+ * allow in a prerendered route, so the render lives in its own `'use cache'`
+ * scope and the handler only serves the cached bytes. That keeps this a static
+ * route instead of a per-request satori render.
+ */
+async function renderLogo(): Promise<ArrayBuffer> {
+  'use cache'
+  cacheLife('weeks')
 
-export async function GET() {
   return new ImageResponse(
     (
       <div
@@ -26,5 +35,11 @@ export async function GET() {
       width: 512,
       height: 512,
     },
-  )
+  ).arrayBuffer()
+}
+
+export async function GET() {
+  return new Response(await renderLogo(), {
+    headers: { 'content-type': 'image/png' },
+  })
 }

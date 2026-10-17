@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getAllStories } from '@/lib/basehub'
 
-// Local diagnostics only. In any deployed environment this route does not
-// exist (404), so it cannot leak CMS ids, slugs, or error details.
-export const dynamic = 'force-dynamic'
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
 
 export async function GET() {
   if (process.env.NODE_ENV !== 'development') {

@@ -86,51 +86,39 @@ When `BASEHUB_TOKEN` is set:
 - Webhook endpoint at `/api/revalidate` for content updates (`/revalidate-sitemap`
   is kept as a legacy alias)
 
-**Caching.** Use Basehub's documented caching as-is. Call
-`basehub().query(...)` with no `cache` or `next` options: the SDK tags each query
-with its own `basehub-<hash>` string, Next caches those fetches during
-prerendering, and Basehub's own `<Toolbar />` (mounted in `src/app/layout.tsx`)
-provides the Server Action Basehub's servers call on commit to `revalidateTag`
-those exact tags. Passing `next`/`cache` to `basehub()` replaces the tag and opts
-the query out of that automatic revalidation, so do not add cache wrappers
-(`unstable_cache`, `'use cache'`, custom tags) around SDK queries. See the header
-of `src/lib/basehub.ts` for the full mechanism.
+**Caching.** Basehub's documented setup plus Next 16's Cache Components model,
+which is what Basehub's own Next 16 playground uses: `cacheComponents: true`
+(`next.config.mjs`), the SDK's `<Toolbar />` in the root layout inside the
+`<Suspense>` boundary Cache Components requires, and a `'use cache'` scope with
+an explicit `cacheLife` and `cacheTag` for every reader in `src/lib/basehub.ts`.
 
-**`export const dynamic = 'force-static'`** is required on every route that reads
-Basehub and is not itself request-dependent (`page.tsx` and route-handler files;
-not `/search`, `/api/og`, `/api/revalidate`). The SDK resolves a ref with a
-`cache: 'no-store'` fetch before each call, and the Toolbar does the same while
-the root layout renders, so without this directive Next marks whichever routes
-happen to run that fetch first in each build worker as dynamic (`ƒ`), varying
-from build to build and dropping them out of the CDN cache. The directive is
-Next's documented way to declare a route prerendered: it does not affect the
-SDK's tags or Draft Mode. Pinning the ref (`ref`, `BASEHUB_REF`,
-`setGlobalConfig({ ref })`) does not skip that fetch, so it is not an
-alternative.
-
-Known trade-off: `force-static` makes `cookies()` empty on those routes, so the
-Toolbar's branch preview reads the resolved ref (main) rather than the selected
-branch; the SDK reads the `bshb-preview-ref-<repoHash>` cookie for branch
-overrides. Draft Mode itself, and draft preview of main, work normally. No
-supported setup has both fully static pages and cookie-based branch preview:
-dropping the directive puts the routes back to `ƒ`. Verify with `pnpm build`
-twice: the route table must be identical both times, with `ƒ` only on the
-request-dependent routes above.
-
-- `declareContentTag()` (`src/lib/basehub.ts`) runs on every content read and
-declares `basehub:content` on the route that is rendering. Next collects the tags
-of every fetch made during a render onto that route's cache entry, which is how
-our own webhook gets a tag it can expire: a caller-supplied `next.tags`
-*replaces* the SDK's tag (verified against `basehub@9.6.0` and by build output),
-so it cannot ride on the content queries without opting them out of Basehub's
-automatic revalidation. Do not add cache wrappers around SDK queries.
-- `POST /api/revalidate` expires `basehub:content` with the `'max'`
-  (stale-while-revalidate) profile, so a purge while Basehub is unreachable keeps
-serving the last good render instead of hard-expiring pages into 500s. Do not
-switch it to `revalidatePath` or `{ expire: 0 }`; see `src/lib/revalidate.ts`.
-- Draft mode (preview) is inferred by the SDK: in `next dev`, and whenever Next's
-  Draft Mode is on (toggled by the Toolbar), queries read drafts with `no-store`
-  and routes render per request; see `src/lib/basehub.ts`
+- Call `basehub().query(...)` with no `cache`/`next` options. The SDK tags each
+  query with `basehub-<hash>` and those fetch tags propagate into the enclosing
+  `'use cache'` entry, which is what Basehub's Toolbar revalidates on commit.
+  Passing `next`/`cache` replaces that tag and drops the `x-basehub-cache-tag`
+  header, so do not add cache wrappers or tags around SDK queries.
+- `cacheTag(BASEHUB_CONTENT_TAG)` is ours, declared by each reader, and
+  `POST /api/revalidate` expires it with the `'max'` profile: stale-while-
+  revalidate, so a purge during a Basehub outage keeps serving the last good
+  entry instead of hard-expiring pages into 500s. Never use `revalidatePath` or
+  `{ expire: 0 }` there.
+- `cacheLife('content')` (next.config.mjs) is the time-based safety net: 5-minute
+  revalidate, one-year expire, matching the routes' pre-Cache-Components window.
+  Set an explicit `cacheLife` in every `'use cache'` scope.
+- Route segment configs (`revalidate`, `dynamic`, `fetchCache`, `dynamicParams`)
+  are gone: they fail the build with Cache Components. Uncached or request-time
+  data goes inside `<Suspense>` instead (the Toolbar, `/search`'s `searchParams`),
+  and the clock is read inside a cache scope (`src/lib/copyright.ts`), never
+  during prerender.
+- Draft mode (preview) works: `'use cache'` scopes re-execute per request under
+  Draft Mode and store nothing, and the SDK queries drafts with `no-store`.
+  **Branch preview does not**: the SDK reads the `bshb-preview-ref-<repoHash>`
+  cookie with `cookies()`, which Cache Components forbids inside a `'use cache'`
+  scope, so a preview session shows the resolved ref (main). The documented
+  workaround (read the cookie outside the scope, pass it in as `ref`) works, but
+  it makes the page content a request-time streaming hole, which measured 88
+  Lighthouse performance on `/stories` against the 90 budget, so it is not in
+  the code.
 
 ### SEO & Performance
 - Comprehensive metadata and OpenGraph tags

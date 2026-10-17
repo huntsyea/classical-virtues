@@ -13,10 +13,8 @@ import { absoluteUrl } from '@/lib/site'
  * left out until they gather stories; so are the noindex `/stories/virtue/*`
  * filter views (the hubs are the indexable page for each virtue).
  */
-export const revalidate = 300
 
-// Prerender this route (see the Basehub caching note in src/lib/basehub.ts).
-export const dynamic = 'force-static'
+// Cached by the `'use cache'` readers in src/lib/basehub.ts; see AGENTS.md.
 
 interface Entry {
   path: string
