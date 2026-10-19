@@ -6,7 +6,8 @@ Each file is a complete, restorable JSON snapshot; `latest.json` mirrors the new
 
 | Snapshot | Stories | Virtues |
 | --- | --- | --- |
-| **latest.json** (→ basehub-backup-2026-09-28.json) | 8 | 7 |
+| **latest.json** (→ basehub-backup-2026-10-19.json) | 8 | 7 |
+| basehub-backup-2026-10-19.json | | |
 | basehub-backup-2026-09-28.json | | |
 | basehub-backup-2026-09-21.json | | |
 | basehub-backup-2026-09-14.json | | |
@@ -21,4 +22,4 @@ Each file is a complete, restorable JSON snapshot; `latest.json` mirrors the new
 | basehub-backup-2026-07-13.json | | |
 | basehub-backup-2026-07-12.json | | |
 
-_Last updated: 2026-09-28T13:10:28.143Z_
+_Last updated: 2026-10-19T12:25:48.512Z_
