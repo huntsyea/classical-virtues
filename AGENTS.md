@@ -110,9 +110,17 @@ an explicit `cacheLife` and `cacheTag` for every reader in `src/lib/basehub.ts`.
   `'use cache'` scope.
 - Route segment configs (`revalidate`, `dynamic`, `fetchCache`, `dynamicParams`)
   are gone: they fail the build with Cache Components. Uncached or request-time
-  data goes inside `<Suspense>` instead (the Toolbar, `/search`'s `searchParams`),
-  and the clock is read inside a cache scope (`src/lib/copyright.ts`), never
-  during prerender.
+  data goes inside `<Suspense>` instead (the Toolbar), and the clock is read
+  inside a cache scope (`src/lib/copyright.ts`), never during prerender.
+- `/search` is the one place that declares `instant = false` (a Cache Components
+  route segment config, named `unstable_instant` before Next 16.3) instead of
+  streaming its `searchParams` read, and it is the documented "this segment is
+  allowed to block" opt-in. Its contract is a plain `GET /search?q=` form that
+  renders results on the server with JavaScript off, which a `<Suspense>`
+  boundary cannot keep: a streamed boundary only becomes visible through React's
+  client runtime (the resolved nodes ship in a hidden div and are moved in by
+  `$RC`), so a no-JS reader would land on an empty results area with an empty
+  search box. The route is dynamic and noindex; do not convert it to `<Suspense>`.
 - Draft mode (preview) works: `'use cache'` scopes re-execute per request under
   Draft Mode and store nothing, and the SDK queries drafts with `no-store`.
   **Branch preview does not**: the SDK reads the `bshb-preview-ref-<repoHash>`

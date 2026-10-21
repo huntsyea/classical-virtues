@@ -13,18 +13,26 @@ function readQuery(q: string | string[] | undefined): string {
 
 /**
  * `/search` reads `searchParams`, so its results are per-request data. Cache
- * Components wants that streamed behind `<Suspense>`, but a streamed segment
- * only becomes visible through React's client runtime, and the search box
- * promises a plain GET form that renders results on the server without
- * JavaScript (`src/components/search/StorySearch.tsx`).
+ * Components rejects that read outside `<Suspense>` and names three fixes:
+ * stream it, cache it, or declare the segment blocking.
  *
- * `unstable_instant = false` is Next's documented "this segment is allowed to
- * block" opt-in (migration guide: "set the `instant` config to `false` on the
- * segment that raised it"), which renders the page for the request instead of
- * leaving the results in a hidden streamed hole. That makes this route dynamic;
- * it is noindex and request-dependent anyway.
+ * Streaming is the one option that changes what readers get. A streamed
+ * boundary reaches the reader through React's client runtime (`$RC` moving the
+ * resolved nodes out of a hidden div), so with JavaScript off the `/search?q=`
+ * GET form would submit, land here, and show an empty results area with an
+ * empty search box. The box promises that path explicitly
+ * (`src/components/search/StorySearch.tsx`: "Without JavaScript it is a plain
+ * GET form to `/search?q=`, which renders results on the server").
+ *
+ * `instant = false` is the documented blocking opt-in (route segment config:
+ * "Set `false` on a layout or page to indicate that this segment is allowed to
+ * block when navigating to it"), so the page renders per request and its HTML
+ * arrives complete. The export was `unstable_instant` until Next 16.3
+ * stabilized it; `instant` only works with `cacheComponents` enabled, as here.
+ * That makes this route dynamic, which is what it is: noindex and
+ * request-dependent anyway.
  */
-export const unstable_instant = false
+export const instant = false
 
 // Internal search results are crawlable (links are followed) but never indexed.
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {
