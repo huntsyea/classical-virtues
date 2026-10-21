@@ -14,23 +14,26 @@ function readQuery(q: string | string[] | undefined): string {
 /**
  * `/search` reads `searchParams`, so its results are per-request data. Cache
  * Components rejects that read outside `<Suspense>` and names three fixes:
- * stream it, cache it, or declare the segment blocking.
+ * stream it, cache it, or allow the segment to block.
  *
- * Streaming is the one option that changes what readers get. A streamed
- * boundary reaches the reader through React's client runtime (`$RC` moving the
- * resolved nodes out of a hidden div), so with JavaScript off the `/search?q=`
- * GET form would submit, land here, and show an empty results area with an
- * empty search box. The box promises that path explicitly
- * (`src/components/search/StorySearch.tsx`: "Without JavaScript it is a plain
- * GET form to `/search?q=`, which renders results on the server").
+ * Streaming is the one option that changes what readers get here. This page's
+ * boundary is the one carrying the results, and a streamed boundary that has
+ * not finished before the shell is sent reaches the reader through React's
+ * client runtime: the resolved nodes ship in a hidden div and `$RC` moves them
+ * in. With JavaScript off, the `/search?q=` GET form would then land on the
+ * empty fallback instead of the results the server had already rendered. The
+ * box promises that path explicitly (`src/components/search/StorySearch.tsx`:
+ * "Without JavaScript it is a plain GET form to `/search?q=`, which renders
+ * results on the server").
  *
- * `instant = false` is the documented blocking opt-in (route segment config:
- * "Set `false` on a layout or page to indicate that this segment is allowed to
- * block when navigating to it"), so the page renders per request and its HTML
- * arrives complete. The export was `unstable_instant` until Next 16.3
- * stabilized it; `instant` only works with `cacheComponents` enabled, as here.
- * That makes this route dynamic, which is what it is: noindex and
- * request-dependent anyway.
+ * `instant = false` relaxes that validation rather than picking a rendering
+ * mode: the route segment config reference says it marks the segment "allowed to
+ * block when navigating to it", and Cache Components then stops insisting the
+ * read sits behind a boundary. What makes the page request-dependent is
+ * `searchParams` itself, which is why it renders per request with or without
+ * the export. The export was `unstable_instant` until Next 16.3 stabilized it,
+ * and `instant` only works with `cacheComponents` enabled, as here. The route is
+ * noindex and request-dependent anyway.
  */
 export const instant = false
 

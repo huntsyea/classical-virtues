@@ -5,12 +5,13 @@ const nextConfig = {
   // replace the old route segment configs (`revalidate`, `dynamic`), and
   // runtime data (the Toolbar, preview cookies) streams through <Suspense>.
   cacheComponents: true,
-  // Partial Prefetching (new in Next 16.4) stays off, which is the documented
-  // setting for an app that adopted Cache Components before it existed:
-  // leaving the option unset behaves like `false` and warns on every build.
-  // Turning it on changes prefetching app-wide (one App Shell per route) and
-  // needs its own per-route App Shell validation and Lighthouse run, so it is
-  // a separate change, not a Next upgrade side effect.
+  // Partial Prefetching (introduced in Next 16.3) is pinned off as the
+  // documented migration setting for an app that adopted Cache Components
+  // before it existed; leaving the option unset behaves the same and only logs
+  // a warning on every build. Enabling it changes prefetching app-wide (one App
+  // Shell per route) and wants its own per-route App Shell validation and
+  // Lighthouse run, so it is a separate change, not a Next upgrade side effect.
+  // New apps should enable both.
   partialPrefetching: false,
   // Basehub content changes only when an editor publishes, and
   // `POST /api/revalidate` (plus Basehub's own on-demand revalidation) expires
