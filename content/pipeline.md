@@ -49,7 +49,7 @@ the tokens can do that, and no local check changes it. Concretely:
   does not read as an agent, and that the date is not in the future or before
   the review; it cannot prove who typed it. When one person plays several
   recipe roles, they sign with their own name and the role, e.g.
-  `- Sign-off: Hunter Yeagley, 2026-10-13`.
+  `- Sign-off: huntsyea, 2026-10-13`.
 - **Agents are named as agents.** Inside an agent session (detected by
   `BB_THREAD_ID`, `CLAUDECODE`/`CLAUDE_CODE_ENTRYPOINT`, or any `CODEX_*`
   variable) every record the pipeline writes names the agent, e.g.
