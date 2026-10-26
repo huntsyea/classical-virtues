@@ -28,3 +28,8 @@ overrides:
   nanoid@3: ^3.3.18
   postcss@8: ^8.5.18
   source-map-js@1: ^1.2.2
+  # axios@1 declares follow-redirects ^1.16.0. Pinned to the advisory's patched
+  # 1.16.1 because 1.16.2 is still inside pnpm's minimumReleaseAge window.
+  follow-redirects@1: 1.16.1
+  # @vercel/blob declares undici ^6.23.0 (GHSA-xjj6-f33q-929c).
+  undici@6: ^6.29.1
