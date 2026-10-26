@@ -17,8 +17,11 @@ name: Lighthouse CI
 # e.g. the production site — via the `preview_url` input.
 
 on:
+  # No `branches` filter on purpose: a stacked PR (base is another PR's branch,
+  # not main) must run Lighthouse on its own Vercel preview just like a PR into
+  # main. Without a filter this fires on the default pull_request activity
+  # types: opened, synchronize, reopened.
   pull_request:
-    branches: [ main ]
   workflow_dispatch:
     inputs:
       preview_url:

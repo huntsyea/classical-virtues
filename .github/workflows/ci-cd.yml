@@ -3,8 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches: [ main, develop ]
+  # No `branches` filter on purpose: a stacked PR (base is another PR's branch,
+  # not main) must run CI just like a PR into main. Without a filter this fires
+  # on the default pull_request activity types: opened, synchronize, reopened.
   pull_request:
-    branches: [ main ]
 
 jobs:
   lint-and-test:
