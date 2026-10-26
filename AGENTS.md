@@ -33,6 +33,20 @@ summaries, or moral reflections while fixing code, scripts, schema adapters, or
 rendering bugs. If approved content cannot render or publish safely, report the
 technical blocker and route editorial decisions back to the editor of record.
 
+## Agent skills
+
+### Issue tracker
+
+Work items live in the BB Tasks project `CV` (`bb tasks` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical triage labels, under their default names. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root, created by `/domain-modeling` when needed. See `docs/agents/domain.md`.
+
 ## Development Commands
 
 - `pnpm install` - Install dependencies
