@@ -13,18 +13,29 @@ function readQuery(q: string | string[] | undefined): string {
 
 /**
  * `/search` reads `searchParams`, so its results are per-request data. Cache
- * Components wants that streamed behind `<Suspense>`, but a streamed segment
- * only becomes visible through React's client runtime, and the search box
- * promises a plain GET form that renders results on the server without
- * JavaScript (`src/components/search/StorySearch.tsx`).
+ * Components rejects that read outside `<Suspense>` and names three fixes:
+ * stream it, cache it, or allow the segment to block.
  *
- * `unstable_instant = false` is Next's documented "this segment is allowed to
- * block" opt-in (migration guide: "set the `instant` config to `false` on the
- * segment that raised it"), which renders the page for the request instead of
- * leaving the results in a hidden streamed hole. That makes this route dynamic;
- * it is noindex and request-dependent anyway.
+ * Streaming is the one option that changes what readers get here. This page's
+ * boundary is the one carrying the results, and a streamed boundary that has
+ * not finished before the shell is sent reaches the reader through React's
+ * client runtime: the resolved nodes ship in a hidden div and `$RC` moves them
+ * in. With JavaScript off, the `/search?q=` GET form would then land on the
+ * empty fallback instead of the results the server had already rendered. The
+ * box promises that path explicitly (`src/components/search/StorySearch.tsx`:
+ * "Without JavaScript it is a plain GET form to `/search?q=`, which renders
+ * results on the server").
+ *
+ * `instant = false` relaxes that validation rather than picking a rendering
+ * mode: the route segment config reference says it marks the segment "allowed to
+ * block when navigating to it", and Cache Components then stops insisting the
+ * read sits behind a boundary. What makes the page request-dependent is
+ * `searchParams` itself, which is why it renders per request with or without
+ * the export. The export was `unstable_instant` until Next 16.3 stabilized it,
+ * and `instant` only works with `cacheComponents` enabled, as here. The route is
+ * noindex and request-dependent anyway.
  */
-export const unstable_instant = false
+export const instant = false
 
 // Internal search results are crawlable (links are followed) but never indexed.
 export async function generateMetadata({ searchParams }: { searchParams: SearchParams }): Promise<Metadata> {

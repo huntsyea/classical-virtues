@@ -122,11 +122,24 @@ an explicit `cacheLife` and `cacheTag` for every reader in `src/lib/basehub.ts`.
   profile in its render, so pages that also read the footer year (`weeks`)
   expire their shell after 30 days. Set an explicit `cacheLife` in every
   `'use cache'` scope.
-- Route segment configs (`revalidate`, `dynamic`, `fetchCache`, `dynamicParams`)
-  are gone: they fail the build with Cache Components. Uncached or request-time
-  data goes inside `<Suspense>` instead (the Toolbar, `/search`'s `searchParams`),
-  and the clock is read inside a cache scope (`src/lib/copyright.ts`), never
-  during prerender.
+- Legacy route segment configs (`revalidate`, `dynamic`, `fetchCache`,
+  `dynamicParams`) are gone: they fail the build with Cache Components. What
+  remains are the Cache Components route segment configs (`instant`,
+  `prefetch`, ...). Uncached or request-time data goes inside `<Suspense>`
+  instead (the Toolbar), and the clock is read inside a cache scope
+  (`src/lib/copyright.ts`), never during prerender.
+- `/search` is the one place that declares `instant = false` (a Cache Components
+  route segment config, named `unstable_instant` before Next 16.3). That relaxes
+  the validation instead of choosing a rendering mode: it marks the segment
+  "allowed to block when navigating to it", and Cache Components then stops
+  insisting the read sits behind a boundary. The page is request-dependent
+  because it reads `searchParams`, which is why it renders per request. Its
+  contract is a plain `GET /search?q=` form that renders results on the server
+  with JavaScript off, which streaming the result-bearing read would break: a
+  boundary that has not finished before the shell is sent becomes visible only
+  through React's client runtime (the resolved nodes ship in a hidden div and
+  are moved in by `$RC`), so a no-JS reader would get the empty fallback instead
+  of the results. The route is noindex; do not convert it to `<Suspense>`.
 - Draft mode (preview) works: `'use cache'` scopes re-execute per request under
   Draft Mode and store nothing, and the SDK queries drafts with `no-store`.
   **Branch preview does not**: the SDK reads the `bshb-preview-ref-<repoHash>`
