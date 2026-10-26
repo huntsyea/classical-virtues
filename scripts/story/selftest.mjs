@@ -270,9 +270,9 @@ await test('story:seo --record names the actor, never the owner, and leaves sign
   assert(!/the user,/.test(note), "owner's name used as a signature")
   // A person signs; re-recording the same draft bytes keeps the signature.
   if (/^- Verdict: clear$/m.test(note)) {
-    writeFileSync(paths.seo, note.replace(/^- Owner sign-off:[ \t]*$/m, '- Owner sign-off: Hunter Yeagley, 2026-10-13'))
+    writeFileSync(paths.seo, note.replace(/^- Owner sign-off:[ \t]*$/m, '- Owner sign-off: huntsyea, 2026-10-13'))
     record()
-    assert(/^- Owner sign-off: Hunter Yeagley, 2026-10-13$/m.test(readFileSync(paths.seo, 'utf8')), 'sign-off lost on re-record of same bytes')
+    assert(/^- Owner sign-off: huntsyea, 2026-10-13$/m.test(readFileSync(paths.seo, 'utf8')), 'sign-off lost on re-record of same bytes')
   }
   writeCleanStory()
 })
@@ -512,8 +512,8 @@ await test('reserved route slugs and duplicate frontmatter keys are refused', as
 await test('STORY_ACTOR cannot put an owner name on agent work', () => {
   const run = (env) => spawnSync(process.execPath, [join(REPO, 'scripts/story/seo.mjs'), SLUG, '--record'], { env: { ...childEnv, ...env }, encoding: 'utf8' })
   writeCleanStory()
-  const owners = { STORY_OWNERS: 'Hunter Yeagley' }
-  const r = run({ ...owners, BB_THREAD_ID: 'thr_selftest', STORY_ACTOR: 'Hunter Yeagley' })
+  const owners = { STORY_OWNERS: 'huntsyea' }
+  const r = run({ ...owners, BB_THREAD_ID: 'thr_selftest', STORY_ACTOR: 'huntsyea' })
   assert(r.status === 1 && /names an owner/.test(r.stderr), `owner name accepted in an agent session (exit ${r.status})`)
   run({ ...owners, BB_THREAD_ID: 'thr_selftest', STORY_ACTOR: 'a friend' })
   assert(/^- Run by: agent \(bb thread thr_selftest\) for a friend via story:seo$/m.test(readFileSync(paths.seo, 'utf8')), 'agent identity replaced')
